@@ -83,6 +83,7 @@ export function BoosterOpening({
         {revealed.length === 7 ? (
           <BoosterResults
             receipt={receipt}
+            reduced={reduced}
             onCollection={() => onExit("collection")}
             onAgain={() => onExit("again")}
             onShop={() => onExit("shop")}

@@ -9,7 +9,12 @@ import {
   recharge,
   RECHARGE_MS,
 } from "../src/domain/boosters.ts";
-import { EXTENSIONS, WEIGHTS } from "../src/domain/catalog.ts";
+import {
+  CARDS,
+  EXTENSIONS,
+  WEIGHTS,
+  resolveCard,
+} from "../src/domain/catalog.ts";
 function seeded(seed = 1) {
   return () => {
     seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
@@ -187,4 +192,37 @@ test("mode test : conserve le solde réel et bloque toujours les doubles achats 
       ),
     /Aucune charge gratuite/,
   );
+});
+
+test("Zeus divin remplace l'emplacement OLY-30 sans changer le catalogue ni les tirages divins", () => {
+  assert.equal(CARDS.length, 120);
+  assert.equal(new Set(CARDS.map((c) => c.id)).size, 120);
+  for (const extension of EXTENSIONS)
+    assert.equal(CARDS.filter((c) => c.extension === extension.id).length, 30);
+  const pack = generatePack("olympe", 0, () => 0.9999);
+  assert.equal(pack.length, 7);
+  for (const card of pack) {
+    assert.equal(card.id, "olympe-30");
+    assert.equal(card.number, "OLY-30");
+    assert.equal(card.name, "Zeus");
+    assert.equal(card.rarity, 6);
+    assert.equal(card.extension, "olympe");
+    assert.ok(card.history?.includes("Cronos et de Rhéa"));
+  }
+});
+
+test("un ancien reçu conserve son attribution et retrouve les informations éditoriales à jour", () => {
+  const legacy = {
+    id: "olympe-30",
+    extension: "olympe",
+    name: "Dionysos",
+    rarity: 6,
+  };
+  const saved = { ...initialState(0), collection: { "olympe-30": 2 } };
+  const card = resolveCard(legacy);
+  assert.equal(card.id, legacy.id);
+  assert.equal(card.name, "Zeus");
+  assert.equal(card.epithet, "Le Souverain Céleste");
+  assert.equal(legacy.name, "Dionysos");
+  assert.deepEqual(saved.collection, { "olympe-30": 2 });
 });

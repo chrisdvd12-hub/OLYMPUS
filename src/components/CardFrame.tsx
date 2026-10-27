@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image } from "react-native";
 import Svg, { Path, Circle, Rect } from "react-native-svg";
 import { COLORS } from "../domain/catalog";
-/** Cadre vectoriel provisoire. La référence divine originale n'est pas encore un asset local. */
+/** Cadre de repli pour les cartes sans recto individuel validé. */
 export function CardFrame({ rarity }: { rarity: number }) {
   const color = COLORS[rarity]!;
   if (rarity === 6)

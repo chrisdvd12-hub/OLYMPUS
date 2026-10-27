@@ -41,3 +41,9 @@ Dans son terminal, exécuter `npm run start:go`. Cette commande démarre Expo Go
 Le SDK 58 est la cible actuelle, correspondant à la version demandée par Expo Go sur l’iPhone de test. Les mentions du SDK 57 ci-dessus documentent les vérifications historiques, et ne définissent plus la version courante.
 
 Dépendances alignées sur `expo@58.0.19/bundledNativeModules.json`, notamment React 19.3.0, React Native 0.88.0, Reanimated 4.7.1, Worklets 0.13.0 et les types React 19.3. Le correctif des protocoles de proxy répétés est conservé. Après mise à jour du dépôt, `npm ci` est obligatoire avant de relancer Expo ; `git pull` seul ne met pas à jour les modules déjà installés.
+
+## Vérifier Zeus divin
+
+Après avoir récupéré la mise à jour, installer les dépendances avec `npm ci` puis relancer Expo. Dans la boutique « Les Maîtres de l’Olympe », toucher « VOIR ZEUS DIVIN ». Vérifier le recto validé, le code OLY-30 à gauche et la collection à droite. Faire défiler la fiche pour lire les textes de l’encyclopédie, les attributs et les relations. L’aperçu ne doit pas augmenter le nombre de cartes possédées.
+
+Une fois la carte obtenue dans un booster, elle doit utiliser le même recto. Toucher sa miniature sur les résultats, ou sa ligne dans la collection, pour rouvrir la fiche. Les autres cartes conservent leurs visuels provisoires en attendant les cadres et illustrations définitifs.

@@ -11,6 +11,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
+import { ZEUS_DIVINE } from "../domain/zeus";
+import { CardDetailModal } from "./CardDetailModal";
 import { PRICE, RECHARGE_MS, type GameState } from "../domain/boosters";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { buy, finish, refresh } from "../storage/store";
@@ -24,6 +26,7 @@ export default function BoosterShop() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [collection, setCollection] = useState(false);
+  const [inspectedId, setInspectedId] = useState<string | null>(null);
   const lock = useRef(false);
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
@@ -168,9 +171,18 @@ export default function BoosterShop() {
                 {CARDS.filter(
                   (c) => c.extension === e.id && state.collection[c.id],
                 ).map((c) => (
-                  <Text key={c.id} style={styles.text}>
-                    {c.name} · {RARITIES[c.rarity]} · ×{state.collection[c.id]}
-                  </Text>
+                  <Pressable
+                    key={c.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Voir ${c.name}, ${RARITIES[c.rarity]}`}
+                    style={{ minHeight: 48, justifyContent: "center" }}
+                    onPress={() => setInspectedId(c.id)}
+                  >
+                    <Text style={styles.text}>
+                      {c.name} · {RARITIES[c.rarity]} · ×
+                      {state.collection[c.id]} ›
+                    </Text>
+                  </Pressable>
                 ))}
               </View>
             ))}
@@ -273,6 +285,22 @@ export default function BoosterShop() {
               >
                 <Text style={styles.text}>MA COLLECTION</Text>
               </Pressable>
+              {ext.id === ZEUS_DIVINE.extension && (
+                <Pressable
+                  accessibilityRole="button"
+                  style={styles.outline}
+                  onPress={() => setInspectedId(ZEUS_DIVINE.id)}
+                >
+                  <Text
+                    style={[
+                      styles.text,
+                      { color: theme.gold, textAlign: "center" },
+                    ]}
+                  >
+                    VOIR ZEUS DIVIN
+                  </Text>
+                </Pressable>
+              )}
               <Text style={styles.muted}>
                 Édition de développement · illustrations provisoires locales
               </Text>
@@ -285,6 +313,14 @@ export default function BoosterShop() {
           </>
         )}
       </ScrollView>
+      {inspectedId && (
+        <CardDetailModal
+          cardId={inspectedId}
+          quantity={state.collection[inspectedId] ?? 0}
+          reduced={reduced}
+          onClose={() => setInspectedId(null)}
+        />
+      )}
     </SafeAreaView>
   );
 }

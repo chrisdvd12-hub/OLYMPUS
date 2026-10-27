@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { COLORS, RARITIES, type Card } from "../domain/catalog";
-import { CardFrame } from "./CardFrame";
+import { COLORS, RARITIES, resolveCard, type Card } from "../domain/catalog";
+import { CardFace } from "./CardFace";
+import { hasCardArt } from "./cardArt";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
 export function BoosterCardReveal({
@@ -18,6 +19,7 @@ export function BoosterCardReveal({
   compact = false,
   fullWidth = false,
   enabled = true,
+  onInspect,
 }: {
   card: Card;
   index: number;
@@ -27,7 +29,10 @@ export function BoosterCardReveal({
   compact?: boolean;
   fullWidth?: boolean;
   enabled?: boolean;
+  onInspect?: () => void;
 }) {
+  const current = resolveCard(card);
+  const artwork = hasCardArt(current.id);
   const revealing = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
@@ -44,7 +49,11 @@ export function BoosterCardReveal({
     ],
   }));
   const reveal = () => {
-    if (revealed || revealing.current) return;
+    if (revealed) {
+      onInspect?.();
+      return;
+    }
+    if (revealing.current) return;
     revealing.current = true;
     turn.value = withTiming(0.5, {
       duration: reduced ? 0 : card.rarity >= 4 ? 1200 : 500,
@@ -59,12 +68,15 @@ export function BoosterCardReveal({
   };
   return (
     <Pressable
-      disabled={!enabled}
+      disabled={!enabled || (revealed && !onInspect)}
       accessibilityRole="button"
       accessibilityLabel={
         revealed
-          ? `${card.name}, ${RARITIES[card.rarity]}`
+          ? `${current.name}, ${RARITIES[current.rarity]}`
           : `Révéler la carte ${index + 1}`
+      }
+      accessibilityHint={
+        revealed && onInspect ? "Ouvrir la fiche encyclopédique" : undefined
       }
       onPress={reveal}
       style={{
@@ -76,12 +88,12 @@ export function BoosterCardReveal({
         style={[
           {
             aspectRatio: CARD_ASPECT_RATIO,
-            borderWidth: revealed ? 2 : 0,
+            borderWidth: revealed && !artwork ? 2 : 0,
             borderColor: revealed ? COLORS[card.rarity] : theme.gold,
-            borderRadius: 7,
+            borderRadius: artwork && revealed ? 0 : 7,
             backgroundColor:
               revealed && card.rarity >= 5 ? "#2a173d" : "#132339",
-            padding: revealed ? 6 : 0,
+            padding: 0,
             overflow: "hidden",
             justifyContent: "space-between",
             alignItems: "center",
@@ -92,46 +104,7 @@ export function BoosterCardReveal({
           style,
         ]}
       >
-        {revealed ? (
-          <>
-            <CardFrame rarity={revealed ? card.rarity : 4} />
-            <Text
-              style={{ color: theme.gold, fontSize: 9, textAlign: "center" }}
-            >
-              {revealed ? card.name.toUpperCase() : "OLYMPUS"}
-            </Text>
-            <Text
-              style={{
-                color: revealed ? COLORS[card.rarity] : theme.gold,
-                fontSize: 32,
-              }}
-            >
-              {revealed ? "✧" : "♜"}
-            </Text>
-            <View>
-              <Text
-                style={{
-                  color: revealed ? COLORS[card.rarity] : theme.gold,
-                  fontSize: 8,
-                  textAlign: "center",
-                }}
-              >
-                {revealed
-                  ? RARITIES[card.rarity]?.toUpperCase()
-                  : "DIVINE COLLECTION"}
-              </Text>
-              {revealed && (
-                <Text
-                  style={{ color: "#a9a698", fontSize: 7, textAlign: "center" }}
-                >
-                  ART PROVISOIRE
-                </Text>
-              )}
-            </View>
-          </>
-        ) : (
-          <CardBack />
-        )}
+        {revealed ? <CardFace card={current} /> : <CardBack />}
       </Animated.View>
     </Pressable>
   );

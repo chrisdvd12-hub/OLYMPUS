@@ -1,18 +1,25 @@
+import { useState } from "react";
+import { CardDetailModal } from "./CardDetailModal";
 import { Text, View, Pressable } from "react-native";
 import type { Receipt } from "../domain/boosters";
 import { BoosterCardReveal } from "./BoosterCardReveal";
 import { styles, theme } from "./theme";
 export function BoosterResults({
   receipt,
+  reduced = false,
   onCollection,
   onAgain,
   onShop,
 }: {
   receipt: Receipt;
+  reduced?: boolean;
   onCollection: () => void;
   onAgain: () => void;
   onShop: () => void;
 }) {
+  const [inspectedIndex, setInspectedIndex] = useState<number | null>(null);
+  const inspected =
+    inspectedIndex === null ? null : receipt.cards[inspectedIndex];
   return (
     <View style={styles.body}>
       <Text style={styles.title}>VOTRE TRÉSOR</Text>
@@ -35,6 +42,7 @@ export function BoosterResults({
                 index={i}
                 revealed
                 onReveal={() => {}}
+                onInspect={() => setInspectedIndex(i)}
                 reduced
                 compact
                 fullWidth
@@ -63,6 +71,14 @@ export function BoosterResults({
       <Pressable style={styles.outline} onPress={onShop}>
         <Text style={styles.text}>RETOUR À LA BOUTIQUE</Text>
       </Pressable>
+      {inspected && (
+        <CardDetailModal
+          cardId={inspected.id}
+          quantity={receipt.quantities[inspectedIndex!] ?? 0}
+          reduced={reduced}
+          onClose={() => setInspectedIndex(null)}
+        />
+      )}
     </View>
   );
 }

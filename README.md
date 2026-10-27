@@ -46,7 +46,7 @@ Compte de démonstration : 500 drachmes, deux charges gratuites. Aucun gain réc
 Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une version commerciale définitive.
 
 - Les 120 peintures individuelles, descriptions et fiches définitives manquent. Chaque carte affiche « ART PROVISOIRE ».
-- Le cadre divin original est embarqué tel quel (JPEG à centre blanc) ; un PNG transparent en haute définition est nécessaire pour superposer les peintures. Les six autres cadres sont des substituts SVG simples, pas des reproductions finales.
+- Zeus divin utilise son recto complet approuvé. Les six autres cadres ont été fournis pour toutes les extensions ; les compositions des prochaines cartes restent à valider. Les autres cartes utilisent encore les cadres de repli provisoires.
 - Les quatre sachets individuels sont intégrés en PNG transparents. Les JPG originaux sont conservés comme références. Il manque encore le décor peint du temple pour la boutique.
 - Brillance animée, balayage de découpe, particules douces et retournements sont présents. Flottement, retrait de la languette, apparition en éventail puis grille, rayons légendaires, constellation mythique et halo divin sont intégrés sous une forme simplifiée. La déchirure physique réaliste et la mise en scène commerciale définitive restent à finaliser.
 - Réduction des animations : préférence système et interrupteur pendant la session ; les effets continus sont arrêtés pour les boosters non sélectionnés.
@@ -95,3 +95,17 @@ Les sept cartes, les garanties, le suivi des doublons et la protection contre le
 Les quatre sachets affichés utilisent désormais les PNG RGBA `assets/boosters/*-transparent.png` préparés à partir des JPG fournis. Les dimensions sont de 1024 × 1536, avec un fond extérieur alpha transparent. Les JPG originaux et les sorties de génération locales sont conservés ; les anciennes descriptions des fonds blancs ci-dessus documentent l'intégration précédente.
 
 `BoosterShimmer` applique aussi un masque alpha du sachet à son reflet pour éviter toute bande lumineuse dans les marges transparentes. Aucun cadre ou fond de remplacement n'est ajouté dans `BoosterPack`. Le changement couvre la boutique et la présentation d'ouverture, qui partagent ce composant.
+
+## Zeus divin — recto validé et encyclopédie
+
+`OLY-30` désigne désormais Zeus, Le Souverain Céleste, dans Les Maîtres de l’Olympe. L’identifiant interne `olympe-30` reste inchangé afin de préserver les collections et les reçus enregistrés. Cet emplacement était auparavant une donnée de démonstration nommée Dionysos. Le catalogue conserve 120 identifiants uniques, 30 par extension, avec les mêmes poids de rareté.
+
+Le recto local `assets/cards/zeus-divine-front.png` est la copie exacte du dernier aperçu approuvé : code OLY-30 à gauche, collection à droite. Il est utilisé sans surimpression de cadre ni de texte dans les révélations, les résultats et la fiche de carte. Le cadre et l’illustration originaux restent conservés séparément pour les prochaines créations. Les textes du recto sont aplatis dans ce visuel validé : toute modification de ces textes nécessite un nouvel export approuvé.
+
+La fiche affiche la description, l’histoire, les attributs et les relations fournis par le propriétaire. Elle s’ouvre depuis les résultats, les lignes de collection et le bouton « VOIR ZEUS DIVIN » dans la boutique de l’extension. L’aperçu d’une carte non possédée ne l’attribue pas et ne modifie aucune probabilité. Les anciens reçus sont résolus contre les métadonnées actuelles à l’affichage, sans nouveau tirage ni changement de quantité.
+
+Les polices Cinzel Regular, SemiBold et Bold sont embarquées localement pour la fiche, avec la licence OFL. Trajan Pro n’a pas été fournie : Cinzel Regular sert de repli pour les petits textes. Les éléments de combat et les exemples de boosters à 6 cartes du guide visuel ne sont pas repris : le jeu reste consacré à la collection, avec 7 cartes par booster.
+
+Fichiers principaux : `src/domain/zeus.ts`, `src/domain/catalog.ts`, `src/components/cardArt.ts`, `CardFace.tsx`, `CardDetailModal.tsx`, `BoosterCardReveal.tsx`, `BoosterResults.tsx`, `BoosterShop.tsx` et `BoosterOpening.tsx`. Les six autres cadres définitifs ont été reçus dans l’ordre Commune, Peu commune, Rare, Épique, Légendaire, Mythique, pour les quatre extensions. Ils sont conservés pour les prochaines compositions à valider ; les autres illustrations restent attendues. Aucun autre design de carte n’a été inventé.
+
+Validation de cette intégration : typage strict et 12 tests réussis (dont identité de Zeus dans les tirages divins et compatibilité des reçus existants). SDK 58 conservé ; correctifs Expo 58.0.20 et Router 58.0.27 appliqués conformément au contrôle des dépendances. Les prochains rectos doivent suivre le même flux de validation visuelle avant publication ; la présente version de Zeus a été approuvée et sa publication explicitement autorisée.

@@ -1,3 +1,5 @@
+import { ZEUS_DIVINE } from "./zeus.ts";
+
 export const RARITIES = [
   "Commune",
   "Peu commune",
@@ -102,26 +104,48 @@ export interface Card {
   extension: string;
   name: string;
   rarity: number;
+  number?: string;
+  epithet?: string;
+  category?: string;
+  description?: string;
+  history?: string;
+  attributes?: readonly string[];
+  relations?: readonly string[];
 }
 // Catalogue de démonstration : 30 identifiants par extension, tous les niveaux représentés.
 export const CARDS: Card[] = EXTENSIONS.flatMap((e) =>
-  Array.from({ length: 30 }, (_, i) => ({
-    id: `${e.id}-${i + 1}`,
-    extension: e.id,
-    name: e.names[i % 10]!,
-    rarity:
-      i < 14
-        ? 0
-        : i < 21
-          ? 1
-          : i < 25
-            ? 2
-            : i < 27
-              ? 3
-              : i === 27
-                ? 4
-                : i === 28
-                  ? 5
-                  : 6,
-  })),
+  Array.from({ length: 30 }, (_, i): Card =>
+    i === 29 && e.id === "olympe"
+      ? ZEUS_DIVINE
+      : {
+          id: `${e.id}-${i + 1}`,
+          extension: e.id,
+          name: e.names[i % 10]!,
+          rarity:
+            i < 14
+              ? 0
+              : i < 21
+                ? 1
+                : i < 25
+                  ? 2
+                  : i < 27
+                    ? 3
+                    : i === 27
+                      ? 4
+                      : i === 28
+                        ? 5
+                        : 6,
+        },
+  ),
 );
+
+const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
+
+// Resolve legacy receipt snapshots against current editorial data, without changing the draw.
+export function resolveCard(card: Card): Card {
+  return CARD_BY_ID.get(card.id) ?? card;
+}
+
+export function findCard(id: string): Card | undefined {
+  return CARD_BY_ID.get(id);
+}
