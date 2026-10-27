@@ -1,0 +1,9 @@
+{
+  "name": "OLYMPUS — Expo Go",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-24-bookworm",
+  "postCreateCommand": "npm ci",
+  "forwardPorts": [8081],
+  "portsAttributes": {
+    "8081": { "label": "Expo Metro", "onAutoForward": "notify" }
+  }
+}

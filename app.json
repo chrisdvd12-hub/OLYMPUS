@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "OLYMPUS — Divine Collection",
+    "slug": "olympus-divine-collection",
+    "scheme": "olympus",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "plugins": ["expo-router", "expo-sqlite"],
+    "ios": { "supportsTablet": true },
+    "android": { "package": "com.olympus.divinecollection" }
+  }
+}

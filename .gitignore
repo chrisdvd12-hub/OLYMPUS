@@ -1,0 +1,6 @@
+node_modules/
+.expo/
+dist/
+*.db
+dist-go57/
+OLYMPUS-Expo-Go.zip
