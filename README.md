@@ -67,3 +67,11 @@ Le SDK 58 est la cible actuelle, correspondant à la version demandée par Expo 
 Dépendances alignées sur `expo@58.0.19/bundledNativeModules.json`, notamment React 19.3.0, React Native 0.88.0, Reanimated 4.7.1, Worklets 0.13.0 et les types React 19.3. Le correctif des protocoles de proxy répétés est conservé. Après mise à jour du dépôt, `npm ci` est obligatoire avant de relancer Expo ; `git pull` seul ne met pas à jour les modules déjà installés.
 
 Validation SDK 58 : typage strict et 8 tests réussis, dépendances compatibles selon Expo, export iOS réussi (1810 modules). Le lancement sur l’iPhone reste à confirmer.
+
+## Ouverture céleste et mythologie grecque
+
+L'ouverture dispose maintenant d'un fond fixe avec deux plans d'étoiles mobiles, une étoile filante, un cercle céleste en rotation lente et des silhouettes de colonnes et de temple. Les motifs des extensions sont des interprétations graphiques : aigle de Zeus, voûte primordiale des Titans, lyre d'Orphée et Pégase. Ils ne prétendent pas constituer des cartes astronomiques exactes.
+
+Des poussières dorées montent dans le décor ; la déchirure déclenche une onde et une gerbe d'étincelles. Les sept cartes se déploient progressivement en éventail avec le dos fourni. Les effets de rareté restent derrière les cartes et les commandes. Aucun flash plein écran ajouté.
+
+Les boucles utilisent Reanimated sur le thread UI, s'arrêtent en arrière-plan et à l'écran de résultats. Le mode réduction des animations conserve un décor statique et masque les particules. Aucun nouvel asset externe ni dépendance ajouté. Le rendu et la fluidité doivent encore être confirmés sur l'iPhone de test.
