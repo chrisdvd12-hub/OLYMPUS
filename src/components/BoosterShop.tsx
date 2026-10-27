@@ -11,7 +11,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
-import { RECHARGE_MS, type GameState } from "../domain/boosters";
+import { PRICE, RECHARGE_MS, type GameState } from "../domain/boosters";
+import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { buy, finish, refresh } from "../storage/store";
 import { BoosterCarousel } from "./BoosterCarousel";
 import { BoosterOpening } from "./BoosterOpening";
@@ -104,6 +105,7 @@ export default function BoosterShop() {
         )}
       </SafeAreaView>
     );
+  const canAfford = UNLIMITED_DRACHMAS || state.drachmas >= PRICE;
   const ext = EXTENSIONS[selected]!;
   const owned = CARDS.filter(
     (c) => c.extension === ext.id && state.collection[c.id],
@@ -124,7 +126,10 @@ export default function BoosterShop() {
           >
             <Text style={styles.subtitle}>LE SANCTUAIRE</Text>
             <Text style={{ color: theme.gold }}>
-              ◉ {state.drachmas} drachmes
+              ◉{" "}
+              {UNLIMITED_DRACHMAS
+                ? "∞ drachmes · TEST"
+                : `${state.drachmas} drachmes`}
             </Text>
           </View>
           <Text style={styles.title}>OLYMPUS</Text>
@@ -213,14 +218,16 @@ export default function BoosterShop() {
                   { textAlign: "center", color: theme.gold },
                 ]}
               >
-                100 DRACHMES
+                {UNLIMITED_DRACHMAS
+                  ? "MODE TEST · OUVERTURES ILLIMITÉES"
+                  : `${PRICE} DRACHMES`}
               </Text>
               <Pressable
-                disabled={busy || state.drachmas < 100}
+                disabled={busy || !canAfford}
                 accessibilityRole="button"
                 style={[
                   styles.button,
-                  { opacity: busy || state.drachmas < 100 ? 0.4 : 1 },
+                  { opacity: busy || !canAfford ? 0.4 : 1 },
                 ]}
                 onPress={() => open("paid")}
               >
@@ -228,7 +235,7 @@ export default function BoosterShop() {
                   {busy ? "ENREGISTREMENT…" : "OUVRIR UN BOOSTER"}
                 </Text>
               </Pressable>
-              {state.drachmas < 100 && (
+              {!canAfford && (
                 <Text style={styles.muted}>
                   Drachmes insuffisantes. Les charges gratuites restent
                   disponibles.

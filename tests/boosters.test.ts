@@ -117,3 +117,74 @@ test("transaction SQLite : reprise du reçu après fermeture et rollback", () =>
   );
   db.close();
 });
+
+test("mode test : ouvertures illimitées à solde nul, attribution persistante et garanties", () => {
+  let state = { ...initialState(0), drachmas: 0 };
+  for (let i = 0; i < 25; i++) {
+    state = purchase(state, "olympe", "paid", `test-${i}`, 0, () => 0, {
+      unlimitedDrachmas: true,
+    });
+    assert.equal(state.drachmas, 0);
+    assert.equal(state.freeCharges, 2);
+    assert.equal(state.pending!.cards.length, 7);
+    assert.ok(state.pending!.cards.every((c) => c.extension === "olympe"));
+    assert.ok(state.pending!.cards.some((c) => c.rarity >= 2));
+    if (i === 19) assert.ok(state.pending!.cards.some((c) => c.rarity >= 4));
+    assert.equal(
+      Object.values(state.collection).reduce((a, b) => a + b, 0),
+      (i + 1) * 7,
+    );
+    state = JSON.parse(JSON.stringify({ ...state, pending: null }));
+  }
+  // Removing the temporary option restores normal refusal without touching saves.
+  assert.throws(
+    () => purchase(state, "olympe", "paid", "normal", 0),
+    /Drachmes insuffisantes/,
+  );
+});
+
+test("mode test : conserve le solde réel et bloque toujours les doubles achats et charges gratuites épuisées", () => {
+  const options = { unlimitedDrachmas: true };
+  const before = initialState(0);
+  const after = purchase(
+    before,
+    "titans",
+    "paid",
+    "test-once",
+    0,
+    () => 0,
+    options,
+  );
+  assert.equal(after.drachmas, before.drachmas);
+  assert.equal(after.collection["titans-1"], 6);
+  assert.throws(
+    () => purchase(after, "titans", "paid", "other", 0, () => 0, options),
+    /déjà en cours/,
+  );
+  assert.throws(
+    () =>
+      purchase(
+        { ...after, pending: null },
+        "titans",
+        "paid",
+        "test-once",
+        0,
+        () => 0,
+        options,
+      ),
+    /déjà traité/,
+  );
+  assert.throws(
+    () =>
+      purchase(
+        { ...before, freeCharges: 0 },
+        "titans",
+        "free",
+        "no-free",
+        0,
+        () => 0,
+        options,
+      ),
+    /Aucune charge gratuite/,
+  );
+});

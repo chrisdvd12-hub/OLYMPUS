@@ -1,5 +1,7 @@
 # OLYMPUS — Divine Collection
 
+**Mode test actif : drachmes illimitées.** La boutique affiche ∞ et les ouvertures principales ne débitent pas le solde réel.
+
 ## Tester sur iPhone depuis un iPad
 
 1. Installer **Expo Go** sur l’iPhone (projet prévu pour Expo SDK 58).
@@ -81,3 +83,9 @@ Les boucles utilisent Reanimated sur le thread UI, s'arrêtent en arrière-plan 
 Les images de Zeus, Cronos, Achille et Méduse remplacent le cadrage de la planche dans la boutique et l’ouverture. Sources originales JPG de 853 × 1280 pixels, copiées sans retouche ; proportions conservées, fonds blancs des sources inclus. Aucun cadre, bordure, arrondi, fond coloré, texte supplémentaire ou ombre rectangulaire ajouté par `BoosterPack`. Les dorures et les textes restent ceux déjà imprimés sur les images.
 
 La brillance et la déchirure sont conservées : la languette et le corps du sachet utilisent des portions complémentaires du même fichier, sans duplication persistante de la languette sous la partie déchirée.
+
+## Drachmes illimitées temporaires
+
+Activées à la demande du propriétaire dans `src/config/testing.ts` (`UNLIMITED_DRACHMAS = true`). La boutique affiche « ∞ drachmes · TEST » et son bouton principal reste disponible même avec un solde réel nul. Le stockage transmet cette option au tirage transactionnel : aucun débit ni contrôle de fonds pour les ouvertures payantes en mode test. Aucun `Infinity` n'est écrit en JSON/SQLite ; le solde réel, la collection et les reçus existants sont conservés.
+
+Les sept cartes, les garanties, le suivi des doublons et la protection contre les achats répétés restent appliqués. Les charges gratuites conservent leur fonctionnement normal. Remettre la constante à `false` rétablit le prix de 100 drachmes sans migration ni réinitialisation des sauvegardes. Les tests couvrent les deux politiques et une série de 25 ouvertures à solde nul, avec sérialisation et protection légendaire.

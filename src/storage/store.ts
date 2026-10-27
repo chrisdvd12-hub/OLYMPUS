@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite";
+import { UNLIMITED_DRACHMAS } from "../config/testing";
 import {
   initialState,
   purchase,
@@ -47,7 +48,11 @@ export function transact(
   return task;
 }
 export const buy = (extension: string, source: "paid" | "free", id: string) =>
-  transact((s) => purchase(s, extension, source, id, Date.now()));
+  transact((s) =>
+    purchase(s, extension, source, id, Date.now(), Math.random, {
+      unlimitedDrachmas: UNLIMITED_DRACHMAS,
+    }),
+  );
 export const finish = (id: string) =>
   transact((s) => (s.pending?.id === id ? { ...s, pending: null } : s));
 export const refresh = () => transact((s) => recharge(s, Date.now()));

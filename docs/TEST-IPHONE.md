@@ -12,9 +12,9 @@ Le serveur lancé dans l'environnement distant de développement n'est pas acces
 
 ## Parcours à vérifier sur une installation neuve
 
-- [ ] La boutique affiche 500 drachmes et 2 charges gratuites.
+- [ ] La boutique affiche « ∞ drachmes · TEST » et 2 charges gratuites (mode test temporaire actif).
 - [ ] Les quatre extensions sont sélectionnables ; chaque sachet indique 7 cartes.
-- [ ] Un achat payé retire exactement 100 drachmes et démarre une ouverture.
+- [ ] Le bouton principal démarre une ouverture même si le solde réel était épuisé ; aucun débit en mode test.
 - [ ] Fermer complètement l'application pendant l'ouverture, puis la relancer : le même tirage reprend, sans nouveau débit.
 - [ ] Le geste horizontal et le bouton de découpe fonctionnent tous deux.
 - [ ] Exactement 7 cartes sont révélées, une à une ; au moins une est rare ou supérieure.

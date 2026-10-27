@@ -74,6 +74,10 @@ export function recharge(state: GameState, now: number): GameState {
       freeCharges === 2 ? now : state.rechargeAt + gained * RECHARGE_MS,
   };
 }
+export interface PurchaseOptions {
+  unlimitedDrachmas?: boolean;
+}
+
 export function purchase(
   input: GameState,
   extension: string,
@@ -81,11 +85,13 @@ export function purchase(
   id: string,
   now: number,
   rng: () => number = Math.random,
+  options: PurchaseOptions = {},
 ): GameState {
   if (input.pending) throw Error("Une ouverture est déjà en cours");
   if (input.lastReceipt?.id === id) throw Error("Achat déjà traité");
   const state = recharge(input, now);
-  if (source === "paid" && state.drachmas < PRICE)
+  const cost = source === "paid" && !options.unlimitedDrachmas ? PRICE : 0;
+  if (source === "paid" && state.drachmas < cost)
     throw Error("Drachmes insuffisantes");
   if (source === "free" && state.freeCharges < 1)
     throw Error("Aucune charge gratuite disponible");
@@ -107,7 +113,7 @@ export function purchase(
   };
   return {
     ...state,
-    drachmas: state.drachmas - (source === "paid" ? PRICE : 0),
+    drachmas: state.drachmas - cost,
     freeCharges: state.freeCharges - (source === "free" ? 1 : 0),
     rechargeAt:
       source === "free" && state.freeCharges === 2 ? now : state.rechargeAt,
