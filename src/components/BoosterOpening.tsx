@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { EXTENSIONS, COLORS } from "../domain/catalog";
 import type { Receipt } from "../domain/boosters";
+import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { BoosterPack } from "./BoosterPack";
 import { BoosterTearAnimation } from "./BoosterTearAnimation";
 import { BoosterParticles } from "./BoosterParticles";
@@ -90,9 +91,8 @@ export function BoosterOpening({
                   style={{
                     position: "absolute",
                     width: 95,
-                    height: 145,
-                    borderWidth: 2,
-                    borderColor: "#ddbd7b",
+                    aspectRatio: CARD_ASPECT_RATIO,
+                    overflow: "hidden",
                     borderRadius: 6,
                     backgroundColor: "#12253c",
                     alignItems: "center",
@@ -104,8 +104,7 @@ export function BoosterOpening({
                     ],
                   }}
                 >
-                  <Text style={{ color: "#ddbd7b", fontSize: 9 }}>OLYMPUS</Text>
-                  <Text style={{ color: "#ddbd7b", fontSize: 30 }}>♜</Text>
+                  <CardBack />
                 </View>
               ))}
             </Animated.View>

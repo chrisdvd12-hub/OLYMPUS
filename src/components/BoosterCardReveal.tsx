@@ -7,6 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { COLORS, RARITIES, type Card } from "../domain/catalog";
 import { CardFrame } from "./CardFrame";
+import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
 export function BoosterCardReveal({
   card,
@@ -74,13 +75,14 @@ export function BoosterCardReveal({
       <Animated.View
         style={[
           {
-            height: compact ? 134 : 174,
-            borderWidth: 2,
+            aspectRatio: CARD_ASPECT_RATIO,
+            borderWidth: revealed ? 2 : 0,
             borderColor: revealed ? COLORS[card.rarity] : theme.gold,
             borderRadius: 7,
             backgroundColor:
               revealed && card.rarity >= 5 ? "#2a173d" : "#132339",
-            padding: 6,
+            padding: revealed ? 6 : 0,
+            overflow: "hidden",
             justifyContent: "space-between",
             alignItems: "center",
             shadowColor: COLORS[card.rarity],
@@ -90,38 +92,46 @@ export function BoosterCardReveal({
           style,
         ]}
       >
-        <CardFrame rarity={revealed ? card.rarity : 4} />
-        <Text style={{ color: theme.gold, fontSize: 9, textAlign: "center" }}>
-          {revealed ? card.name.toUpperCase() : "OLYMPUS"}
-        </Text>
-        <Text
-          style={{
-            color: revealed ? COLORS[card.rarity] : theme.gold,
-            fontSize: 32,
-          }}
-        >
-          {revealed ? "✧" : "♜"}
-        </Text>
-        <View>
-          <Text
-            style={{
-              color: revealed ? COLORS[card.rarity] : theme.gold,
-              fontSize: 8,
-              textAlign: "center",
-            }}
-          >
-            {revealed
-              ? RARITIES[card.rarity]?.toUpperCase()
-              : "DIVINE COLLECTION"}
-          </Text>
-          {revealed && (
+        {revealed ? (
+          <>
+            <CardFrame rarity={revealed ? card.rarity : 4} />
             <Text
-              style={{ color: "#a9a698", fontSize: 7, textAlign: "center" }}
+              style={{ color: theme.gold, fontSize: 9, textAlign: "center" }}
             >
-              ART PROVISOIRE
+              {revealed ? card.name.toUpperCase() : "OLYMPUS"}
             </Text>
-          )}
-        </View>
+            <Text
+              style={{
+                color: revealed ? COLORS[card.rarity] : theme.gold,
+                fontSize: 32,
+              }}
+            >
+              {revealed ? "✧" : "♜"}
+            </Text>
+            <View>
+              <Text
+                style={{
+                  color: revealed ? COLORS[card.rarity] : theme.gold,
+                  fontSize: 8,
+                  textAlign: "center",
+                }}
+              >
+                {revealed
+                  ? RARITIES[card.rarity]?.toUpperCase()
+                  : "DIVINE COLLECTION"}
+              </Text>
+              {revealed && (
+                <Text
+                  style={{ color: "#a9a698", fontSize: 7, textAlign: "center" }}
+                >
+                  ART PROVISOIRE
+                </Text>
+              )}
+            </View>
+          </>
+        ) : (
+          <CardBack />
+        )}
       </Animated.View>
     </Pressable>
   );
