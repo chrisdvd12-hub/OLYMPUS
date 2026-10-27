@@ -1,36 +1,95 @@
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
+import { StyleSheet, View, type ImageSourcePropType } from "react-native";
 import Animated, {
+  cancelAnimation,
+  useAnimatedProps,
   useSharedValue,
-  useAnimatedStyle,
   withRepeat,
   withTiming,
-  cancelAnimation,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
-export function BoosterShimmer({ active }: { active: boolean }) {
-  const x = useSharedValue(-300);
+import Svg, {
+  Defs,
+  G,
+  Image as SvgImage,
+  LinearGradient,
+  Mask,
+  Rect,
+  Stop,
+} from "react-native-svg";
+
+const AnimatedRect = Animated.createAnimatedComponent(Rect);
+
+export function BoosterShimmer({
+  active,
+  source,
+  width,
+  height,
+}: {
+  active: boolean;
+  source: ImageSourcePropType;
+  width: number;
+  height: number;
+}) {
+  const id = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const maskId = `pack-mask-${id}`;
+  const gradientId = `pack-shine-${id}`;
+  const x = useSharedValue(-120);
   useEffect(() => {
     if (active)
-      x.value = withRepeat(withTiming(300, { duration: 3200 }), -1, false);
+      x.value = withRepeat(
+        withTiming(width + 160, { duration: 3200 }),
+        -1,
+        false,
+      );
     else cancelAnimation(x);
     return () => cancelAnimation(x);
-  }, [active, x]);
-  const style = useAnimatedStyle(() => ({
-    transform: [{ translateX: x.value }, { rotate: "22deg" }],
-  }));
+  }, [active, width, x]);
+  const animatedProps = useAnimatedProps(() => ({ x: x.value }));
   if (!active) return null;
+  // The shine follows the PNG alpha: no reflection is drawn in the transparent margins.
   return (
-    <Animated.View
+    <View
       pointerEvents="none"
-      style={[
-        { position: "absolute", top: -80, bottom: -80, width: 100 },
-        style,
-      ]}
+      accessible={false}
+      accessibilityElementsHidden
+      style={StyleSheet.absoluteFill}
     >
-      <LinearGradient
-        colors={["transparent", "#ffffff24", "transparent"]}
-        style={{ flex: 1 }}
-      />
-    </Animated.View>
+      <Svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`}>
+        <Defs>
+          <Mask
+            id={maskId}
+            x="0"
+            y="0"
+            width={width}
+            height={height}
+            maskType="alpha"
+            maskUnits="userSpaceOnUse"
+            maskContentUnits="userSpaceOnUse"
+          >
+            <SvgImage
+              href={source}
+              width={width}
+              height={height}
+              preserveAspectRatio="xMidYMid meet"
+            />
+          </Mask>
+          <LinearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+            <Stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <Stop offset=".5" stopColor="#fff" stopOpacity=".14" />
+            <Stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </LinearGradient>
+        </Defs>
+        <G mask={`url(#${maskId})`}>
+          <AnimatedRect
+            animatedProps={animatedProps}
+            y={-height}
+            width={90}
+            height={height * 3}
+            transform="skewX(-15)"
+            fill={`url(#${gradientId})`}
+          />
+        </G>
+      </Svg>
+    </View>
   );
 }

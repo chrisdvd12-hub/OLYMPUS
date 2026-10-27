@@ -47,7 +47,7 @@ Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une ve
 
 - Les 120 peintures individuelles, descriptions et fiches définitives manquent. Chaque carte affiche « ART PROVISOIRE ».
 - Le cadre divin original est embarqué tel quel (JPEG à centre blanc) ; un PNG transparent en haute définition est nécessaire pour superposer les peintures. Les six autres cadres sont des substituts SVG simples, pas des reproductions finales.
-- Les quatre sachets individuels sont désormais fournis et intégrés. Le fond blanc opaque fait partie de ces JPG ; des PNG transparents seront nécessaires pour un détourage définitif. Il manque encore le décor peint du temple pour la boutique.
+- Les quatre sachets individuels sont intégrés en PNG transparents. Les JPG originaux sont conservés comme références. Il manque encore le décor peint du temple pour la boutique.
 - Brillance animée, balayage de découpe, particules douces et retournements sont présents. Flottement, retrait de la languette, apparition en éventail puis grille, rayons légendaires, constellation mythique et halo divin sont intégrés sous une forme simplifiée. La déchirure physique réaliste et la mise en scène commerciale définitive restent à finaliser.
 - Réduction des animations : préférence système et interrupteur pendant la session ; les effets continus sont arrêtés pour les boosters non sélectionnés.
 - Les tests de fermeture réelle pendant transaction, gestes, VoiceOver/TalkBack, rendu et performances iOS/Android restent à exécuter.
@@ -89,3 +89,9 @@ La brillance et la déchirure sont conservées : la languette et le corps du sac
 Activées à la demande du propriétaire dans `src/config/testing.ts` (`UNLIMITED_DRACHMAS = true`). La boutique affiche « ∞ drachmes · TEST » et son bouton principal reste disponible même avec un solde réel nul. Le stockage transmet cette option au tirage transactionnel : aucun débit ni contrôle de fonds pour les ouvertures payantes en mode test. Aucun `Infinity` n'est écrit en JSON/SQLite ; le solde réel, la collection et les reçus existants sont conservés.
 
 Les sept cartes, les garanties, le suivi des doublons et la protection contre les achats répétés restent appliqués. Les charges gratuites conservent leur fonctionnement normal. Remettre la constante à `false` rétablit le prix de 100 drachmes sans migration ni réinitialisation des sauvegardes. Les tests couvrent les deux politiques et une série de 25 ouvertures à solde nul, avec sérialisation et protection légendaire.
+
+## Suppression des contours blancs des boosters
+
+Les quatre sachets affichés utilisent désormais les PNG RGBA `assets/boosters/*-transparent.png` préparés à partir des JPG fournis. Les dimensions sont de 1024 × 1536, avec un fond extérieur alpha transparent. Les JPG originaux et les sorties de génération locales sont conservés ; les anciennes descriptions des fonds blancs ci-dessus documentent l'intégration précédente.
+
+`BoosterShimmer` applique aussi un masque alpha du sachet à son reflet pour éviter toute bande lumineuse dans les marges transparentes. Aucun cadre ou fond de remplacement n'est ajouté dans `BoosterPack`. Le changement couvre la boutique et la présentation d'ouverture, qui partagent ce composant.

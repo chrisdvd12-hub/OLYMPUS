@@ -61,7 +61,12 @@ export function BoosterPack({
           style={s.image}
         />
       </Animated.View>
-      <BoosterShimmer active={active && !reduced} />
+      <BoosterShimmer
+        active={active && !reduced && !torn}
+        source={source}
+        width={WIDTH}
+        height={HEIGHT}
+      />
     </View>
   );
 }

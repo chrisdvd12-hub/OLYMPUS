@@ -4,3 +4,4 @@ dist/
 *.db
 dist-go57/
 OLYMPUS-Expo-Go.zip
+generated_images/
