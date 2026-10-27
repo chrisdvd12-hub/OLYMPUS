@@ -27,8 +27,8 @@ Node 24 recommandé (tests TypeScript natifs). `npm install`, puis `npx expo ins
 - `src/domain/catalog.ts` : quatre extensions de 30 identifiants, catalogue de démonstration à remplacer par les fiches éditoriales définitives.
 - `src/domain/boosters.ts` : tirages, garanties, recharges et transitions pures.
 - `src/storage/store.ts` : transaction SQLite exclusive, achats sérialisés, attribution avant révélation, reprise du reçu et clôture idempotente.
-- `assets/references/` : planche des boosters et cadre divin originaux fournis par l'utilisateur, copiés localement sans retouche. Les sachets sont affichés par cadrage de la planche ; des exports individuels HD sont préférables pour la production.
-- `assets/boosters/` et `src/components/packArt.ts` : quatre esquisses vectorielles provisoires conservées comme ressources de remplacement, non utilisées par défaut.
+- `assets/references/` : références historiques de la planche des boosters et du cadre divin.
+- `assets/boosters/` : quatre JPG individuels fournis par l’utilisateur, utilisés via `src/components/packArt.ts`. Les anciennes esquisses SVG sont conservées comme archives non utilisées.
 - `tests/boosters.test.ts` : tests métier.
 
 ## Comportement
@@ -45,7 +45,7 @@ Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une ve
 
 - Les 120 peintures individuelles, descriptions et fiches définitives manquent. Chaque carte affiche « ART PROVISOIRE ».
 - Le cadre divin original est embarqué tel quel (JPEG à centre blanc) ; un PNG transparent en haute définition est nécessaire pour superposer les peintures. Les six autres cadres sont des substituts SVG simples, pas des reproductions finales.
-- Il manque les quatre exports HD des sachets séparés, la texture métallisée/holographique et le décor de temple séparé. La boutique emploie actuellement un dégradé bleu nuit.
+- Les quatre sachets individuels sont désormais fournis et intégrés. Le fond blanc opaque fait partie de ces JPG ; des PNG transparents seront nécessaires pour un détourage définitif. Il manque encore le décor peint du temple pour la boutique.
 - Brillance animée, balayage de découpe, particules douces et retournements sont présents. Flottement, retrait de la languette, apparition en éventail puis grille, rayons légendaires, constellation mythique et halo divin sont intégrés sous une forme simplifiée. La déchirure physique réaliste et la mise en scène commerciale définitive restent à finaliser.
 - Réduction des animations : préférence système et interrupteur pendant la session ; les effets continus sont arrêtés pour les boosters non sélectionnés.
 - Les tests de fermeture réelle pendant transaction, gestes, VoiceOver/TalkBack, rendu et performances iOS/Android restent à exécuter.
@@ -75,3 +75,9 @@ L'ouverture dispose maintenant d'un fond fixe avec deux plans d'étoiles mobiles
 Des poussières dorées montent dans le décor ; la déchirure déclenche une onde et une gerbe d'étincelles. Les sept cartes se déploient progressivement en éventail avec le dos fourni. Les effets de rareté restent derrière les cartes et les commandes. Aucun flash plein écran ajouté.
 
 Les boucles utilisent Reanimated sur le thread UI, s'arrêtent en arrière-plan et à l'écran de résultats. Le mode réduction des animations conserve un décor statique et masque les particules. Aucun nouvel asset externe ni dépendance ajouté. Le rendu et la fluidité doivent encore être confirmés sur l'iPhone de test.
+
+## Sachets individuels définitifs fournis
+
+Les images de Zeus, Cronos, Achille et Méduse remplacent le cadrage de la planche dans la boutique et l’ouverture. Sources originales JPG de 853 × 1280 pixels, copiées sans retouche ; proportions conservées, fonds blancs des sources inclus. Aucun cadre, bordure, arrondi, fond coloré, texte supplémentaire ou ombre rectangulaire ajouté par `BoosterPack`. Les dorures et les textes restent ceux déjà imprimés sur les images.
+
+La brillance et la déchirure sont conservées : la languette et le corps du sachet utilisent des portions complémentaires du même fichier, sans duplication persistante de la languette sous la partie déchirée.

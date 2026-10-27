@@ -1,10 +1,10 @@
-export const PACK_ART: Record<string, string> = {
-  olympe:
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420"><defs><radialGradient id="a"><stop stop-color="#174b8b"/><stop offset="1" stop-color="#080f1d"/></radialGradient><pattern id="b" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0L8 8" stroke="#edcb83" stroke-opacity=".06"/></pattern></defs><path fill="url(#a)" d="M0 0h300v420H0z"/><path fill="url(#b)" d="M0 0h300v420H0z"/><g stroke="#c7a362" fill="none"><path d="M20 12h260v396H20z M28 20h244v380H28z"/><path d="M45 315V120h28v195m154 0V120h28v195M40 115h220L150 55zM35 320h230m-230 8h230"/><circle cx="150" cy="192" r="70" stroke-opacity=".35"/></g><text x="150" y="225" text-anchor="middle" font-size="100" fill="#e8cd91">\u03df</text><text x="150" y="365" text-anchor="middle" font-size="11" fill="#e8cd91">ILLUSTRATION PROVISOIRE</text></svg>',
-  titans:
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420"><defs><radialGradient id="a"><stop stop-color="#17624e"/><stop offset="1" stop-color="#080f1d"/></radialGradient><pattern id="b" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0L8 8" stroke="#edcb83" stroke-opacity=".06"/></pattern></defs><path fill="url(#a)" d="M0 0h300v420H0z"/><path fill="url(#b)" d="M0 0h300v420H0z"/><g stroke="#c7a362" fill="none"><path d="M20 12h260v396H20z M28 20h244v380H28z"/><path d="M45 315V120h28v195m154 0V120h28v195M40 115h220L150 55zM35 320h230m-230 8h230"/><circle cx="150" cy="192" r="70" stroke-opacity=".35"/></g><text x="150" y="225" text-anchor="middle" font-size="100" fill="#e8cd91">\u25f7</text><text x="150" y="365" text-anchor="middle" font-size="11" fill="#e8cd91">ILLUSTRATION PROVISOIRE</text></svg>',
-  heros:
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420"><defs><radialGradient id="a"><stop stop-color="#852c39"/><stop offset="1" stop-color="#080f1d"/></radialGradient><pattern id="b" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0L8 8" stroke="#edcb83" stroke-opacity=".06"/></pattern></defs><path fill="url(#a)" d="M0 0h300v420H0z"/><path fill="url(#b)" d="M0 0h300v420H0z"/><g stroke="#c7a362" fill="none"><path d="M20 12h260v396H20z M28 20h244v380H28z"/><path d="M45 315V120h28v195m154 0V120h28v195M40 115h220L150 55zM35 320h230m-230 8h230"/><circle cx="150" cy="192" r="70" stroke-opacity=".35"/></g><text x="150" y="225" text-anchor="middle" font-size="100" fill="#e8cd91">\u2694</text><text x="150" y="365" text-anchor="middle" font-size="11" fill="#e8cd91">ILLUSTRATION PROVISOIRE</text></svg>',
-  creatures:
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420"><defs><radialGradient id="a"><stop stop-color="#59367f"/><stop offset="1" stop-color="#080f1d"/></radialGradient><pattern id="b" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 0L8 8" stroke="#edcb83" stroke-opacity=".06"/></pattern></defs><path fill="url(#a)" d="M0 0h300v420H0z"/><path fill="url(#b)" d="M0 0h300v420H0z"/><g stroke="#c7a362" fill="none"><path d="M20 12h260v396H20z M28 20h244v380H28z"/><path d="M45 315V120h28v195m154 0V120h28v195M40 115h220L150 55zM35 320h230m-230 8h230"/><circle cx="150" cy="192" r="70" stroke-opacity=".35"/></g><text x="150" y="225" text-anchor="middle" font-size="100" fill="#e8cd91">\u2646</text><text x="150" y="365" text-anchor="middle" font-size="11" fill="#e8cd91">ILLUSTRATION PROVISOIRE</text></svg>',
-};
+// Original individual booster designs supplied by the user, bundled locally.
+// The printed names, ornaments, and "7 CARTES" are already part of each image.
+export const PACK_ART = {
+  olympe: require("../../assets/boosters/zeus.jpg"),
+  titans: require("../../assets/boosters/cronos.jpg"),
+  heros: require("../../assets/boosters/achille.jpg"),
+  creatures: require("../../assets/boosters/meduse.jpg"),
+} as const;
+
+export const PACK_ART_ASPECT_RATIO = 853 / 1280;
