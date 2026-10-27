@@ -9,8 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types tests/boosters.test.ts",
-    "start:go": "expo start --go --tunnel"
+    "test": "node --experimental-strip-types tests/boosters.test.ts && node --test tests/proxy.test.cjs",
+    "start:go": "node --require ./scripts/normalize-proxy.cjs ./node_modules/expo/bin/cli start --go --tunnel"
   },
   "dependencies": {
     "expo": "~57.0.31",
