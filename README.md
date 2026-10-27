@@ -2,7 +2,7 @@
 
 ## Tester sur iPhone depuis un iPad
 
-1. Installer **Expo Go** sur l’iPhone (projet prévu pour Expo SDK 57).
+1. Installer **Expo Go** sur l’iPhone (projet prévu pour Expo SDK 58).
 2. Sur l’iPad, ouvrir [le lancement de Codespaces](https://codespaces.new/chrisdvd12-hub/OLYMPUS) dans Safari, se connecter à GitHub et créer l’environnement.
 3. Attendre la fin de l’installation automatique des dépendances (`npm ci`).
 4. Dans le terminal en bas de Codespaces, saisir **`npm run start:go`**, puis valider.
@@ -16,7 +16,7 @@ Base mobile Expo / React Native / TypeScript strict créée dans un dépôt init
 
 ## Démarrage
 
-Node 24 recommandé (tests TypeScript natifs). `npm install`, puis `npx expo install --check`, `npm run typecheck`, `npm start`. Ouvrir dans Expo Go SDK 57 ou un development build iOS/Android. SQLite natif : la cible web n'est pas prise en charge ici.
+Node 24 recommandé (tests TypeScript natifs). `npm install`, puis `npx expo install --check`, `npm run typecheck`, `npm start`. Ouvrir dans Expo Go SDK 58 ou un development build iOS/Android. SQLite natif : la cible web n'est pas prise en charge ici.
 
 `npm test` : sept tests couvrant 10000 boosters, les probabilités initiales et conditionnelles exactes, les garanties rare et légendaire, l'économie, les doublons, les charges gratuites et la sérialisation transactionnelle SQLite. Le test SQLite utilise le moteur Node ; il ne remplace pas un test d'intégration expo-sqlite sur appareil.
 
@@ -59,3 +59,11 @@ Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une ve
 Projet migré vers Expo SDK 57, version annoncée par le service Expo pour Expo Go, avec React Native 0.86.3 et React 19.2.3. Correction de l'ancienne API `StyleSheet.absoluteFillObject`. `npm run start:go` et configuration Codespaces ajoutés ; voir `docs/TEST-IPHONE.md`.
 
 Typage strict, sept tests métier et compatibilité des dépendances : validés après migration. Export iOS réussi dans `dist-go57/` (1709 modules). L'ancien export `dist/` reste celui du SDK 54. Aucun test natif iPhone effectué. Le tunnel ngrok a échoué deux fois par expiration du délai, avec et sans configuration du proxy ; aucun accès public fourni. React Native DevTools signale aussi une incompatibilité avec le sandbox de cet environnement, sans empêcher l'export Metro. Aucun contournement du sandbox effectué.
+
+## Mise à niveau Expo Go SDK 58
+
+Le SDK 58 est la cible actuelle, correspondant à la version demandée par Expo Go sur l’iPhone de test. Les mentions du SDK 57 ci-dessus documentent les vérifications historiques, et ne définissent plus la version courante.
+
+Dépendances alignées sur `expo@58.0.19/bundledNativeModules.json`, notamment React 19.3.0, React Native 0.88.0, Reanimated 4.7.1, Worklets 0.13.0 et les types React 19.3. Le correctif des protocoles de proxy répétés est conservé. Après mise à jour du dépôt, `npm ci` est obligatoire avant de relancer Expo ; `git pull` seul ne met pas à jour les modules déjà installés.
+
+Validation SDK 58 : typage strict et 8 tests réussis, dépendances compatibles selon Expo, export iOS réussi (1810 modules). Le lancement sur l’iPhone reste à confirmer.
