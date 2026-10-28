@@ -1,0 +1,18 @@
+{
+  "name": "OLYMPUS — Divine Collection",
+  "short_name": "OLYMPUS",
+  "description": "Collection premium de cartes consacrée à la mythologie grecque.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1426",
+  "theme_color": "#0B1426",
+  "icons": [
+    {
+      "src": "/olympus-icon.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

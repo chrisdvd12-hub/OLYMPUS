@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "plugins": ["expo-router", "expo-sqlite"],
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/cards/olympus-back.jpg"
+    },
     "ios": { "supportsTablet": true },
     "android": { "package": "com.olympus.divinecollection" }
   }

@@ -8,6 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build:web": "expo export --platform web && node scripts/inject-pwa.cjs",
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types tests/boosters.test.ts && node --experimental-strip-types tests/premium.test.ts && node --experimental-strip-types tests/artwork-layout.test.ts && node --experimental-strip-types tests/sync.test.ts && node --test tests/proxy.test.cjs && npm run check:artwork && npm run check:illustrations && npm run check:memory",
     "start:go": "node --require ./scripts/normalize-proxy.cjs ./node_modules/expo/bin/cli start --go --tunnel ngrok",
@@ -17,6 +18,7 @@
     "doctor:offline": "EXPO_OFFLINE=1 EXPO_NO_TELEMETRY=1 expo install --check"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~58.0.15",
     "expo": "~58.0.20",
     "expo-constants": "~58.0.13",
     "expo-font": "~58.0.10",
@@ -35,6 +37,7 @@
     "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "~4.30.0",
     "react-native-svg": "15.16.0",
+    "react-native-web": "~0.21.4",
     "react-native-worklets": "0.13.0"
   },
   "devDependencies": {
