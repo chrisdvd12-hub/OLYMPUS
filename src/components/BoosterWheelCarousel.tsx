@@ -273,7 +273,6 @@ export function BoosterWheelCarousel({
         >
           <Text style={{ color: theme.highlight }}>‹</Text>
         </Pressable>
-        <Text style={styles.subtitle}>GLISSEZ POUR EXPLORER</Text>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Booster suivant"
