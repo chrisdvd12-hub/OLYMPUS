@@ -13,7 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
 import { ZEUS_DIVINE } from "../domain/zeus";
 import { CardDetailModal } from "./CardDetailModal";
-import { PRICE, RECHARGE_MS, type GameState } from "../domain/boosters";
+import { PRICE, RECHARGE_MS, type GameState, type BoosterSource } from "../domain/boosters";
+import { dailyCountdown } from "../domain/daily";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { buy, finish, refresh } from "../storage/store";
 import { BoosterCarousel } from "./BoosterCarousel";
@@ -30,7 +31,12 @@ export default function BoosterShop() {
   const lock = useRef(false);
   const [now, setNow] = useState(Date.now());
   useEffect(() => {
-    refresh()
+    if (state?.dailyNextAt !== undefined && now >= state.dailyNextAt && AppState.currentState === "active") {
+      refresh(true).then(setState).catch((e) => setError(String(e)));
+    }
+  }, [now, state?.dailyNextAt]);
+  useEffect(() => {
+    refresh(true)
       .then(setState)
       .catch((e) => setError(String(e)));
     AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
@@ -39,14 +45,19 @@ export default function BoosterShop() {
       setReduced,
     );
     const app = AppState.addEventListener("change", (s) => {
-      if (s === "active")
-        refresh()
+      if (s === "active") {
+        setNow(Date.now());
+        refresh(true)
           .then(setState)
           .catch((e) => setError(String(e)));
+      }
     });
+    const clock = setInterval(() => {
+      if (AppState.currentState === "active") setNow(Date.now());
+    }, 1000);
     const timer = setInterval(() => {
       setNow(Date.now());
-      refresh()
+      refresh(AppState.currentState === "active")
         .then(setState)
         .catch((e) => setError(String(e)));
     }, 30000);
@@ -54,9 +65,10 @@ export default function BoosterShop() {
       motion.remove();
       app.remove();
       clearInterval(timer);
+      clearInterval(clock);
     };
   }, []);
-  const open = async (source: "paid" | "free") => {
+  const open = async (source: BoosterSource) => {
     if (lock.current) return;
     lock.current = true;
     setBusy(true);
@@ -64,7 +76,7 @@ export default function BoosterShop() {
     try {
       setState(
         await buy(
-          EXTENSIONS[selected]!.id,
+          source === "daily" ? state?.dailyPacks?.[0] ?? "" : EXTENSIONS[selected]!.id,
           source,
           `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         ),
@@ -128,12 +140,18 @@ export default function BoosterShop() {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text style={styles.subtitle}>LE SANCTUAIRE</Text>
-            <Text style={{ color: theme.gold }}>
-              ◉{" "}
-              {UNLIMITED_DRACHMAS
-                ? "∞ drachmes · TEST"
-                : `${state.drachmas} drachmes`}
-            </Text>
+            <View style={{ alignItems: "flex-end", gap: 6 }}>
+              <Text style={{ color: theme.gold, fontSize: 12 }}>2 BOOSTERS OFFERTS DANS</Text>
+              <Text
+                accessibilityLabel={`Prochain cadeau quotidien dans ${dailyCountdown(state.dailyNextAt ?? now, now)}`}
+                style={{ color: theme.gold, fontSize: 20, fontVariant: ["tabular-nums"] }}
+              >
+                {dailyCountdown(state.dailyNextAt ?? now, now)}
+              </Text>
+              <Text style={{ color: theme.gold }}>
+                ◉ {UNLIMITED_DRACHMAS ? "∞ drachmes · TEST" : `${state.drachmas} drachmes`}
+              </Text>
+            </View>
           </View>
           <Text style={styles.title}>OLYMPUS</Text>
           <Text style={styles.subtitle}>DIVINE COLLECTION</Text>
@@ -253,6 +271,23 @@ export default function BoosterShop() {
                   disponibles.
                 </Text>
               )}
+              <View style={styles.panel}>
+                <Text style={[styles.text, { color: theme.gold }]}>LE CADEAU QUOTIDIEN</Text>
+                <Text style={styles.text}>{state.dailyPacks?.length ?? 0} booster(s) offert(s) à ouvrir</Text>
+                <Text style={styles.muted}>Deux extensions tirées au hasard toutes les 24 h lors de votre visite. Les deux boosters peuvent appartenir à la même extension.</Text>
+                {EXTENSIONS.map((extension) => {
+                  const count = state.dailyPacks?.filter((id) => id === extension.id).length ?? 0;
+                  return count > 0 ? <Text key={extension.id} style={styles.text}>{extension.name} · ×{count}</Text> : null;
+                })}
+                {!!state.dailyPacks?.length && (
+                  <>
+                    <Text style={styles.muted}>Prochain à ouvrir : {EXTENSIONS.find((extension) => extension.id === state.dailyPacks![0])?.name}</Text>
+                    <Pressable accessibilityRole="button" disabled={busy} style={[styles.outline, { opacity: busy ? 0.4 : 1 }]} onPress={() => open("daily")}>
+                      <Text style={styles.text}>OUVRIR LE BOOSTER OFFERT</Text>
+                    </Pressable>
+                  </>
+                )}
+              </View>
               <View style={styles.panel}>
                 <Text style={[styles.text, { color: theme.gold }]}>
                   L’OFFRANDE DES DIEUX

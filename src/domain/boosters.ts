@@ -2,6 +2,7 @@ import { CARDS, EXTENSIONS, WEIGHTS, type Card } from "./catalog.ts";
 export const PACK_SIZE = 7;
 export const PRICE = 100;
 export const RECHARGE_MS = 12 * 60 * 60 * 1000;
+export type BoosterSource = "paid" | "free" | "daily";
 export interface Receipt {
   id: string;
   extension: string;
@@ -9,7 +10,7 @@ export interface Receipt {
   discoveries: boolean[];
   quantities: number[];
   createdAt: number;
-  source: "paid" | "free";
+  source: BoosterSource;
 }
 export interface GameState {
   version: 1;
@@ -20,6 +21,8 @@ export interface GameState {
   collection: Record<string, number>;
   pending: Receipt | null;
   lastReceipt: Receipt | null;
+  dailyNextAt?: number;
+  dailyPacks?: string[];
 }
 export const initialState = (now: number): GameState => ({
   version: 1,
@@ -81,7 +84,7 @@ export interface PurchaseOptions {
 export function purchase(
   input: GameState,
   extension: string,
-  source: "paid" | "free",
+  source: BoosterSource,
   id: string,
   now: number,
   rng: () => number = Math.random,
@@ -95,6 +98,8 @@ export function purchase(
     throw Error("Drachmes insuffisantes");
   if (source === "free" && state.freeCharges < 1)
     throw Error("Aucune charge gratuite disponible");
+  if (source === "daily" && state.dailyPacks?.[0] !== extension)
+    throw Error("Aucun booster quotidien de cette extension disponible");
   const cards = generatePack(extension, state.pity, rng);
   const collection = { ...state.collection };
   const discoveries = cards.map((card) => {
@@ -119,6 +124,7 @@ export function purchase(
       source === "free" && state.freeCharges === 2 ? now : state.rechargeAt,
     pity: cards.some((c) => c.rarity >= 4) ? 0 : state.pity + 1,
     collection,
+    ...(source === "daily" ? { dailyPacks: state.dailyPacks!.slice(1) } : {}),
     pending: receipt,
     lastReceipt: receipt,
   };

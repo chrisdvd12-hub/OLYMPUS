@@ -1,3 +1,4 @@
+import { grantDailyBoosters, DAILY_REWARD_MS, dailyCountdown } from "../src/domain/daily.ts";
 import { test } from "node:test";
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
@@ -270,4 +271,63 @@ test("les fiches importées correspondent au fichier fourni, hors Zeus approuvé
     assert.deepEqual(card.relations, row.relations.split(";").map((s: string) => s.trim()));
     assert.equal(card.editorialNote, row.editorialNote);
   }
+});
+
+
+test("cadeau quotidien : deux extensions équiprobables, doublons possibles et attribution unique", () => {
+  const start = initialState(0);
+  for (const [i, extension] of EXTENSIONS.entries()) {
+    const gift = grantDailyBoosters(start, 1000, () => (i + 0.5) / 4);
+    assert.deepEqual(gift.dailyPacks, [extension.id, extension.id]);
+    assert.equal(gift.dailyNextAt, 1000 + DAILY_REWARD_MS);
+    assert.equal(gift.drachmas, start.drachmas);
+    assert.deepEqual(gift.collection, start.collection);
+    assert.equal(grantDailyBoosters(gift, 1000, () => { throw Error("ne pas retirer"); }), gift);
+  }
+  assert.throws(() => grantDailyBoosters(start, 0, () => 1), /Aléatoire invalide/);
+});
+
+test("cadeau quotidien : délai exact de 24h, reprise après fermeture, pas de rattrapage ni retour d’horloge", () => {
+  const first = grantDailyBoosters(initialState(0), 0, () => 0);
+  const restored = JSON.parse(JSON.stringify(first));
+  assert.deepEqual(grantDailyBoosters(restored, DAILY_REWARD_MS - 1), first);
+  assert.deepEqual(grantDailyBoosters(restored, -1), first);
+  const next = grantDailyBoosters(restored, DAILY_REWARD_MS, () => 0.9);
+  assert.deepEqual(next.dailyPacks, ["olympe", "olympe", "creatures", "creatures"]);
+  assert.equal(next.dailyNextAt, 2 * DAILY_REWARD_MS);
+  const late = grantDailyBoosters(first, 10 * DAILY_REWARD_MS, () => 0.3);
+  assert.equal(late.dailyPacks?.length, 4);
+  assert.equal(late.dailyNextAt, 11 * DAILY_REWARD_MS);
+});
+
+test("booster offert : consomme un cadeau enregistré, sept cartes persistantes et garanties habituelles", () => {
+  const gift = grantDailyBoosters({ ...initialState(0), drachmas: 0, pity: 19 }, 0, () => 0.3);
+  assert.throws(() => purchase(gift, "olympe", "daily", "wrong", 0), /Aucun booster quotidien/);
+  const opened = purchase(gift, "titans", "daily", "gift", 0, () => 0);
+  assert.equal(opened.drachmas, 0);
+  assert.equal(opened.freeCharges, gift.freeCharges);
+  assert.equal(opened.dailyPacks?.length, 1);
+  assert.equal(opened.pending?.source, "daily");
+  assert.equal(opened.pending?.cards.length, 7);
+  assert.ok(opened.pending?.cards.every((c) => c.extension === "titans"));
+  assert.ok(opened.pending?.cards.some((c) => c.rarity >= 4));
+  assert.equal(opened.pity, 0);
+  const resumed = JSON.parse(JSON.stringify(opened));
+  assert.deepEqual(resumed.pending, opened.pending);
+  assert.throws(() => purchase(resumed, "titans", "daily", "gift", 0), /déjà en cours/);
+  assert.throws(() => purchase({ ...resumed, pending: null }, "titans", "daily", "gift", 0), /déjà traité/);
+  const second = purchase({ ...resumed, pending: null }, "titans", "daily", "gift-2", 0, () => 0);
+  assert.equal(second.dailyPacks?.length, 0);
+  assert.equal(Object.values(second.collection).reduce((a, b) => a + b, 0), 14);
+  assert.throws(() => purchase({ ...second, pending: null }, "titans", "daily", "empty", 0), /Aucun booster quotidien/);
+  const tomorrow = grantDailyBoosters(opened, DAILY_REWARD_MS, () => 0.6);
+  assert.deepEqual(tomorrow.pending, opened.pending);
+  assert.deepEqual(tomorrow.collection, opened.collection);
+});
+
+test("compteur quotidien : 24:00:00, secondes, zéro et date de sauvegarde inchangée", () => {
+  assert.equal(dailyCountdown(DAILY_REWARD_MS, 0), "24:00:00");
+  assert.equal(dailyCountdown(DAILY_REWARD_MS, 1000), "23:59:59");
+  assert.equal(dailyCountdown(DAILY_REWARD_MS, DAILY_REWARD_MS - 1), "00:00:01");
+  assert.equal(dailyCountdown(DAILY_REWARD_MS, DAILY_REWARD_MS + 1), "00:00:00");
 });
