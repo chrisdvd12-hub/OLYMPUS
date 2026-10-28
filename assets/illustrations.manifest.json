@@ -518,5 +518,181 @@
     "width": 750,
     "height": 1050,
     "sha256": "33bce5119c2572649c259e5cd04130d04a5ebbd1f059ef091c86d63fbe9aad95"
+  },
+  {
+    "catalogueId": "OLY-069",
+    "cardId": "heros-9",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-069_Telemaque.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "068ae877b0922eb3c5a418324ce09c4d7c86b1480bd5dbda9d10ebe11e641a5a"
+  },
+  {
+    "catalogueId": "OLY-070",
+    "cardId": "heros-10",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-070_Ariane.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "d7de30eb7a42f297353df1dd13708ae39ed80ef6dd84bc15b5685ba859e79c0f"
+  },
+  {
+    "catalogueId": "OLY-071",
+    "cardId": "heros-11",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-071_Atalante.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "003a93555cf31df194193bca65c6b8e5bf8d8b51b503cc1555f41aa009616141"
+  },
+  {
+    "catalogueId": "OLY-072",
+    "cardId": "heros-12",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-072_Meleagre.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bee70336c859e99436c93a95496462bbae98679cda3011b534caef2303819283"
+  },
+  {
+    "catalogueId": "OLY-073",
+    "cardId": "heros-13",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-073_Bellerophon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "446853ef4ffca87da4fd9c5335f122385d2bc219d9a58f45c24370dd56d55ea5"
+  },
+  {
+    "catalogueId": "OLY-074",
+    "cardId": "heros-14",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-074_Persee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "033343830c80e2289e9e950485d37e935bdb025c9cbf14f4de1469d6b2de692a"
+  },
+  {
+    "catalogueId": "OLY-075",
+    "cardId": "heros-15",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-075_Andromede.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "3e9120e7a78fb0f001485a0b9e6b5170f69599673f6327366ddbe6382bbc3c3e"
+  },
+  {
+    "catalogueId": "OLY-076",
+    "cardId": "heros-16",
+    "path": "assets/cards/illustrations/heros-partie-2/OLY-076_Thesee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "cca814e9268f026c910e51c020200e47b93907b03d2ee09c6bbb73916967bfe9"
+  },
+  {
+    "catalogueId": "OLY-077",
+    "cardId": "heros-17",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-077_Jason.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bb4b9773430c64d3d48d0e9747b09973445347785e4e2991ef33ff90699a2742"
+  },
+  {
+    "catalogueId": "OLY-078",
+    "cardId": "heros-18",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-078_Medee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "a2f4344b749e7bf00b2096d6fa379449e4a53bc98887e54b90511483eb798074"
+  },
+  {
+    "catalogueId": "OLY-079",
+    "cardId": "heros-19",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-079_Cadmos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "cfaf6ad231e542dc9fcc5a451ebeb2f884a03e11878dfaf720c5b8f3c58cfb5d"
+  },
+  {
+    "catalogueId": "OLY-080",
+    "cardId": "heros-20",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-080_dipe.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "250bbf8d23470b3966cf6e6d860b90e82d76bad2506497efbc3b07fd82792a0d"
+  },
+  {
+    "catalogueId": "OLY-081",
+    "cardId": "heros-21",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-081_Ulysse.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "fe40341edcd3a46dc0ee356f97a4953f8f553dd5d3f16ae9413a8aeecddcb21e"
+  },
+  {
+    "catalogueId": "OLY-082",
+    "cardId": "heros-22",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-082_Hector.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "4011eab68903c8dd66345469b55c10e65470acdd13e1c58f2662ce289e4b03f6"
+  },
+  {
+    "catalogueId": "OLY-083",
+    "cardId": "heros-23",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-083_Achille.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "2e9e837dfedb9213b72265e2679e69433282ef6fc94865420b30e1aa9ffbe8bf"
+  },
+  {
+    "catalogueId": "OLY-084",
+    "cardId": "heros-24",
+    "path": "assets/cards/illustrations/heros-partie-3/OLY-084_Heracles.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "1ca99a81c2e41ff77bc48fc51a6d3b8dff3ec5054e91c5668b97953c2491eef9"
+  },
+  {
+    "catalogueId": "OLY-085",
+    "cardId": "heros-25",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-085_Paris.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "3f2d041ff3e2d1e68408424d8e071f1189fb79e65ee9564b2e21ab416553e96a"
+  },
+  {
+    "catalogueId": "OLY-086",
+    "cardId": "heros-26",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-086_Agamemnon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "f35617a76e8a9df226e272186cc45a88a18888a93a933c099e05e9bb1914c33c"
+  },
+  {
+    "catalogueId": "OLY-087",
+    "cardId": "heros-27",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-087_Patrocle.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "65b69409237ca649bcab5b9106ab130ab6017dc74b970d2e2d800e39f9ca09e2"
+  },
+  {
+    "catalogueId": "OLY-088",
+    "cardId": "heros-28",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-088_Achille.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6766aa96dcce415ce1d5b7aa4e4c8d666ea0039671402840715e866b244da847"
+  },
+  {
+    "catalogueId": "OLY-089",
+    "cardId": "heros-29",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-089_Persee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "3d0447c09b69c33faa7ab6dea6989234397aa0b9fd9f987ab3862cb195088e7c"
+  },
+  {
+    "catalogueId": "OLY-090",
+    "cardId": "heros-30",
+    "path": "assets/cards/illustrations/heros-partie-4/OLY-090_Heracles.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "084ddc7d88835047406af265210f7c176116d99b8c1e405b2e3c304535fbfcdb"
   }
 ]
