@@ -3,7 +3,6 @@ import { UNLIMITED_DRACHMAS } from "../config/testing";
 import {
   initialState,
   purchase,
-  recharge,
   type GameState,
   type BoosterSource,
 } from "../domain/boosters";
@@ -49,7 +48,7 @@ export function transact(
   queue = task.catch(() => {});
   return task;
 }
-export const buy = (extension: string, source: BoosterSource, id: string) =>
+export const buy = (extension: string, source: Exclude<BoosterSource, "free">, id: string) =>
   transact((s) =>
     purchase(s, extension, source, id, Date.now(), Math.random, {
       unlimitedDrachmas: UNLIMITED_DRACHMAS,
@@ -59,6 +58,5 @@ export const finish = (id: string) =>
   transact((s) => (s.pending?.id === id ? { ...s, pending: null } : s));
 export const refresh = (dailyVisit = false) => transact((s) => {
   const now = Date.now();
-  const state = recharge(s, now);
-  return dailyVisit ? grantDailyBoosters(state, now) : state;
+  return dailyVisit ? grantDailyBoosters(s, now) : s;
 });

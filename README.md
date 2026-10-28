@@ -109,3 +109,8 @@ Les polices Cinzel Regular, SemiBold et Bold sont embarquées localement pour la
 Fichiers principaux : `src/domain/zeus.ts`, `src/domain/catalog.ts`, `src/components/cardArt.ts`, `CardFace.tsx`, `CardDetailModal.tsx`, `BoosterCardReveal.tsx`, `BoosterResults.tsx`, `BoosterShop.tsx` et `BoosterOpening.tsx`. Les six autres cadres définitifs ont été reçus dans l’ordre Commune, Peu commune, Rare, Épique, Légendaire, Mythique, pour les quatre extensions. Ils sont conservés pour les prochaines compositions à valider ; les autres illustrations restent attendues. Aucun autre design de carte n’a été inventé.
 
 Validation de cette intégration : typage strict et 12 tests réussis (dont identité de Zeus dans les tirages divins et compatibilité des reçus existants). SDK 58 conservé ; correctifs Expo 58.0.20 et Router 58.0.27 appliqués conformément au contrôle des dépendances. Les prochains rectos doivent suivre le même flux de validation visuelle avant publication ; la présente version de Zeus a été approuvée et sa publication explicitement autorisée.
+
+
+## Offrande des dieux — règle actuelle
+
+Une seule offrande de deux boosters d’extensions aléatoires toutes les 24 h remplace la recharge de 12 h et la section « Le cadeau quotidien ». En haut à droite de l’accueil, le compte à rebours est remplacé par « OUVRIR UN BOOSTER » dès que des boosters offerts sont disponibles. Le bouton permet de les ouvrir un par un, puis le décompte réapparaît. Échéance, extensions attribuées et ouvertures sont persistantes ; les sauvegardes et boosters déjà reçus sont conservés.

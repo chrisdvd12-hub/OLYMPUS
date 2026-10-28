@@ -26,7 +26,7 @@ Le serveur lancé dans l'environnement distant de développement n'est pas acces
 
 Pour chaque problème, relever le modèle d'iPhone, la version iOS, le message d'erreur exact et les étapes qui l'ont précédé. Ne pas désinstaller l'application entre les étapes de persistance.
 
-Les recharges de 12 heures et la protection légendaire sont couvertes par les tests métier automatisés ; leur intégration native et le rendu des raretés restent à confirmer séparément.
+L’offrande de 24 heures et la protection légendaire sont couvertes par les tests métier automatisés ; le rendu sur appareil reste à vérifier. Les tests de recharge de 12 h concernent uniquement la compatibilité du modèle historique.
 
 ## Sans ordinateur : iPad et environnement cloud
 
@@ -49,10 +49,12 @@ Après avoir récupéré la mise à jour, installer les dépendances avec `npm c
 Une fois la carte obtenue dans un booster, elle doit utiliser le même recto. Toucher sa miniature sur les résultats, ou sa ligne dans la collection, pour rouvrir la fiche. Les autres cartes conservent leurs visuels provisoires en attendant les cadres et illustrations définitifs.
 
 
-## Cadeau de connexion : deux boosters aléatoires / 24 heures
+## L’Offrande des dieux : deux boosters aléatoires / 24 heures
 
-À la première visite après cette mise à jour, deux boosters sont attribués automatiquement. Chaque extension a une chance sur quatre, les deux peuvent être identiques. Leurs extensions et la prochaine échéance sont enregistrées atomiquement. Le cadeau reste à ouvrir dans « Le cadeau quotidien » ; il ne dépense ni drachmes ni charges de l’offrande de 12 h, qui reste disponible.
+Une seule offrande est présentée en haut à droite de l’accueil. Tant qu’aucun booster offert n’est disponible, elle affiche le décompte HH:MM:SS jusqu’à la prochaine attribution. À l’échéance, deux extensions aléatoires sont enregistrées et une case « OUVRIR UN BOOSTER » remplace le décompte. Le bouton reste disponible pour le deuxième booster, puis le décompte réapparaît. Les deux extensions peuvent être identiques.
 
-Le décompte HH:MM:SS apparaît en haut à droite de l’accueil. Il part de 24 h à chaque attribution, persiste après fermeture et se recalcule au retour au premier plan. À échéance, une visite ou une session toujours active attribue exactement deux nouveaux boosters ; aucune compensation pour les jours d’absence. Les cadeaux reçus non ouverts restent stockés. Les cartes sont tirées et sauvegardées au moment de l’ouverture, avec sept cartes et les garanties habituelles.
+Le délai de 24 h est enregistré à chaque attribution et continue pendant les ouvertures ou la fermeture de l’application. Il ne repart pas à 24 h au rechargement. Aucun rattrapage pour les journées d’absence. Les boosters déjà attribués restent conservés ; les anciennes charges de 12 h ne sont plus proposées ni utilisées par la boutique. Les champs historiques restent compatibles avec les sauvegardes existantes. Une sauvegarde sans échéance démarre un décompte de 24 h ; une échéance déjà enregistrée est conservée.
 
-Sur iPhone : constater le cadeau et 24:00:00, fermer et rouvrir sans recevoir deux cadeaux supplémentaires, ouvrir un cadeau puis reprendre la révélation après fermeture. Après 24 h, vérifier deux nouveaux cadeaux et le redémarrage du décompte. La sauvegarde utilise l’horloge du téléphone ; avancer manuellement l’heure peut avancer l’échéance dans ce jeu local sans serveur.
+Sur iPhone : vérifier l’absence des sections « Le cadeau quotidien » et de l’ancienne offrande de 12 h ; contrôler l’offrande en haut à droite. À échéance, vérifier le bouton, ouvrir les deux boosters un à un, puis retrouver le compteur. Fermer pendant une révélation et vérifier que le même tirage reprend. Les cartes sont toujours enregistrées atomiquement avant l’animation et chaque booster contient sept cartes.
+
+Le jeu reste local : l’horloge du téléphone sert de référence au compteur.

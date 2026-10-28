@@ -10,7 +10,10 @@ export function grantDailyBoosters(
   rng: () => number = Math.random,
 ): GameState {
   if (!Number.isFinite(now)) throw Error("Date invalide");
-  if (state.dailyNextAt !== undefined && now < state.dailyNextAt) return state;
+  // Older saves without the offering clock start a full 24-hour countdown.
+  if (state.dailyNextAt === undefined)
+    return { ...state, dailyNextAt: now + DAILY_REWARD_MS };
+  if (now < state.dailyNextAt) return state;
   const packs = Array.from({ length: 2 }, () => {
     const value = rng();
     if (!Number.isFinite(value) || value < 0 || value >= 1)

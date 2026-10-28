@@ -13,7 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
 import { ZEUS_DIVINE } from "../domain/zeus";
 import { CardDetailModal } from "./CardDetailModal";
-import { PRICE, RECHARGE_MS, type GameState, type BoosterSource } from "../domain/boosters";
+import { PRICE, type GameState, type BoosterSource } from "../domain/boosters";
 import { dailyCountdown } from "../domain/daily";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { buy, finish, refresh } from "../storage/store";
@@ -68,7 +68,7 @@ export default function BoosterShop() {
       clearInterval(clock);
     };
   }, []);
-  const open = async (source: BoosterSource) => {
+  const open = async (source: Exclude<BoosterSource, "free">) => {
     if (lock.current) return;
     lock.current = true;
     setBusy(true);
@@ -125,9 +125,6 @@ export default function BoosterShop() {
   const owned = CARDS.filter(
     (c) => c.extension === ext.id && state.collection[c.id],
   ).length;
-  const remaining = Math.max(0, state.rechargeAt + RECHARGE_MS - now);
-  const hours = Math.floor(remaining / 3600000);
-  const minutes = Math.ceil((remaining % 3600000) / 60000);
   return (
     <SafeAreaView style={styles.screen}>
       <LinearGradient
@@ -141,13 +138,33 @@ export default function BoosterShop() {
           >
             <Text style={styles.subtitle}>LE SANCTUAIRE</Text>
             <View style={{ alignItems: "flex-end", gap: 6 }}>
-              <Text style={{ color: theme.gold, fontSize: 12 }}>2 BOOSTERS OFFERTS DANS</Text>
-              <Text
-                accessibilityLabel={`Prochain cadeau quotidien dans ${dailyCountdown(state.dailyNextAt ?? now, now)}`}
-                style={{ color: theme.gold, fontSize: 20, fontVariant: ["tabular-nums"] }}
-              >
-                {dailyCountdown(state.dailyNextAt ?? now, now)}
-              </Text>
+              <View style={{ alignItems: "flex-end", gap: 6, maxWidth: 210 }}>
+                <Text style={{ color: theme.gold, fontSize: 11 }}>L’OFFRANDE DES DIEUX</Text>
+                {(state.dailyPacks?.length ?? 0) > 0 ? (
+                  <>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Ouvrir un booster offert"
+                      disabled={busy}
+                      style={[styles.outline, { minHeight: 48, opacity: busy ? 0.4 : 1 }]}
+                      onPress={() => open("daily")}
+                    >
+                      <Text style={[styles.text, { color: theme.gold, textAlign: "center", fontSize: 13 }]}>OUVRIR UN BOOSTER</Text>
+                    </Pressable>
+                    <Text style={{ color: theme.gold, fontSize: 11 }}>{state.dailyPacks!.length} booster(s) disponible(s)</Text>
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      accessibilityLabel={`Prochaine offrande dans ${dailyCountdown(state.dailyNextAt ?? now, now)}`}
+                      style={{ color: theme.gold, fontSize: 20, fontVariant: ["tabular-nums"] }}
+                    >
+                      {dailyCountdown(state.dailyNextAt ?? now, now)}
+                    </Text>
+                    <Text style={{ color: theme.gold, fontSize: 11 }}>2 boosters aléatoires</Text>
+                  </>
+                )}
+              </View>
               <Text style={{ color: theme.gold }}>
                 ◉ {UNLIMITED_DRACHMAS ? "∞ drachmes · TEST" : `${state.drachmas} drachmes`}
               </Text>
@@ -267,50 +284,9 @@ export default function BoosterShop() {
               </Pressable>
               {!canAfford && (
                 <Text style={styles.muted}>
-                  Drachmes insuffisantes. Les charges gratuites restent
-                  disponibles.
+                  Drachmes insuffisantes. Votre prochaine offrande est indiquée en haut à droite.
                 </Text>
               )}
-              <View style={styles.panel}>
-                <Text style={[styles.text, { color: theme.gold }]}>LE CADEAU QUOTIDIEN</Text>
-                <Text style={styles.text}>{state.dailyPacks?.length ?? 0} booster(s) offert(s) à ouvrir</Text>
-                <Text style={styles.muted}>Deux extensions tirées au hasard toutes les 24 h lors de votre visite. Les deux boosters peuvent appartenir à la même extension.</Text>
-                {EXTENSIONS.map((extension) => {
-                  const count = state.dailyPacks?.filter((id) => id === extension.id).length ?? 0;
-                  return count > 0 ? <Text key={extension.id} style={styles.text}>{extension.name} · ×{count}</Text> : null;
-                })}
-                {!!state.dailyPacks?.length && (
-                  <>
-                    <Text style={styles.muted}>Prochain à ouvrir : {EXTENSIONS.find((extension) => extension.id === state.dailyPacks![0])?.name}</Text>
-                    <Pressable accessibilityRole="button" disabled={busy} style={[styles.outline, { opacity: busy ? 0.4 : 1 }]} onPress={() => open("daily")}>
-                      <Text style={styles.text}>OUVRIR LE BOOSTER OFFERT</Text>
-                    </Pressable>
-                  </>
-                )}
-              </View>
-              <View style={styles.panel}>
-                <Text style={[styles.text, { color: theme.gold }]}>
-                  L’OFFRANDE DES DIEUX
-                </Text>
-                <Text style={styles.text}>
-                  {state.freeCharges} / 2 boosters gratuits
-                </Text>
-                <Text style={styles.muted}>
-                  {state.freeCharges === 2
-                    ? "Vos deux offrandes sont prêtes."
-                    : `Prochaine charge dans ${hours} h ${minutes} min`}
-                </Text>
-                <Pressable
-                  disabled={busy || state.freeCharges === 0}
-                  style={[
-                    styles.outline,
-                    { opacity: state.freeCharges === 0 ? 0.4 : 1 },
-                  ]}
-                  onPress={() => open("free")}
-                >
-                  <Text style={styles.text}>OUVRIR GRATUITEMENT</Text>
-                </Pressable>
-              </View>
               <Text style={styles.muted}>
                 Protection légendaire · {state.pity}/20
               </Text>
