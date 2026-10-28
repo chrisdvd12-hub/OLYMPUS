@@ -75,11 +75,12 @@ test("roue : les quatre boosters occupent des points distincts autour du centre"
     for (let b = a + 1; b < poses.length; b++) {
       const dx = poses[a]!.x - poses[b]!.x;
       const dy = poses[a]!.y - poses[b]!.y;
-      assert.ok(Math.hypot(dx, dy) > 1);
+      assert.ok(Math.hypot(dx, dy) > 200);
     }
   assert.ok(poses[0]!.y > poses[2]!.y);
   assert.equal(poses[0]!.scale, 1);
   assert.ok(poses[2]!.scale < poses[1]!.scale);
+  assert.ok(poses[1]!.scale < poses[0]!.scale);
 });
 test("ouverture : l’ordre visuel va de la rareté la plus faible à la plus forte", () => {
   const input = [

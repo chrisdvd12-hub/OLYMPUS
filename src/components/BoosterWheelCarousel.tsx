@@ -55,8 +55,7 @@ function WheelPack({
       transform: [
         { perspective: 1000 },
         { translateX: p.x },
-        { translateY: p.y - 8 },
-        { matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, p.z, 1] },
+        { translateY: p.y },
         { rotateY: `${p.rotateY}deg` },
         { scale: scale * p.scale },
       ],
@@ -69,7 +68,7 @@ function WheelPack({
           position: "absolute",
           left: "50%",
           marginLeft: -124,
-          top: 70,
+          top: 105,
           width: 248,
           height: 372,
         },
@@ -114,7 +113,7 @@ export function BoosterWheelCarousel({
   const position = useSharedValue(selected);
   const anchor = useSharedValue(0);
   const scale = Math.min(1.12, Math.max(0.73, width / 440));
-  const radius = Math.min(width * 0.39, 220);
+  const radius = Math.min(width * 0.37, 200);
   const notify = useCallback((index: number) => onSelect(index), [onSelect]);
   useAnimatedReaction(
     () => wrapIndex(position.value),
@@ -219,7 +218,7 @@ export function BoosterWheelCarousel({
         <Animated.View
           collapsable={false}
           style={{
-            height: 520,
+            height: 590,
             width: "100%",
             overflow: "hidden",
             justifyContent: "center",
@@ -230,16 +229,15 @@ export function BoosterWheelCarousel({
             style={{
               position: "absolute",
               width: radius * 2,
-              height: 164,
+              height: 290,
               left: "50%",
-              top: 174,
+              top: 146,
               marginLeft: -radius,
               borderRadius: 999,
               borderWidth: 1,
               borderColor: EXTENSIONS[selected]!.color,
               backgroundColor: `${EXTENSIONS[selected]!.color}18`,
-              transform: [{ rotateX: "58deg" }],
-              opacity: 0.7,
+              opacity: 0.5,
             }}
           />
           <View
@@ -250,7 +248,7 @@ export function BoosterWheelCarousel({
               height: 10,
               borderRadius: 5,
               left: "50%",
-              top: 251,
+              top: 286,
               marginLeft: -5,
               backgroundColor: theme.highlight,
               shadowColor: theme.highlight,

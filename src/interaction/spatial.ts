@@ -26,13 +26,14 @@ export function wheelPose(
   const depth = Math.cos(angle);
   return {
     x: Math.sin(angle) * radius,
-    // A vertical ellipse keeps the rear pack visible instead of stacking it
-    // directly behind the selected pack at the same screen coordinates.
-    y: depth * 82,
-    z: (depth - 1) * 125,
-    scale: 0.42 + (depth + 1) * 0.29,
-    opacity: 0.35 + (depth + 1) * 0.325,
-    rotateY: -Math.sin(angle) * 48,
+    // The four centers describe a clearly visible orbit on a phone screen.
+    // The rear pack is physically above the center rather than hidden behind
+    // the active pack, while depth still controls scale and orientation.
+    y: depth * 145,
+    z: (depth - 1) * 110,
+    scale: 0.22 + (depth + 1) * 0.39,
+    opacity: 0.4 + (depth + 1) * 0.3,
+    rotateY: -Math.sin(angle) * 58,
     zIndex: Math.round((depth + 1) * 100),
   };
 }
