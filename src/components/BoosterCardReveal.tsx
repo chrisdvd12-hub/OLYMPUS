@@ -92,7 +92,7 @@ export function BoosterCardReveal({
             borderColor: revealed ? COLORS[card.rarity] : theme.gold,
             borderRadius: artwork && revealed ? 0 : 7,
             backgroundColor:
-              revealed && card.rarity >= 5 ? "#2a173d" : "#132339",
+              revealed && artwork ? "transparent" : revealed && card.rarity >= 5 ? "#2a173d" : "#132339",
             padding: 0,
             overflow: "hidden",
             justifyContent: "space-between",

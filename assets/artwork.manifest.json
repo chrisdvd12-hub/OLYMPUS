@@ -1,0 +1,50 @@
+[
+  {
+    "path": "assets/frames/commune.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/peu-commune.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/rare.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/epique.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/legendaire.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/mythique.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/frames/divine.png",
+    "kind": "frame"
+  },
+  {
+    "path": "assets/boosters/zeus-transparent.png",
+    "kind": "booster"
+  },
+  {
+    "path": "assets/boosters/cronos-transparent.png",
+    "kind": "booster"
+  },
+  {
+    "path": "assets/boosters/meduse-transparent.png",
+    "kind": "booster"
+  },
+  {
+    "path": "assets/boosters/achille-transparent.png",
+    "kind": "booster"
+  },
+  {
+    "path": "assets/cards/zeus-divine-front-transparent.png",
+    "kind": "card"
+  }
+]

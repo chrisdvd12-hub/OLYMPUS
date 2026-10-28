@@ -9,8 +9,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types tests/boosters.test.ts && node --test tests/proxy.test.cjs",
-    "start:go": "node --require ./scripts/normalize-proxy.cjs ./node_modules/expo/bin/cli start --go --tunnel ngrok"
+    "test": "node --experimental-strip-types tests/boosters.test.ts && node --test tests/proxy.test.cjs && npm run check:artwork",
+    "start:go": "node --require ./scripts/normalize-proxy.cjs ./node_modules/expo/bin/cli start --go --tunnel ngrok",
+    "check:artwork": "node scripts/check-artwork.cjs"
   },
   "dependencies": {
     "expo": "~58.0.20",
@@ -34,6 +35,7 @@
   "devDependencies": {
     "@expo/ngrok": "^4.1.3",
     "@types/react": "~19.3.0",
+    "pngjs": "^7.0.0",
     "tsx": "^4.20.0",
     "typescript": "~6.0.3"
   },
