@@ -50,17 +50,6 @@ export function BoosterCardReveal({
   const artwork = true;
   const revealing = useRef(false);
   const turn = useSharedValue(revealed ? 1 : 0);
-  const bodyStyle = useAnimatedStyle(() => {
-    const pose = cardFlipPose(turn.get());
-    return {
-      transform: [
-        { perspective: 1000 },
-        { translateY: pose.translateY },
-        { rotateZ: `${pose.rotateZ}deg` },
-        { scale: pose.scale },
-      ],
-    };
-  });
   const backStyle = useAnimatedStyle(() => ({
     transform: [
       { perspective: 1000 },
@@ -148,12 +137,7 @@ export function BoosterCardReveal({
             borderWidth: revealed && !artwork ? 2 : 0,
             borderColor: revealed ? COLORS[card.rarity] : theme.gold,
             borderRadius: artwork && revealed ? 0 : 7,
-            backgroundColor:
-              revealed && artwork
-                ? "transparent"
-                : revealed && card.rarity >= 5
-                  ? "#2a173d"
-                  : "#132339",
+            backgroundColor: "transparent",
             padding: 0,
             overflow: "hidden",
             justifyContent: "space-between",
@@ -162,7 +146,6 @@ export function BoosterCardReveal({
             shadowOpacity: revealed ? 0.65 : 0,
             shadowRadius: 16,
           },
-          bodyStyle,
         ]}
       >
         <Animated.View pointerEvents="none" style={[faceStyle, backStyle]}>

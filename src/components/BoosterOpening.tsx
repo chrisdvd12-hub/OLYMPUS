@@ -239,7 +239,7 @@ export function BoosterOpening({
             justifyContent: "center",
             paddingHorizontal: 24,
             paddingVertical: 34,
-            backgroundColor: "#020711f2",
+            backgroundColor: "transparent",
           }}
         >
           {focusedRevealed && focused && (
