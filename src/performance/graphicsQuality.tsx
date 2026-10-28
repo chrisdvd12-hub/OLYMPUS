@@ -1,27 +1,80 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { PixelRatio, Platform, useWindowDimensions } from "react-native";
+import Storage from "expo-sqlite/kv-store";
 import {
   chooseGraphicsTier,
   GRAPHICS_PROFILES,
+  resolveGraphicsTier,
+  type GraphicsPreference,
   type GraphicsProfile,
 } from "./graphicsProfiles";
 
 export { chooseGraphicsTier, GRAPHICS_PROFILES } from "./graphicsProfiles";
-export type { GraphicsProfile, GraphicsTier } from "./graphicsProfiles";
+export type {
+  GraphicsPreference,
+  GraphicsProfile,
+  GraphicsTier,
+} from "./graphicsProfiles";
 
-const GraphicsQualityContext = createContext<GraphicsProfile>(
-  GRAPHICS_PROFILES.balanced,
-);
+interface GraphicsQualityValue extends GraphicsProfile {
+  automaticTier: GraphicsProfile["tier"];
+  preference: GraphicsPreference;
+  setPreference: (preference: GraphicsPreference) => void;
+}
+
+const STORAGE_KEY = "olympus.graphics.preference.v1";
+
+const GraphicsQualityContext = createContext<GraphicsQualityValue>({
+  ...GRAPHICS_PROFILES.balanced,
+  automaticTier: "balanced",
+  preference: "auto",
+  setPreference: () => {},
+});
 
 export function GraphicsQualityProvider({ children }: { children: ReactNode }) {
   const { width, height } = useWindowDimensions();
-  const tier = chooseGraphicsTier({
+  const [preference, updatePreference] = useState<GraphicsPreference>("auto");
+  const automaticTier = chooseGraphicsTier({
     width,
     height,
     pixelRatio: PixelRatio.get(),
     platform: Platform.OS,
   });
-  const profile = useMemo(() => GRAPHICS_PROFILES[tier], [tier]);
+  useEffect(() => {
+    void Storage.getItem(STORAGE_KEY)
+      .then((stored) => {
+        if (
+          stored === "auto" ||
+          stored === "high" ||
+          stored === "balanced" ||
+          stored === "economy"
+        )
+          updatePreference(stored);
+      })
+      .catch(() => {});
+  }, []);
+  const setPreference = useCallback((next: GraphicsPreference) => {
+    updatePreference(next);
+    void Storage.setItem(STORAGE_KEY, next).catch(() => {});
+  }, []);
+  const tier = resolveGraphicsTier(preference, automaticTier);
+  const profile = useMemo<GraphicsQualityValue>(
+    () => ({
+      ...GRAPHICS_PROFILES[tier],
+      automaticTier,
+      preference,
+      setPreference,
+    }),
+    [automaticTier, preference, setPreference, tier],
+  );
   return (
     <GraphicsQualityContext.Provider value={profile}>
       {children}

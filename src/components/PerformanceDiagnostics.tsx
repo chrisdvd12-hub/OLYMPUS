@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { PixelRatio, Platform, Pressable, useWindowDimensions, View } from "react-native";
 import { summarizeFrameTimes, type FrameMetrics } from "../performance/frameMetrics";
 import { useGraphicsQuality } from "../performance/graphicsQuality";
+import type { GraphicsPreference } from "../performance/graphicsProfiles";
 import { AppText as Text } from "./AppText";
 import { styles, theme } from "./theme";
 
@@ -42,8 +43,32 @@ export function PerformanceDiagnostics() {
     <View style={styles.panel}>
       <Text style={styles.subtitle}>DIAGNOSTIC DE FLUIDITÉ</Text>
       <Text style={styles.muted}>
-        Profil {quality.tier.toUpperCase()} · {Platform.OS} · {(pixels / 1_000_000).toFixed(1)} Mpx
+        Profil {quality.tier.toUpperCase()} · automatique {quality.automaticTier.toUpperCase()} · {Platform.OS} · {(pixels / 1_000_000).toFixed(1)} Mpx
       </Text>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
+        {(
+          [
+            ["auto", "AUTO"],
+            ["high", "HIGH"],
+            ["balanced", "BALANCED"],
+            ["economy", "ECONOMY"],
+          ] as const satisfies readonly (readonly [GraphicsPreference, string])[]
+        ).map(([value, label]) => (
+          <Pressable
+            key={value}
+            accessibilityRole="button"
+            accessibilityState={{ selected: quality.preference === value }}
+            style={[
+              styles.outline,
+              { flexGrow: 1, minHeight: 44, paddingHorizontal: 9 },
+              quality.preference === value && styles.activeTab,
+            ]}
+            onPress={() => quality.setPreference(value)}
+          >
+            <Text style={{ color: theme.highlight, fontSize: 10 }}>{label}</Text>
+          </Pressable>
+        ))}
+      </View>
       <Text style={styles.muted}>
         Cette mesure observe la cadence JavaScript pendant 10 secondes. Elle complète, sans remplacer, le profilage du thread UI dans une version de production.
       </Text>

@@ -1,4 +1,5 @@
 export type GraphicsTier = "high" | "balanced" | "economy";
+export type GraphicsPreference = "auto" | GraphicsTier;
 
 export interface GraphicsProfile {
   tier: GraphicsTier;
@@ -54,4 +55,11 @@ export function chooseGraphicsTier({
   if (physicalPixels > 7_500_000) return "economy";
   if (physicalPixels > 3_600_000) return "balanced";
   return "high";
+}
+
+export function resolveGraphicsTier(
+  preference: GraphicsPreference,
+  automaticTier: GraphicsTier,
+): GraphicsTier {
+  return preference === "auto" ? automaticTier : preference;
 }

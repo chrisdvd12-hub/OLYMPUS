@@ -18,7 +18,10 @@ import {
 } from "../src/domain/collection.ts";
 import { CARDS, EXTENSIONS } from "../src/domain/catalog.ts";
 import { initialState, purchase } from "../src/domain/boosters.ts";
-import { chooseGraphicsTier } from "../src/performance/graphicsProfiles.ts";
+import {
+  chooseGraphicsTier,
+  resolveGraphicsTier,
+} from "../src/performance/graphicsProfiles.ts";
 import { summarizeFrameTimes } from "../src/performance/frameMetrics.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
@@ -175,6 +178,8 @@ test("qualité graphique : adaptation déterministe à la charge d'affichage", (
   assert.equal(chooseGraphicsTier({ width: 1024, height: 1366, pixelRatio: 2, platform: "ios" }), "balanced");
   assert.equal(chooseGraphicsTier({ width: 1440, height: 2960, pixelRatio: 3, platform: "android" }), "economy");
   assert.equal(chooseGraphicsTier({ width: 390, height: 844, pixelRatio: 3, reducedMotion: true }), "economy");
+  assert.equal(resolveGraphicsTier("auto", "balanced"), "balanced");
+  assert.equal(resolveGraphicsTier("high", "economy"), "high");
 });
 
 test("diagnostic : FPS, P95 et images longues restent des mesures séparées", () => {

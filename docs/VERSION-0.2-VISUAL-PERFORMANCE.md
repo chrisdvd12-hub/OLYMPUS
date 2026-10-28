@@ -11,6 +11,7 @@ La branche `restore/v0.2-before-visual-performance-20261028` conserve le commit 
 - Les mises à jour React déclenchées par le défilement sont maintenant limitées aux changements réels de visibilité.
 - La qualité graphique choisit un profil `high`, `balanced` ou `economy` selon la surface physique à afficher. Les profils réduisent progressivement les particules, étoiles et couches de ciel sans retirer les cadres ni les cartes.
 - Le profil joueur contient une mesure volontaire de dix secondes. Elle rapporte la cadence JavaScript, la moyenne, le P95 et les images de plus de 32 ms sans effectuer un rendu React à chaque image.
+- Le profil joueur permet aussi de conserver un choix `AUTO`, `HIGH`, `BALANCED` ou `ECONOMY` dans un stockage SQLite séparé de la sauvegarde de collection.
 - Les images sont chargées avec `expo-image`, cache mémoire/disque, redimensionnement natif et liste virtualisée. `npm run check:memory` calcule également la surface décodée théorique des illustrations suivies.
 - Les petits écrans inférieurs à 360 points utilisent deux colonnes dans l’album et une offrande quotidienne compacte.
 - OLY-049 Éos reste explicitement indisponible : son PNG source est tronqué et n’est ni remplacé ni inventé.
