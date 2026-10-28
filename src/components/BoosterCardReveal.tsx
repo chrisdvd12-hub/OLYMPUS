@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import { Pressable } from "react-native";
 import Animated, {
   useSharedValue,
@@ -24,6 +24,8 @@ export function BoosterCardReveal({
   enabled = true,
   onInspect,
   final = false,
+  onSelect,
+  autoReveal = false,
 }: {
   card: Card;
   index: number;
@@ -35,6 +37,8 @@ export function BoosterCardReveal({
   enabled?: boolean;
   onInspect?: () => void;
   final?: boolean;
+  onSelect?: () => void;
+  autoReveal?: boolean;
 }) {
   const current = resolveCard(card);
   const active = useAppActivity();
@@ -56,7 +60,11 @@ export function BoosterCardReveal({
       { rotateY: `${(revealed ? turn.value - 1 : 1 - turn.value) * 180}deg` },
     ],
   }));
-  const reveal = () => {
+  const reveal = useCallback(() => {
+    if (onSelect) {
+      onSelect();
+      return;
+    }
     if (revealed) {
       onInspect?.();
       return;
@@ -75,7 +83,21 @@ export function BoosterCardReveal({
       },
       timing.firstHalf,
     );
-  };
+  }, [
+    card.rarity,
+    final,
+    onInspect,
+    onReveal,
+    onSelect,
+    reduced,
+    revealed,
+    turn,
+  ]);
+  useEffect(() => {
+    if (!autoReveal || revealed || onSelect) return;
+    const automatic = setTimeout(reveal, reduced ? 0 : 220);
+    return () => clearTimeout(automatic);
+  }, [autoReveal, onSelect, reduced, reveal, revealed]);
   return (
     <Pressable
       disabled={!enabled || (revealed && !onInspect)}

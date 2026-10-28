@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { BoosterAura } from "./BoosterAura";
 import { useState, useEffect, useMemo } from "react";
-import { View, ScrollView, Pressable } from "react-native";
+import { Modal, View, ScrollView, Pressable } from "react-native";
 import { EXTENSIONS, COLORS } from "../domain/catalog";
 import type { Receipt } from "../domain/boosters";
 import { BoosterSky, CELESTIAL_MOTIFS } from "./BoosterSky";
@@ -38,6 +38,7 @@ export function BoosterOpening({
   const [torn, setTorn] = useState(false);
   const [revealed, setRevealed] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [focusedCard, setFocusedCard] = useState<number | null>(null);
   const orderedCards = useMemo(
     () => sortCardsForReveal(receipt.cards),
     [receipt.cards],
@@ -75,6 +76,9 @@ export function BoosterOpening({
     ? orderedCards[revealed[revealed.length - 1]!]!
     : null;
   const allRevealed = revealed.length === orderedCards.length;
+  const focused = focusedCard === null ? null : orderedCards[focusedCard]!;
+  const focusedRevealed =
+    focusedCard !== null && revealed.includes(focusedCard);
   useEffect(() => {
     if (!allRevealed || !last || showResults) return;
     const timer = setTimeout(
@@ -189,7 +193,7 @@ export function BoosterOpening({
             ) : (
               <>
                 <Text style={styles.muted}>
-                  Touchez les cartes une à une · {revealed.length}/7
+                  Choisissez la carte à révéler · {revealed.length}/7
                 </Text>
                 <View
                   style={{
@@ -204,15 +208,11 @@ export function BoosterOpening({
                       key={`${card.id}-${i}`}
                       card={card}
                       index={i}
-                      enabled={i === revealed.length}
-                      final={i === orderedCards.length - 1}
+                      enabled
                       reduced={reduced}
                       revealed={revealed.includes(i)}
-                      onReveal={() =>
-                        setRevealed((old) =>
-                          old.includes(i) ? old : [...old, i],
-                        )
-                      }
+                      onSelect={() => setFocusedCard(i)}
+                      onReveal={() => {}}
                     />
                   ))}
                 </View>
@@ -226,6 +226,67 @@ export function BoosterOpening({
           </View>
         )}
       </ScrollView>
+      <Modal
+        visible={focusedCard !== null}
+        transparent
+        animationType={reduced ? "none" : "fade"}
+        onRequestClose={() => setFocusedCard(null)}
+      >
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 24,
+            paddingVertical: 34,
+            backgroundColor: "#020711f2",
+          }}
+        >
+          {focusedRevealed && focused && (
+            <BoosterAura
+              rarity={focused.rarity}
+              reduced={reduced || !appActive}
+              final={revealed.length === orderedCards.length}
+            />
+          )}
+          <View
+            style={{
+              width: "88%",
+              maxWidth: 420,
+              zIndex: 2,
+              alignItems: "center",
+              gap: 16,
+            }}
+          >
+            <Text style={styles.subtitle}>
+              {focusedRevealed
+                ? "TOUCHEZ LA CARTE POUR CONTINUER"
+                : "LA CARTE SE RÉVÈLE"}
+            </Text>
+            {focused && focusedCard !== null && (
+              <CardRevealAnimation
+                key={`${focused.id}-${focusedCard}`}
+                card={focused}
+                index={focusedCard}
+                enabled
+                fullWidth
+                autoReveal
+                final={revealed.length === orderedCards.length - 1}
+                reduced={reduced}
+                revealed={focusedRevealed}
+                onReveal={() =>
+                  setRevealed((old) =>
+                    old.includes(focusedCard)
+                      ? old
+                      : [...old, focusedCard],
+                  )
+                }
+                onInspect={() => setFocusedCard(null)}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
