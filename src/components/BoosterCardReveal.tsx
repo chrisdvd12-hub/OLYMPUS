@@ -1,10 +1,13 @@
 import { useCallback, useRef, useEffect } from "react";
 import { Pressable } from "react-native";
 import Animated, {
+  Easing,
+  interpolate,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { COLORS, RARITIES, resolveCard, type Card } from "../domain/catalog";
 import { CardMaterialEffects } from "./CardMaterialEffects";
 import { useAppActivity } from "../animations/openingMotion";
@@ -12,7 +15,7 @@ import { CardFace } from "./CardFace";
 import { discoveryFeedback } from "../interaction/feedback";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
-import { revealTiming } from "../domain/reveal";
+import { cardFlipPose, revealTiming } from "../domain/reveal";
 export function BoosterCardReveal({
   card,
   index,
@@ -46,20 +49,40 @@ export function BoosterCardReveal({
   const pitch = useSharedValue(0);
   const artwork = true;
   const revealing = useRef(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
-  const turn = useSharedValue(1);
-  const style = useAnimatedStyle(() => ({
+  const turn = useSharedValue(revealed ? 1 : 0);
+  const bodyStyle = useAnimatedStyle(() => {
+    const pose = cardFlipPose(turn.get());
+    return {
+      transform: [
+        { perspective: 1000 },
+        { translateY: pose.translateY },
+        { rotateZ: `${pose.rotateZ}deg` },
+        { scale: pose.scale },
+      ],
+    };
+  });
+  const backStyle = useAnimatedStyle(() => ({
     transform: [
-      { perspective: 800 },
-      { rotateY: `${(revealed ? turn.value - 1 : 1 - turn.value) * 180}deg` },
+      { perspective: 1000 },
+      { rotateY: `${cardFlipPose(turn.get()).backRotation}deg` },
     ],
   }));
+  const frontStyle = useAnimatedStyle(() => ({
+    transform: [
+      { perspective: 1000 },
+      { rotateY: `${cardFlipPose(turn.get()).frontRotation}deg` },
+    ],
+  }));
+  const edgeStyle = useAnimatedStyle(() => {
+    const light = cardFlipPose(turn.get()).edgeLight;
+    return {
+      opacity: interpolate(light, [0, 0.72, 1], [0, 0.18, 0.85]),
+      transform: [{ scale: 0.9 + light * 0.18 }],
+    };
+  });
+  useEffect(() => {
+    if (revealed && !revealing.current) turn.set(1);
+  }, [revealed, turn]);
   const reveal = useCallback(() => {
     if (onSelect) {
       onSelect();
@@ -73,15 +96,17 @@ export function BoosterCardReveal({
     revealing.current = true;
     discoveryFeedback(!reduced);
     const timing = revealTiming(card.rarity, final, reduced);
-    turn.value = withTiming(0.5, {
-      duration: timing.firstHalf,
-    });
-    timer.current = setTimeout(
-      () => {
-        turn.value = withTiming(1, { duration: timing.secondHalf });
-        onReveal();
-      },
-      timing.firstHalf,
+    turn.set(
+      withTiming(
+        1,
+        {
+          duration: timing.firstHalf + timing.secondHalf,
+          easing: Easing.bezier(0.77, 0, 0.175, 1),
+        },
+        (finished) => {
+          if (finished) scheduleOnRN(onReveal);
+        },
+      ),
     );
   }, [
     card.rarity,
@@ -137,11 +162,48 @@ export function BoosterCardReveal({
             shadowOpacity: revealed ? 0.65 : 0,
             shadowRadius: 16,
           },
-          style,
+          bodyStyle,
         ]}
       >
-        {revealed ? <><CardFace card={current} material={false} /><CardMaterialEffects card={current} yaw={yaw} pitch={pitch} active={active && enabled} reduced={reduced} /></> : <CardBack />}
+        <Animated.View pointerEvents="none" style={[faceStyle, backStyle]}>
+          <CardBack />
+        </Animated.View>
+        <Animated.View pointerEvents="none" style={[faceStyle, frontStyle]}>
+          <CardFace card={current} material={false} />
+          <CardMaterialEffects
+            card={current}
+            yaw={yaw}
+            pitch={pitch}
+            active={active && enabled && (revealed || autoReveal)}
+            reduced={reduced}
+          />
+        </Animated.View>
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            {
+              position: "absolute",
+              inset: 0,
+              borderRadius: 7,
+              borderWidth: 2,
+              borderColor: COLORS[card.rarity],
+              shadowColor: COLORS[card.rarity],
+              shadowOpacity: 1,
+              shadowRadius: 24,
+            },
+            edgeStyle,
+          ]}
+        />
       </Animated.View>
     </Pressable>
   );
 }
+
+const faceStyle = {
+  position: "absolute" as const,
+  inset: 0,
+  backfaceVisibility: "hidden" as const,
+  overflow: "hidden" as const,
+  justifyContent: "center" as const,
+  alignItems: "center" as const,
+};

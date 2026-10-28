@@ -29,3 +29,17 @@ export function revealTiming(
 export function finalRevealHold(rarity: number, reduced: boolean): number {
   return reduced ? 0 : 1200 + Math.max(0, rarity - 2) * 180;
 }
+
+export function cardFlipPose(progress: number) {
+  "worklet";
+  const value = Math.max(0, Math.min(1, progress));
+  const lift = Math.sin(value * Math.PI);
+  return {
+    backRotation: value * 180,
+    frontRotation: 180 + value * 180,
+    translateY: -12 * lift,
+    scale: 1 + 0.055 * lift,
+    rotateZ: Math.sin(value * Math.PI * 2) * 1.2,
+    edgeLight: lift,
+  };
+}

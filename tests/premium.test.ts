@@ -24,6 +24,7 @@ import {
 } from "../src/performance/graphicsProfiles.ts";
 import { summarizeFrameTimes } from "../src/performance/frameMetrics.ts";
 import {
+  cardFlipPose,
   finalRevealHold,
   revealTiming,
   sortCardsForReveal,
@@ -119,6 +120,19 @@ test("ouverture : la dernière carte se révèle et reste éclairée plus longte
     firstHalf: 0,
     secondHalf: 0,
   });
+});
+test("retournement : une trajectoire 3D unique reste continue au passage sur la tranche", () => {
+  const before = cardFlipPose(0.499);
+  const middle = cardFlipPose(0.5);
+  const after = cardFlipPose(0.501);
+  assert.ok(Math.abs(before.backRotation - middle.backRotation) < 0.2);
+  assert.ok(Math.abs(after.backRotation - middle.backRotation) < 0.2);
+  assert.equal(middle.backRotation, 90);
+  assert.equal(middle.frontRotation, 270);
+  assert.ok(middle.translateY < before.translateY);
+  assert.ok(middle.edgeLight > 0.99);
+  assert.deepEqual(cardFlipPose(-1), cardFlipPose(0));
+  assert.deepEqual(cardFlipPose(2), cardFlipPose(1));
 });
 test("visualiseur : 360 degrés sans limite, inclinaison bornée, inertie modérée", () => {
   for (const yaw of [-1080, -360, 0, 360, 1080])

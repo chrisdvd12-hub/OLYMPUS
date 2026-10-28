@@ -69,7 +69,7 @@ function WheelPack({
           position: "absolute",
           left: "50%",
           marginLeft: -124,
-          top: 20,
+          top: -10,
           width: 248,
           height: 372,
         },
@@ -114,7 +114,7 @@ export function BoosterWheelCarousel({
   const position = useSharedValue(selected);
   const anchor = useSharedValue(0);
   const scale = Math.min(1.12, Math.max(0.73, width / 440));
-  const radius = Math.min(width * 0.37, 200);
+  const radius = Math.min(width * 0.29, 150);
   const notify = useCallback((index: number) => onSelect(index), [onSelect]);
   useAnimatedReaction(
     () => wrapIndex(position.value),
@@ -232,7 +232,7 @@ export function BoosterWheelCarousel({
               width: radius * 2,
               height: 250,
               left: "50%",
-              top: 81,
+              top: 51,
               marginLeft: -radius,
               borderRadius: 999,
               borderWidth: 1,

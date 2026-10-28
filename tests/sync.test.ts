@@ -286,3 +286,30 @@ test("connexion SQLite : initialisation défaillante fermée, puis réouverture 
   assert.equal(setups, 2);
   assert.equal(closes, 1);
 });
+
+test("SQLite web : la table existe même si le pilote n’exécute que la première instruction", async () => {
+  const db = new DatabaseSync(":memory:");
+  const persistence = createSqlitePersistence(
+    async () => ({
+      execAsync: async (sql) => {
+        const firstStatement = sql.split(";").find((part) => part.trim());
+        if (firstStatement) db.exec(firstStatement);
+      },
+      getFirstAsync: async <T>(sql: string) =>
+        (db.prepare(sql).get() as T) ?? null,
+      runAsync: async (sql, value) => db.prepare(sql).run(value),
+      closeAsync: async () => db.close(),
+      withExclusiveTransactionAsync: async (update) => {
+        await update({
+          getFirstAsync: async <T>(sql: string) =>
+            (db.prepare(sql).get() as T) ?? null,
+          runAsync: async (sql, value) => db.prepare(sql).run(value),
+        });
+      },
+    }),
+    () => 123,
+  );
+  await persistence.prepare();
+  assert.deepEqual(await persistence.read(), initialState(123));
+  db.close();
+});

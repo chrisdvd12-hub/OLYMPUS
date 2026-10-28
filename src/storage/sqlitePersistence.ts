@@ -23,7 +23,7 @@ export function createSqlitePersistence(
         try {
           // Initialise once. FULL preserves durability; WAL allows readers alongside a write.
           await db.execAsync(
-            "PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY CHECK(id=1), data TEXT NOT NULL)",
+            "CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY CHECK(id=1), data TEXT NOT NULL); PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL",
           );
           return db;
         } catch (error) {
