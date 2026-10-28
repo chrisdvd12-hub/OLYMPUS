@@ -22,7 +22,7 @@ L’analyse a couvert les routes, composants, animations, domaine, stockage, tes
 
 `CardFront` fournit un gabarit normalisé de référence **1500 × 2100**, ratio **5:7**, avec illustration, cadre maître de rareté et champs de texte indépendants. Les sept cadres sont partagés par toutes les extensions. Les dimensions réelles des PNG fournis sont conservées ; il ne s’agit pas de nouveaux exports de peintures en 1500 × 2100.
 
-**Limites éditoriales** : seule la peinture individuelle de Zeus divin est fournie. Les 119 autres illustrations ne sont pas créées ou remplacées par des peintures génériques ; les cartes découvertes emploient leur cadre officiel et la mention « Illustration à fournir ». Le recto complet de Zeus déjà approuvé reste affiché intact, comme exception de conservation ; sa peinture indépendante est disponible dans le zoom et dans le gabarit `CardFront`. Uniformiser également ce recto signifierait remplacer la composition précédemment approuvée.
+**État lors de la refonte initiale** : seule la peinture individuelle de Zeus divin était fournie. Les 119 autres illustrations ne sont pas créées ou remplacées par des peintures génériques ; les cartes découvertes emploient leur cadre officiel et la mention « Illustration à fournir ». Le recto complet de Zeus déjà approuvé reste affiché intact, comme exception de conservation ; sa peinture indépendante est disponible dans le zoom et dans le gabarit `CardFront`. Uniformiser également ce recto signifierait remplacer la composition précédemment approuvée.
 
 Aucun cadre, sachet, verso, peinture, catalogue ou solde n’a été supprimé. Les textes des illustrations déjà approuvées ne sont pas réécrits. Trajan Pro n’étant pas fourni, Cinzel Regular reste le remplacement déclaré pour les petits textes.
 
@@ -54,3 +54,8 @@ Dans un nouveau terminal Codespaces : `git pull && npm ci && npm run start:go --
 5. Vérifier filtres, cartes masquées et progression sur téléphone et tablette.
 6. Ouvrir un booster, interrompre l’application et reprendre le même reçu ; tester aussi « Passer les animations » et les sept résultats.
 7. Activer Réduire les animations, passer en arrière-plan et vérifier l’arrêt des mouvements décoratifs.
+
+
+## Mise à jour des ressources
+
+Les 29 peintures OLY-001 à OLY-029 ont depuis été intégrées : [détails de l’import](ILLUSTRATIONS-OLYMPE.md). Les 30 cartes des Maîtres de l’Olympe disposent désormais d’une illustration ; les 90 peintures des trois autres extensions restent à fournir.

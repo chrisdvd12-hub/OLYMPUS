@@ -1,3 +1,4 @@
+import { CARD_ILLUSTRATIONS } from "./illustrationArt";
 import { Image, StyleSheet, View } from "react-native";
 import { AppText as Text } from "./AppText";
 import { RARITIES, EXTENSIONS, type Card } from "../domain/catalog";
@@ -9,9 +10,7 @@ export const CARD_REFERENCE = {
   height: 2100,
   ratio: 5 / 7,
 } as const;
-export const CARD_ILLUSTRATIONS: Record<string, number> = {
-  "olympe-30": require("../../assets/cards/zeus-divine-illustration.jpg"),
-};
+export { CARD_ILLUSTRATIONS } from "./illustrationArt";
 // One template, seven official master frames. Never generate per-character borders.
 export function CardFront({
   card,
@@ -23,7 +22,7 @@ export function CardFront({
   compact?: boolean;
 }) {
   const illustration = CARD_ILLUSTRATIONS[card.id];
-  const ink = card.rarity <= 1 || card.rarity === 4 ? "#29231b" : theme.paper;
+  const ink = card.rarity === 0 || card.rarity === 4 ? "#29231b" : theme.paper;
   const collection =
     EXTENSIONS.find((e) => e.id === card.extension)?.name ?? card.extension;
   const unit = width / CARD_REFERENCE.width;

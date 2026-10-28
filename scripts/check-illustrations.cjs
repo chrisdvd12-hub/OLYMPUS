@@ -1,0 +1,30 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const { PNG } = require('pngjs');
+const root = path.resolve(__dirname, '..');
+const entries = JSON.parse(fs.readFileSync(path.join(root, 'assets/illustrations.manifest.json'), 'utf8'));
+const catalogue = JSON.parse(fs.readFileSync(path.join(root, 'docs/catalogue/OLYMPUS_Catalogue_120_Cartes.json'), 'utf8')).cards;
+const csv = fs.readFileSync(path.join(root, 'assets/cards/illustrations/INDEX.csv'), 'utf8').replace(/^\uFEFF/, '').trim().split(/\r?\n/).slice(1).map((line) => line.split(','));
+const registryPath = path.join(root, 'src/components/illustrationArt.ts');
+const registry = new Map([...fs.readFileSync(registryPath, 'utf8').matchAll(/"([^"]+)"\s*:\s*require\(\s*"([^"]+)"\s*,?\s*\)/g)].map((match) => [match[1], path.resolve(path.dirname(registryPath), match[2])]));
+for (const row of csv) assert.ok(entries.some((entry) => entry.catalogueId === row[0]), 'Entrée INDEX.csv manquante');
+assert.equal(new Set(entries.map((entry) => entry.cardId)).size, entries.length);
+for (const entry of entries) {
+  const source = catalogue.find((card) => card.id === entry.catalogueId);
+  assert.ok(source, entry.catalogueId);
+  assert.equal(source.extensionNumber, 1);
+  assert.equal(entry.cardId, `olympe-${source.numberInExtension}`);
+  const index = csv.find((row) => row[0] === entry.catalogueId);
+  if (index) assert.equal(path.basename(entry.path), index[3]);
+  assert.ok(path.basename(entry.path).startsWith(`${entry.catalogueId}_`));
+  assert.equal(registry.get(entry.cardId), path.join(root, entry.path), 'Mauvaise association illustration/carte');
+  const bytes = fs.readFileSync(path.join(root, entry.path));
+  assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), entry.sha256, 'Le fichier original a été modifié');
+  const png = PNG.sync.read(bytes);
+  assert.equal(png.width, entry.width);
+  assert.equal(png.height, entry.height);
+  assert.equal(png.width * 7, png.height * 5, 'Le ratio doit rester 5:7');
+}
+console.log(`${entries.length} illustrations originales : catalogue, index, associations, dimensions et empreintes vérifiés.`);

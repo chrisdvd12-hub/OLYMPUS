@@ -1,0 +1,234 @@
+[
+  {
+    "catalogueId": "OLY-001",
+    "cardId": "olympe-1",
+    "path": "assets/cards/illustrations/OLY-001_Hebe_Eternelle_Jeunesse.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "92d062873495fd4549ba6d800e9662a01f0dc7a447f3d6aa509409ac986ecfbb"
+  },
+  {
+    "catalogueId": "OLY-002",
+    "cardId": "olympe-2",
+    "path": "assets/cards/illustrations/OLY-002_Iris_Messagere_de_l_Arc_en_ciel.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "a3a88f93b6655af052e7868b53278f9e0f4630037a594039968064bfad54116e"
+  },
+  {
+    "catalogueId": "OLY-003",
+    "cardId": "olympe-3",
+    "path": "assets/cards/illustrations/OLY-003_Ilithyie_Gardienne_des_Naissances.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "aab8ccbd58e3565b63b538f71a41481eacab8c9d34a3bead210081e181b6b5b0"
+  },
+  {
+    "catalogueId": "OLY-004",
+    "cardId": "olympe-4",
+    "path": "assets/cards/illustrations/OLY-004_Eunomie_L_Ordre_Harmonieux.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "0c3c061d6423641b25a75de941da20c05e15328255403206617a6a8d1ef627fa"
+  },
+  {
+    "catalogueId": "OLY-005",
+    "cardId": "olympe-5",
+    "path": "assets/cards/illustrations/OLY-005_Dice_Justice_Divine.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "5459eecf9713ec4a6a72ab98db824c1e0b3ad3f43307dcc494b1cb1b7aae56b0"
+  },
+  {
+    "catalogueId": "OLY-006",
+    "cardId": "olympe-6",
+    "path": "assets/cards/illustrations/OLY-006_Eros_Desir_Eternel.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "203e3e701956765e688b93dd668df005b1ed9c48a571005020b57a71fbb9854d"
+  },
+  {
+    "catalogueId": "OLY-007",
+    "cardId": "olympe-7",
+    "path": "assets/cards/illustrations/OLY-007_Nike_Victoire_Ailee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bf6b46cbd9bdcbbff048a65ae0f434e748ecd357471ebabad63138069433475c"
+  },
+  {
+    "catalogueId": "OLY-008",
+    "cardId": "olympe-8",
+    "path": "assets/cards/illustrations/OLY-008_Tyche_Fortune_Changeante.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "9af36ece14061091f66d8275a9d788bd6cd38eedad752c44bb4d1a54ae92364a"
+  },
+  {
+    "catalogueId": "OLY-009",
+    "cardId": "olympe-9",
+    "path": "assets/cards/illustrations/OLY-009_Asclepios_Guerisseur_Sacre.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "52d989894a4756f941e023fea95965ab3bb0990474e65109ad3e80c1942d0ec0"
+  },
+  {
+    "catalogueId": "OLY-010",
+    "cardId": "olympe-10",
+    "path": "assets/cards/illustrations/OLY-010_Harmonie_Union_des_Contraires.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "8efb9c18953359c0b85604c979a2c21d5329000b136a826183f61ed7a538ac79"
+  },
+  {
+    "catalogueId": "OLY-011",
+    "cardId": "olympe-11",
+    "path": "assets/cards/illustrations/OLY-011_Enyo_Fureur_Guerriere.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "cbfee842d6934a87930cf8b3cdc09d1470a0c4d7cd45a31b4db74187432d3735"
+  },
+  {
+    "catalogueId": "OLY-012",
+    "cardId": "olympe-12",
+    "path": "assets/cards/illustrations/OLY-012_Demeter_Terre_Nourriciere.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c3c4c7bd13707260ac04e10a69a30c6f4f5beae24a328ee2de77151b3cd8033e"
+  },
+  {
+    "catalogueId": "OLY-013",
+    "cardId": "olympe-13",
+    "path": "assets/cards/illustrations/OLY-013_Hestia_Flamme_du_Foyer.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "9bdf12c0187995079183c91dce0b61cd77998a910c31247179bafadf52cbf98c"
+  },
+  {
+    "catalogueId": "OLY-014",
+    "cardId": "olympe-14",
+    "path": "assets/cards/illustrations/OLY-014_Hermes_Messager_des_Dieux.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bd6f133eb8915997ce6e2bd9f473b9e54897d76f8c823861c6c987eca66cd387"
+  },
+  {
+    "catalogueId": "OLY-015",
+    "cardId": "olympe-15",
+    "path": "assets/cards/illustrations/OLY-015_Dionysos_Dieu_de_l_Ivresse.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "493b221aff5c75fc7f6768ec8e5615a0adda27a0ef334f307af9e362c58dec72"
+  },
+  {
+    "catalogueId": "OLY-016",
+    "cardId": "olympe-16",
+    "path": "assets/cards/illustrations/OLY-016_Hephaistos_Forgeron_Divin.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "480e6176c547a911934d2c4b9e360f1e1d17b1b917d3cff436b0416a968e98a8"
+  },
+  {
+    "catalogueId": "OLY-017",
+    "cardId": "olympe-17",
+    "path": "assets/cards/illustrations/OLY-017_Pan_Seigneur_des_Bois.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "54ed75e823aa13ae8924ad036a08e56254179b1e27f7e2f3d2efe11985ecded2"
+  },
+  {
+    "catalogueId": "OLY-018",
+    "cardId": "olympe-18",
+    "path": "assets/cards/illustrations/OLY-018_Persephone_Reine_des_Deux_Mondes.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "f8ab3ef06707b0a1fedf4f1f0d3bfc8bd01e71ba766410127f3f50858ffe5da4"
+  },
+  {
+    "catalogueId": "OLY-019",
+    "cardId": "olympe-19",
+    "path": "assets/cards/illustrations/OLY-019_Ares_Fracas_de_la_Guerre.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "25a6dea8719ff2802cb4f3aa4de3d7ab6c45f9595a68cd0d05de3be3892de49d"
+  },
+  {
+    "catalogueId": "OLY-020",
+    "cardId": "olympe-20",
+    "path": "assets/cards/illustrations/OLY-020_Aphrodite_Beaute_Immortelle.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "0412049d2f2920cb7671eb180430182b8128c7d51eca357885979ee28f545125"
+  },
+  {
+    "catalogueId": "OLY-021",
+    "cardId": "olympe-21",
+    "path": "assets/cards/illustrations/OLY-021_Artemis_Chasseresse_Lunaire.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "5c4002ac240b0583e278e9b6dc4f15e2b9d03d39db58f104bac936e6c353e1ef"
+  },
+  {
+    "catalogueId": "OLY-022",
+    "cardId": "olympe-22",
+    "path": "assets/cards/illustrations/OLY-022_Apollon_Lumiere_de_Delphes.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c8a9e31c837fde481803c6f9fb72674ea26eb7359bea36733de9eb2deb8e836f"
+  },
+  {
+    "catalogueId": "OLY-023",
+    "cardId": "olympe-23",
+    "path": "assets/cards/illustrations/OLY-023_Athena_Sagesse_Armee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "ba27f572d441a9c1aff61652d10bcacf53fcf979c6020f0eb5156b621a328f01"
+  },
+  {
+    "catalogueId": "OLY-024",
+    "cardId": "olympe-24",
+    "path": "assets/cards/illustrations/OLY-024_Hera_Reine_de_l_Olympe.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "27b64fef68920c37b3f01bceb728359985021e95a615074da6adc80ef298d9a6"
+  },
+  {
+    "catalogueId": "OLY-025",
+    "cardId": "olympe-25",
+    "path": "assets/cards/illustrations/OLY-025_Hades_Souverain_des_Ombres.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "1491ef91f9ac926daab58a84bef030eec2df46b50fdf630dac157c35c7c0704b"
+  },
+  {
+    "catalogueId": "OLY-026",
+    "cardId": "olympe-26",
+    "path": "assets/cards/illustrations/OLY-026_Poseidon_Maitre_des_Oceans.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e259d3a308fc9a411b4174451706feff2a8ac5eddcff4b5a51abfe4e6b7c1f3e"
+  },
+  {
+    "catalogueId": "OLY-027",
+    "cardId": "olympe-27",
+    "path": "assets/cards/illustrations/OLY-027_Zeus_Roi_des_Dieux.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "479ea88355e17b86f0debe21041fe2d5c174683a660b793e597a0adc2058332a"
+  },
+  {
+    "catalogueId": "OLY-028",
+    "cardId": "olympe-28",
+    "path": "assets/cards/illustrations/OLY-028_Athena_Invincible_Stratege.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "2535ab61fcab37931c7caa9b8e8ec4025c42fbbbbc5353ce7fedd18d898ef69d"
+  },
+  {
+    "catalogueId": "OLY-029",
+    "cardId": "olympe-29",
+    "path": "assets/cards/illustrations/OLY-029_Poseidon_Colere_des_Abysses.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "aaf55ed419d5440f220fc23854611311fd64558f85912211c89126fd0587bc6d"
+  }
+]

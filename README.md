@@ -126,3 +126,8 @@ Charte Cinzel appliquée à tous les textes de l’interface : chargement local 
 La roue `BoosterWheelCarousel` remplace le slider sur l’accueil : perspective, tours infinis, inertie et sélection centrale. L’album propose une grille filtrable, une galerie et un visualiseur 360° recto/verso avec matières réactives, zoom et encyclopédie à relations cliquables. Profil local et missions de collection sont accessibles depuis la navigation. Les ressources officielles, reçus et sauvegardes sont conservés ; les illustrations individuelles manquantes restent identifiées. L’ouverture peut être passée sans retirer de nouvelles cartes.
 
 Voir [le compte rendu, les fichiers et les limites de validation](docs/PREMIUM-IMPLEMENTATION.md). Après mise à jour, lancer `npm ci` pour installer le retour tactile Expo ajouté.
+
+
+## Illustrations des Maîtres de l’Olympe
+
+Les 29 peintures OLY-001 à OLY-029 fournies sont associées aux cartes et au zoom, en conservant les originaux. Avec Zeus divin déjà intégré, l’extension possède ses 30 illustrations. Voir [les associations et contrôles](docs/ILLUSTRATIONS-OLYMPE.md). `npm test` contrôle également les fichiers d’illustration et leurs empreintes.
