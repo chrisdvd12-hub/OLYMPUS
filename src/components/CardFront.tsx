@@ -34,6 +34,13 @@ export function CardFront({
   const collection =
     EXTENSIONS.find((e) => e.id === card.extension)?.name ?? card.extension;
   const unit = width / CARD_REFERENCE.width;
+  // Measured inner cartouches of the seven master PNGs (not one shared offset).
+  const nameBox = [
+    { top: 0.681, height: 0.043 }, { top: 0.659, height: 0.045 },
+    { top: 0.673, height: 0.043 }, { top: 0.670, height: 0.043 },
+    { top: 0.665, height: 0.040 }, { top: 0.675, height: 0.047 },
+    { top: 0.673, height: 0.043 },
+  ][card.rarity]!;
   // Long descriptions must fit the ivory panel without touching the name band.
   const longDescription = (card.description?.length ?? 0) > 100;
   return (
@@ -100,7 +107,7 @@ export function CardFront({
               {RARITIES[card.rarity]?.toUpperCase()}
             </Text>
           </View>
-          <View style={s.name}>
+          <View style={[s.name, { top: `${nameBox.top * 100}%`, height: `${nameBox.height * 100}%` }]}>
             <Text
               numberOfLines={1}
               adjustsFontSizeToFit
@@ -108,7 +115,7 @@ export function CardFront({
                 color: ink,
                 fontFamily: fonts.bold,
                 fontSize: 100 * unit,
-                lineHeight: 120 * unit,
+                lineHeight: 110 * unit,
                 includeFontPadding: false,
                 textAlign: "center",
               }}

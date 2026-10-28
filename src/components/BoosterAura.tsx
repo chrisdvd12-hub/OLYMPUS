@@ -1,3 +1,6 @@
+import { BoosterParticles } from "./BoosterParticles";
+import { useOpeningLoop } from "../animations/openingMotion";
+import { useAnimatedStyle } from "react-native-reanimated";
 import { View } from "react-native";
 import Svg, { Path, Circle, Line } from "react-native-svg";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -9,6 +12,8 @@ export function BoosterAura({
   rarity: number;
   reduced: boolean;
 }) {
+  const glow = useOpeningLoop(!reduced && rarity >= 2, 7000);
+  const orbit = useAnimatedStyle(() => ({ transform: [{ rotate: `${glow.value * 360}deg` }] }));
   if (rarity < 1) return null;
   const color = COLORS[rarity]!;
   return (
@@ -24,13 +29,15 @@ export function BoosterAura({
           rarity >= 5 ? "#080713bb" : rarity >= 3 ? "#20193222" : "transparent",
       }}
     >
+      {rarity >= 2 && <BoosterParticles color={color} reduced={reduced} burst />}
+      <Animated.View style={[{ position: "absolute", inset: 0 }, orbit]}>
       <Svg width="100%" height="100%" viewBox="0 0 360 600">
         <Circle
           cx="180"
           cy="280"
           r="125"
           fill={color}
-          opacity={rarity >= 4 ? ".08" : ".035"}
+          opacity={rarity === 6 ? ".24" : rarity >= 4 ? ".16" : ".07"}
         />
         <Circle
           cx="180"
@@ -78,6 +85,7 @@ export function BoosterAura({
           })
         )}
       </Svg>
+      </Animated.View>
     </Animated.View>
   );
 }

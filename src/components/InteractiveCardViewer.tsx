@@ -181,7 +181,7 @@ export function InteractiveCardViewer({
                   width={cardWidth}
                   front={
                     <>
-                      <CardFace card={card} />
+                      <CardFace card={card} material={false} />
                       <CardMaterialEffects
                         card={card}
                         yaw={yaw}

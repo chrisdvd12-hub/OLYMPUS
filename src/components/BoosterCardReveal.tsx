@@ -6,6 +6,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { COLORS, RARITIES, resolveCard, type Card } from "../domain/catalog";
+import { CardMaterialEffects } from "./CardMaterialEffects";
+import { useAppActivity } from "../animations/openingMotion";
 import { CardFace } from "./CardFace";
 import { discoveryFeedback } from "../interaction/feedback";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
@@ -32,6 +34,9 @@ export function BoosterCardReveal({
   onInspect?: () => void;
 }) {
   const current = resolveCard(card);
+  const active = useAppActivity();
+  const yaw = useSharedValue(0);
+  const pitch = useSharedValue(0);
   const artwork = true;
   const revealing = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -109,7 +114,7 @@ export function BoosterCardReveal({
           style,
         ]}
       >
-        {revealed ? <CardFace card={current} /> : <CardBack />}
+        {revealed ? <><CardFace card={current} material={false} /><CardMaterialEffects card={current} yaw={yaw} pitch={pitch} active={active && enabled} reduced={reduced} /></> : <CardBack />}
       </Animated.View>
     </Pressable>
   );

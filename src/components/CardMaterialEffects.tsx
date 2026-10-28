@@ -9,7 +9,6 @@ import Svg, {
   Mask,
   Rect,
   Stop,
-  Circle,
   Path,
 } from "react-native-svg";
 import Animated, {
@@ -36,26 +35,26 @@ export const MATERIALS = [
   {
     color: "#468cff",
     accent: "#b3d7ff",
-    strength: 0.07,
+    strength: 0.24,
     label: "Argent et lapis-lazuli",
   },
   {
     color: "#a178da",
     accent: "#e3b8ff",
-    strength: 0.085,
+    strength: 0.36,
     label: "Améthyste irisée",
   },
-  { color: "#e3b74a", accent: "#fff0b6", strength: 0.11, label: "Or royal" },
+  { color: "#e3b74a", accent: "#fff0b6", strength: 0.50, label: "Or royal" },
   {
     color: "#9f69dd",
     accent: "#e5ba65",
-    strength: 0.12,
+    strength: 0.65,
     label: "Obsidienne et constellations",
   },
   {
     color: "#fff6dd",
     accent: "#ffd279",
-    strength: 0.13,
+    strength: 0.85,
     label: "Marbre et or céleste",
   },
 ] as const;
@@ -77,8 +76,8 @@ export function CardMaterialEffects({
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const material = MATERIALS[card.rarity]!;
   const shimmer = useOpeningLoop(
-    active && !reduced && card.rarity >= 4,
-    9000,
+    active && !reduced && card.rarity >= 2,
+    7200 - card.rarity * 500,
     true,
   );
   const props = useAnimatedProps(() => ({
@@ -87,6 +86,7 @@ export function CardMaterialEffects({
   const sparkle = useAnimatedProps(() => ({
     opacity: reduced ? 0.35 : 0.35 + shimmer.value * 0.5,
   }));
+  if (card.rarity < 2) return null;
   return (
     <View
       pointerEvents="none"
@@ -112,7 +112,15 @@ export function CardMaterialEffects({
               preserveAspectRatio="xMidYMid meet"
             />
             <Rect x="60" y="70" width="380" height="375" fill="#fff" />
+
           </Mask>
+          <LinearGradient id={`foil-${id}`} x1="0%" y1="100%" x2="100%" y2="0%">
+            <Stop offset="0" stopColor="#54dfff" stopOpacity="0" />
+            <Stop offset=".25" stopColor="#54dfff" stopOpacity={material.strength * .35} />
+            <Stop offset=".5" stopColor="#d8a0ff" stopOpacity={material.strength * .5} />
+            <Stop offset=".75" stopColor="#ffe3a0" stopOpacity={material.strength * .4} />
+            <Stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </LinearGradient>
           <LinearGradient
             id={`material-light-${id}`}
             x1="0%"
@@ -140,24 +148,24 @@ export function CardMaterialEffects({
           </LinearGradient>
         </Defs>
         <G mask={`url(#material-mask-${id})`}>
+          <AnimatedRect animatedProps={props} y="0" width="480" height="440" fill={`url(#foil-${id})`} />
           <AnimatedRect
             animatedProps={props}
             y="-200"
             width="250"
-            height="1100"
+            height="665"
             transform="skewX(-18)"
             fill={`url(#material-light-${id})`}
           />
           {card.rarity >= 2 && (
             <AnimatedG animatedProps={sparkle}>
-              {Array.from({ length: card.rarity >= 5 ? 12 : 4 }, (_, i) => (
-                <Circle
+              {Array.from({ length: card.rarity === 6 ? 32 : card.rarity >= 5 ? 22 : card.rarity * 3 }, (_, i) => (
+                <Path
                   key={i}
-                  cx={25 + ((i * 83) % 460)}
-                  cy={35 + ((i * 117) % 620)}
-                  r={i % 3 ? 1 : 2}
+                  d={`M${25 + ((i * 83) % 460)} ${35 + ((i * 117) % 620) - (i % 3 ? 3 : 7)} l2 ${i % 3 ? 2 : 5} l${i % 3 ? 2 : 5} 2 l-${i % 3 ? 2 : 5} 2 l-2 ${i % 3 ? 2 : 5} l-2 -${i % 3 ? 2 : 5} l-${i % 3 ? 2 : 5} -2 l${i % 3 ? 2 : 5} -2 Z`}
                   fill={material.accent}
                 />
+
               ))}
               {card.rarity === 5 && (
                 <Path
