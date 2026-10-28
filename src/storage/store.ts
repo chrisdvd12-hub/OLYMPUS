@@ -1,15 +1,22 @@
 import * as SQLite from "expo-sqlite";
+import { Platform } from "react-native";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { purchase, type BoosterSource } from "../domain/boosters";
 import { validProfileName } from "../domain/collection";
 import { createStateCoordinator } from "./coordinator";
 import { createSqlitePersistence } from "./sqlitePersistence";
+import { createWebPersistence } from "./webPersistence";
 
-const persistence = createSqlitePersistence(() =>
-  SQLite.openDatabaseAsync("olympus.db"),
-);
-// Prepare the connection while local fonts load; a failure is retried by the first sync.
-void persistence.prepare().catch(() => {});
+const persistence =
+  Platform.OS === "web"
+    ? createWebPersistence()
+    : createSqlitePersistence(() => SQLite.openDatabaseAsync("olympus.db"));
+// Prepare the native connection while local fonts load; web persistence is
+// immediately available and does not depend on SQLite WebAssembly startup.
+if (Platform.OS !== "web")
+  void (persistence as ReturnType<typeof createSqlitePersistence>)
+    .prepare()
+    .catch(() => {});
 export const gameStore = createStateCoordinator(persistence);
 export const subscribe = gameStore.subscribe;
 export const getSnapshot = gameStore.getSnapshot;

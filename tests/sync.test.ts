@@ -16,6 +16,7 @@ import {
   createSqlitePersistence,
   type StateDatabase,
 } from "../src/storage/sqlitePersistence.ts";
+import { createWebPersistence } from "../src/storage/webPersistence.ts";
 
 async function harness(
   seed: GameState = { ...initialState(0), dailyNextAt: DAILY_REWARD_MS },
@@ -312,4 +313,21 @@ test("SQLite web : la table existe même si le pilote n’exécute que la premi�
   await persistence.prepare();
   assert.deepEqual(await persistence.read(), initialState(123));
   db.close();
+});
+
+test("Vercel : la sauvegarde navigateur persiste sans aucune table SQLite", async () => {
+  const values = new Map<string, string>();
+  const browserStorage = {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => values.set(key, value),
+  };
+  const first = createWebPersistence(browserStorage, () => 0);
+  const bought = await first.transact((state) =>
+    purchase(state, "olympe", "paid", "web-receipt", 0, () => 0),
+  );
+  const restarted = createWebPersistence(browserStorage, () => 999);
+  const restored = await restarted.read();
+  assert.deepEqual(restored.pending, bought.pending);
+  assert.deepEqual(restored.collection, bought.collection);
+  assert.equal(restored.drachmas, bought.drachmas);
 });

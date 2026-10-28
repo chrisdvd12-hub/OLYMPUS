@@ -32,6 +32,25 @@ interface GraphicsQualityValue extends GraphicsProfile {
 
 const STORAGE_KEY = "olympus.graphics.preference.v1";
 
+function readStoredPreference() {
+  if (Platform.OS !== "web") return Storage.getItem(STORAGE_KEY);
+  try {
+    return Promise.resolve(globalThis.localStorage.getItem(STORAGE_KEY));
+  } catch {
+    return Promise.resolve(null);
+  }
+}
+
+function writeStoredPreference(value: GraphicsPreference) {
+  if (Platform.OS !== "web") return Storage.setItem(STORAGE_KEY, value);
+  try {
+    globalThis.localStorage.setItem(STORAGE_KEY, value);
+    return Promise.resolve();
+  } catch {
+    return Promise.resolve();
+  }
+}
+
 const GraphicsQualityContext = createContext<GraphicsQualityValue>({
   ...GRAPHICS_PROFILES.balanced,
   automaticTier: "balanced",
@@ -49,7 +68,7 @@ export function GraphicsQualityProvider({ children }: { children: ReactNode }) {
     platform: Platform.OS,
   });
   useEffect(() => {
-    void Storage.getItem(STORAGE_KEY)
+    void readStoredPreference()
       .then((stored) => {
         if (
           stored === "auto" ||
@@ -63,7 +82,7 @@ export function GraphicsQualityProvider({ children }: { children: ReactNode }) {
   }, []);
   const setPreference = useCallback((next: GraphicsPreference) => {
     updatePreference(next);
-    void Storage.setItem(STORAGE_KEY, next).catch(() => {});
+    void writeStoredPreference(next).catch(() => {});
   }, []);
   const tier = resolveGraphicsTier(preference, automaticTier);
   const profile = useMemo<GraphicsQualityValue>(
