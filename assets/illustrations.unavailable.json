@@ -1,0 +1,10 @@
+[
+  {
+    "catalogueId": "OLY-049",
+    "cardId": "titans-19",
+    "filename": "OLY-049_Eos.png",
+    "sourceArchive": "OLYMPIENS_extension_2_partie_3.zip",
+    "sha256": "85b650bfd74626e491ebe6afa09659bd3cd4630077f9385ff3156eb070aab419",
+    "reason": "PNG fourni tronqué : décodage complet impossible. Source originale conservée localement ; image non publiée et non affichée."
+  }
+]

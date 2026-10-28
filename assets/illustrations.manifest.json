@@ -230,5 +230,237 @@
     "width": 750,
     "height": 1050,
     "sha256": "aaf55ed419d5440f220fc23854611311fd64558f85912211c89126fd0587bc6d"
+  },
+  {
+    "catalogueId": "OLY-031",
+    "cardId": "titans-1",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-031_Crios.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bec27bf59314143b3c19046593ec71ac9d8b0cba880f5ccb4112bfa13dd0dcd0"
+  },
+  {
+    "catalogueId": "OLY-032",
+    "cardId": "titans-2",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-032_Ceos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "00f13142aa261aba67aafaa10d1ce10888fccab604b00d9eee127a261468c172"
+  },
+  {
+    "catalogueId": "OLY-033",
+    "cardId": "titans-3",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-033_Phbe.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e0f31dd2e73a61c54805bd1e0ff13e49b1377085d8ff5337e2eb436c4ff2ed21"
+  },
+  {
+    "catalogueId": "OLY-034",
+    "cardId": "titans-4",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-034_Theia.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "82642297e4deb3c08c82dabb068b29ed3e7f7faaef6a097eab5cdceab248fb0c"
+  },
+  {
+    "catalogueId": "OLY-035",
+    "cardId": "titans-5",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-035_Eurybie.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "2848c06000e4f942d4b799ac4072519e459265e7c6ea5a6588513187d4764b69"
+  },
+  {
+    "catalogueId": "OLY-036",
+    "cardId": "titans-6",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-036_Mnemosyne.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "83c835cac59bba8bd7d19a3c3c2735617c4f100fb734639e0ac8db830463c94f"
+  },
+  {
+    "catalogueId": "OLY-037",
+    "cardId": "titans-7",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-037_Themis.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "4c52d8f876ea019cb9cd757e0f4cd79d21153f9d7613c7a967a1aba66c505e76"
+  },
+  {
+    "catalogueId": "OLY-038",
+    "cardId": "titans-8",
+    "path": "assets/cards/illustrations/titans-partie-1/OLY-038_Tethys.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "2c983cbe55615725a08b87950bed29bf14e9eb6455d20234e9f87807455e5f50"
+  },
+  {
+    "catalogueId": "OLY-039",
+    "cardId": "titans-9",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-039_Ocean.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "b1d1dc901fdeeea42f8314cdc42b2c13c3153fd71c01042bbbd3607204bfce1d"
+  },
+  {
+    "catalogueId": "OLY-040",
+    "cardId": "titans-10",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-040_Epimethee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "bc1f77f571d1f1872835bc63715437865a85469c9de337b228b3531874eb0808"
+  },
+  {
+    "catalogueId": "OLY-041",
+    "cardId": "titans-11",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-041_Atlas.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6863d669ab96849f56f22ef6fa89bf1214aecdc6447123bdae1bbd10bd61f61c"
+  },
+  {
+    "catalogueId": "OLY-042",
+    "cardId": "titans-12",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-042_Promethee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "a70149d94c016b16ddd5e12a92e7f331d0a5acc1da0b05637691a5e6162461f0"
+  },
+  {
+    "catalogueId": "OLY-043",
+    "cardId": "titans-13",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-043_Hyperion.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "8c904a4c221e531dc2d4476b92e00f1abd1078fafad339692455b8f23ddc84cf"
+  },
+  {
+    "catalogueId": "OLY-044",
+    "cardId": "titans-14",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-044_Japet.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "59bb8715288181eb8b05c342d18e610f8d56f96b374347fb4fef9de28a9bffbc"
+  },
+  {
+    "catalogueId": "OLY-045",
+    "cardId": "titans-15",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-045_Asteria.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "90132e114ef220068eb6fbcf16f8596461ac5a417fbcc484369daa6642fd0909"
+  },
+  {
+    "catalogueId": "OLY-046",
+    "cardId": "titans-16",
+    "path": "assets/cards/illustrations/titans-partie-2/OLY-046_Leto.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "5a75aeb7d674586db9999885ade4f69a728994b655158f9abcae3e6a7ffc07c1"
+  },
+  {
+    "catalogueId": "OLY-047",
+    "cardId": "titans-17",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-047_Helios.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "4b9380cee59ff44a708c2f547df80000edf4f5759da9bfc8accf9734f4dd93ce"
+  },
+  {
+    "catalogueId": "OLY-048",
+    "cardId": "titans-18",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-048_Selene.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e06397e8a0148e605b21c3bb5fe0760da66dfec6c7bfa98577ac1922d176bd96"
+  },
+  {
+    "catalogueId": "OLY-050",
+    "cardId": "titans-20",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-050_Metis.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "cc19fedd8638adff22e636030828aba414d5a9baaf42744f71ba1209fd2b9f6b"
+  },
+  {
+    "catalogueId": "OLY-051",
+    "cardId": "titans-21",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-051_Rhea.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "64d6fcf90703ba935fe5cab4bc1337c68d62e670d1d12aa56e841100f62b0a5e"
+  },
+  {
+    "catalogueId": "OLY-052",
+    "cardId": "titans-22",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-052_Cronos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "71465f6648bb08e00686ad94655eaf3a72deeb12936a3baf3d10b7d79f5c9b67"
+  },
+  {
+    "catalogueId": "OLY-053",
+    "cardId": "titans-23",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-053_Gaia.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "73f4a25b4a25b0d6a8cfcd7123db2340b4010b240050fff4e5c7ed716b0961ea"
+  },
+  {
+    "catalogueId": "OLY-054",
+    "cardId": "titans-24",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-054_Ouranos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "223490a8a1daf2146b7fc606d40e2d7adbdc4da1f6f8726555724768c81dd4e2"
+  },
+  {
+    "catalogueId": "OLY-055",
+    "cardId": "titans-25",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-055_Nyx.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "909a9281146ca6b6b8a71ad587c534c743596a55940f6dcf1c24ded16ae03081"
+  },
+  {
+    "catalogueId": "OLY-056",
+    "cardId": "titans-26",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-056_Erebe.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "763662c51f06d8dc1b2a8b0d0766fae040450d9bfea82fb4a583a1a9651d180f"
+  },
+  {
+    "catalogueId": "OLY-057",
+    "cardId": "titans-27",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-057_Tartare.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e271d95db744e4d0def446eaba7dcb2e41489b0999d60b96bf3c82f9252b2bf9"
+  },
+  {
+    "catalogueId": "OLY-058",
+    "cardId": "titans-28",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-058_Cronos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "dff5aa8e24f0fe8a50bb193a49438de6328f4d40129ce5a99e438952e38cd674"
+  },
+  {
+    "catalogueId": "OLY-059",
+    "cardId": "titans-29",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-059_Gaia.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e39d294e558231b57978579b9379d451fdf5bcbe135c0d78b1533e73161eef50"
+  },
+  {
+    "catalogueId": "OLY-060",
+    "cardId": "titans-30",
+    "path": "assets/cards/illustrations/titans-partie-4/OLY-060_Chaos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "85db00312239c4d7c371f091289ac2a1f423b095d270698e0831e43266abaf53"
   }
 ]

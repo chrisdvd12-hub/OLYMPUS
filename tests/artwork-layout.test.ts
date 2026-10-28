@@ -63,8 +63,9 @@ test("chaque fenêtre peinte couvre intégralement le trou réel de son cadre PN
   }
 });
 
-test("les 30 illustrations ont un cadrage explicite et un personnage visible", () => {
-  assert.equal(Object.keys(ARTWORK_FOCUS).length, 30);
+test("toutes les illustrations ont un cadrage explicite et un personnage visible", () => {
+  const entries = JSON.parse(readFileSync(new URL("../assets/illustrations.manifest.json", import.meta.url), "utf8")) as { cardId: string }[];
+  assert.deepEqual(Object.keys(ARTWORK_FOCUS).sort(), [...entries.map(e => e.cardId), "olympe-30"].sort());
   for (const [id, focus] of Object.entries(ARTWORK_FOCUS)) {
     const card = CARDS.find((c) => c.id === id)!;
     assert.ok(card);

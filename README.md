@@ -138,3 +138,8 @@ Les 29 peintures OLY-001 à OLY-029 fournies sont associées aux cartes et au zo
 La sauvegarde est désormais partagée entre les écrans par un instantané validé après COMMIT. Les rafraîchissements inutiles et la réécriture toutes les 30 secondes ont été supprimés. L’offrande s’actualise à son échéance et au retour au premier plan. Les images utilisent le cache natif Expo Image ; les originaux et cadrages sont conservés. Exécuter `npm ci` après la mise à jour pour installer cette dépendance.
 
 Voir [les changements, les mesures et les limites](docs/SYNCHRONISATION-PERFORMANCE.md). La sauvegarde reste locale à l’appareil, sans compte cloud.
+
+
+## Illustrations des Titans — quatre archives intégrées
+
+Les quatre archives OLY-031 à OLY-060 fournissent 29 PNG valides, intégrés sans retouche des originaux. Éos OLY-049 est tronqué dans la source reçue : sa carte conserve le remplacement temporaire en attendant un PNG valide. Les quatre INDEX, les associations et les empreintes sont vérifiés ; les données et sauvegardes sont conservées. Les variantes de Cronos et Gaïa gardent leurs illustrations distinctes. Avec les 30 Olympiens, 59 cartes disposent maintenant d’une peinture ; les 60 illustrations des Héros et Créatures restent à fournir, ainsi que le remplacement d’Éos. Voir [le détail des fichiers et des validations](docs/ILLUSTRATIONS-TITANS.md).
