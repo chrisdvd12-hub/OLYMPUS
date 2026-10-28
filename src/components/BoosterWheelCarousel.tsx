@@ -69,7 +69,7 @@ function WheelPack({
           position: "absolute",
           left: "50%",
           marginLeft: -124,
-          top: 70,
+          top: 20,
           width: 248,
           height: 372,
         },
@@ -219,7 +219,7 @@ export function BoosterWheelCarousel({
         <Animated.View
           collapsable={false}
           style={{
-            height: 525,
+            height: 475,
             width: "100%",
             overflow: "hidden",
             justifyContent: "center",
@@ -232,7 +232,7 @@ export function BoosterWheelCarousel({
               width: radius * 2,
               height: 250,
               left: "50%",
-              top: 131,
+              top: 81,
               marginLeft: -radius,
               borderRadius: 999,
               borderWidth: 1,
