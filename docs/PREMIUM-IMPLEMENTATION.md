@@ -22,7 +22,7 @@ L’analyse a couvert les routes, composants, animations, domaine, stockage, tes
 
 `CardFront` fournit un gabarit normalisé de référence **1500 × 2100**, ratio **5:7**, avec illustration, cadre maître de rareté et champs de texte indépendants. Les sept cadres sont partagés par toutes les extensions. Les dimensions réelles des PNG fournis sont conservées ; il ne s’agit pas de nouveaux exports de peintures en 1500 × 2100.
 
-**État lors de la refonte initiale** : seule la peinture individuelle de Zeus divin était fournie. Les 119 autres illustrations ne sont pas créées ou remplacées par des peintures génériques ; les cartes découvertes emploient leur cadre officiel et la mention « Illustration à fournir ». Le recto complet de Zeus déjà approuvé reste affiché intact, comme exception de conservation ; sa peinture indépendante est disponible dans le zoom et dans le gabarit `CardFront`. Uniformiser également ce recto signifierait remplacer la composition précédemment approuvée.
+**État lors de la refonte initiale** : seule la peinture individuelle de Zeus divin était fournie. Depuis, les 30 peintures des Maîtres de l’Olympe ont été intégrées ; les 90 autres restent à fournir, sans remplacement par des peintures génériques. À la demande du propriétaire, le recto de Zeus est désormais assemblé avec sa peinture et le cadre maître divin pour centrer le nom seul. Son ancien recto complet est conservé intact comme archive. Les surnoms des 120 cartes sont affichés en bas des fiches, dans les caractéristiques.
 
 Aucun cadre, sachet, verso, peinture, catalogue ou solde n’a été supprimé. Les textes des illustrations déjà approuvées ne sont pas réécrits. Trajan Pro n’étant pas fourni, Cinzel Regular reste le remplacement déclaré pour les petits textes.
 

@@ -18,7 +18,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { useOpeningLoop } from "../animations/openingMotion";
 import { RARITY_FRAME_ART } from "./rarityFrameArt";
-import { CARD_ART, hasCardArt } from "./cardArt";
 import type { Card } from "../domain/catalog";
 
 export const MATERIALS = [
@@ -107,18 +106,12 @@ export function CardMaterialEffects({
             height="700"
           >
             <SvgImage
-              href={
-                hasCardArt(card.id)
-                  ? CARD_ART[card.id]
-                  : RARITY_FRAME_ART[card.rarity]
-              }
+              href={RARITY_FRAME_ART[card.rarity]}
               width="500"
               height="700"
               preserveAspectRatio="xMidYMid meet"
             />
-            {!hasCardArt(card.id) && (
-              <Rect x="60" y="70" width="380" height="375" fill="#fff" />
-            )}
+            <Rect x="60" y="70" width="380" height="375" fill="#fff" />
           </Mask>
           <LinearGradient
             id={`material-light-${id}`}

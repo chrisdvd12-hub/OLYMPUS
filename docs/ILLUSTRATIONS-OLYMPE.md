@@ -2,7 +2,7 @@
 
 Les 29 peintures originales OLY-001 à OLY-029 ont été fournies dans quatre lots : huit premières images avec INDEX.csv, huit images complémentaires, huit images OLY-017 à OLY-024 et cinq images OLY-025 à OLY-029. Les PNG de 750 × 1050 sont copiés sans retouche, recompression, agrandissement ni suppression de leur décor. Leurs empreintes SHA-256 sont enregistrées dans assets/illustrations.manifest.json. INDEX.csv est conservé à l’identique pour le premier lot.
 
-Avec Zeus divin OLY-030 déjà présent, les 30 cartes de l’extension disposent d’une illustration. Les 90 cartes des autres extensions attendent encore leurs peintures individuelles. Les sources et le recto approuvé de Zeus divin restent inchangés.
+Avec Zeus divin OLY-030 déjà présent, les 30 cartes de l’extension disposent d’une illustration. Les 90 cartes des autres extensions attendent encore leurs peintures individuelles. Toutes les sources restent inchangées ; l’ancien recto précomposé de Zeus est archivé, tandis que son affichage utilise désormais le cadre maître divin et la peinture séparée.
 
 Le registre illustrationArt.ts associe les fichiers aux identifiants persistants olympe-1 à olympe-29 ; il est partagé par CardFront et le zoom. Chaque peinture utilise le cadre maître de sa rareté, les textes existants et le ratio 5:7. La fenêtre du cadre affiche la peinture sans étirement ; le zoom permet de voir la source entière. Les décors des peintures restent opaques, tandis que l’extérieur des cadres conserve sa transparence.
 
@@ -13,6 +13,12 @@ Validation : npm run typecheck, npm test (30 tests et contrôles d’images), ex
 
 ## Correction du cadrage
 
-Le cadrage automatique centré en mode cover a été retiré. Les fenêtres des sept cadres officiels ont été mesurées dans leur canal alpha et possèdent désormais leurs propres coordonnées. Chaque peinture OLY-001 à OLY-029 a un point de cadrage dédié, placé dans le tiers supérieur de la fenêtre ; un zoom modéré permet de centrer horizontalement le personnage. La position et la taille de l’image sont explicites, avec conservation stricte de son ratio. La source n’est ni retouchée ni recadrée sur disque. Le verso, le zoom plein tableau et le recto approuvé de Zeus divin restent inchangés.
+Le cadrage automatique centré en mode cover a été retiré. Les fenêtres des sept cadres officiels ont été mesurées dans leur canal alpha et possèdent désormais leurs propres coordonnées. Chaque peinture OLY-001 à OLY-030 a un point de cadrage dédié, placé dans le tiers supérieur de la fenêtre ; un zoom modéré permet de centrer horizontalement le personnage. La position et la taille de l’image sont explicites, avec conservation stricte de son ratio. La source n’est ni retouchée ni recadrée sur disque. Le verso et le zoom plein tableau restent inchangés.
 
-Le rendu attend la largeur réelle du composant pour éviter un premier affichage à une échelle incorrecte. Quatre tests de régression vérifient la couverture des ouvertures réelles des PNG, les points de cadrage, l’absence de déformation et le placement proportionnel de la vignette au plein écran. La suite comprend désormais 34 tests, en plus des contrôles de ressources. La planche de contrôle est produite avec les composants React Native adaptés pour l’aperçu web ; le rendu natif reste à confirmer sur appareil.
+Le rendu attend la largeur réelle du composant pour éviter un premier affichage à une échelle incorrecte. Quatre tests de régression vérifient la couverture des ouvertures réelles des PNG, les 30 points de cadrage, l’absence de déformation et le placement proportionnel de la vignette au plein écran. La suite comprend désormais 44 tests, en plus des contrôles de ressources. La planche de contrôle est produite avec les composants React Native adaptés pour l’aperçu web ; le rendu natif reste à confirmer sur appareil.
+
+## Noms et surnoms
+
+Les 120 cartes affichent uniquement le nom, centré horizontalement et verticalement dans le cartouche. Le surnom n’est pas supprimé du catalogue : il apparaît dans « CARACTÉRISTIQUES DU PERSONNAGE », en bas de la fiche, et reste recherchable dans l’album. Zeus divin suit la même règle ; son ancienne image avec texte incrusté n’est plus affichée. Aucun original, numéro, texte mythologique ou enregistrement de collection n’est modifié.
+
+Validation de cette modification : typage strict, 44 tests métier/cadrage/synchronisation, contrôles alpha et empreintes des peintures ; exports natifs iOS/Android. L’aperçu adapté pour navigateur vérifie le nom seul et son centrage sur les 120 cartes, puis le surnom unique dans le panneau final de Zeus, les parcours album/encyclopédie/ouverture de sept cartes et les largeurs 320/390/768. Les gestes et le rendu typographique natifs restent à confirmer sur appareil.

@@ -44,6 +44,7 @@ export const ARTWORK_FOCUS: Readonly<Record<string, ArtworkFocus>> = {
   "olympe-27": { x: 0.544, y: 0.231 },
   "olympe-28": { x: 0.543, y: 0.224 },
   "olympe-29": { x: 0.393, y: 0.221 },
+  "olympe-30": { x: 0.548, y: 0.166 },
 };
 export function artworkLayout(
   cardId: string,

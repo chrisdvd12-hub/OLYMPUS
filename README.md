@@ -46,7 +46,7 @@ Compte de démonstration : 500 drachmes, deux charges gratuites. Aucun gain réc
 Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une version commerciale définitive.
 
 - Les 120 peintures individuelles, descriptions et fiches définitives manquent. Chaque carte affiche « ART PROVISOIRE ».
-- Zeus divin utilise son recto complet approuvé. Les six autres cadres ont été fournis pour toutes les extensions ; les compositions des prochaines cartes restent à valider. Les autres cartes utilisent encore les cadres de repli provisoires.
+- Les sept cadres maîtres officiels sont partagés par toutes les extensions. Les noms seuls sont centrés dans les cartouches ; les surnoms figurent en bas des fiches, dans les caractéristiques. Zeus divin utilise également cet assemblage ; son ancien recto complet reste archivé.
 - Les quatre sachets individuels sont intégrés en PNG transparents. Les JPG originaux sont conservés comme références. Il manque encore le décor peint du temple pour la boutique.
 - Brillance animée, balayage de découpe, particules douces et retournements sont présents. Flottement, retrait de la languette, apparition en éventail puis grille, rayons légendaires, constellation mythique et halo divin sont intégrés sous une forme simplifiée. La déchirure physique réaliste et la mise en scène commerciale définitive restent à finaliser.
 - Réduction des animations : préférence système et interrupteur pendant la session ; les effets continus sont arrêtés pour les boosters non sélectionnés.
@@ -100,7 +100,7 @@ Les quatre sachets affichés utilisent désormais les PNG RGBA `assets/boosters/
 
 `OLY-30` désigne désormais Zeus, Le Souverain Céleste, dans Les Maîtres de l’Olympe. L’identifiant interne `olympe-30` reste inchangé afin de préserver les collections et les reçus enregistrés. Cet emplacement était auparavant une donnée de démonstration nommée Dionysos. Le catalogue conserve 120 identifiants uniques, 30 par extension, avec les mêmes poids de rareté.
 
-Le recto local `assets/cards/zeus-divine-front.png` est la copie exacte du dernier aperçu approuvé : code OLY-30 à gauche, collection à droite. Il est utilisé sans surimpression de cadre ni de texte dans les révélations, les résultats et la fiche de carte. Le cadre et l’illustration originaux restent conservés séparément pour les prochaines créations. Les textes du recto sont aplatis dans ce visuel validé : toute modification de ces textes nécessite un nouvel export approuvé.
+Les anciens rectos locaux `assets/cards/zeus-divine-front.png` et `zeus-divine-front-transparent.png` restent archivés sans modification. À la demande du propriétaire, Zeus utilise désormais le même assemblage que les autres cartes : illustration d’origine, cadre maître divin et nom seul centré, sans le surnom incrusté de l’ancienne image. Le code OLY-30 reste à gauche et la collection à droite. Le surnom est conservé en bas de la fiche dans « CARACTÉRISTIQUES DU PERSONNAGE ».
 
 La fiche affiche la description, l’histoire, les attributs et les relations fournis par le propriétaire. Elle s’ouvre depuis les résultats, les lignes de collection et le bouton « VOIR ZEUS DIVIN » dans la boutique de l’extension. L’aperçu d’une carte non possédée ne l’attribue pas et ne modifie aucune probabilité. Les anciens reçus sont résolus contre les métadonnées actuelles à l’affichage, sans nouveau tirage ni changement de quantité.
 

@@ -3,7 +3,7 @@ import { EXTENSIONS, RARITIES, type Card } from "../domain/catalog";
 import { AppText as Text } from "./AppText";
 import { GreekOrnament } from "./GreekOrnament";
 import { MythologyEncyclopedia } from "./MythologyEncyclopedia";
-import { styles, theme } from "./theme";
+import { styles } from "./theme";
 export function CardDetailPanel({
   card,
   quantity,
@@ -18,9 +18,6 @@ export function CardDetailPanel({
       <Text accessibilityRole="header" style={styles.title}>
         {card.name.toUpperCase()}
       </Text>
-      <Text style={[styles.subtitle, { color: theme.highlight }]}>
-        {card.epithet}
-      </Text>
       <GreekOrnament />
       <Text style={styles.muted}>
         {card.number} · {RARITIES[card.rarity]}
@@ -29,11 +26,27 @@ export function CardDetailPanel({
       <Text style={styles.muted}>
         {EXTENSIONS.find((e) => e.id === card.extension)?.name}
       </Text>
-      <Text style={styles.muted}>{card.category}</Text>
       <View style={styles.panel}>
         <Text style={styles.text}>{card.description}</Text>
       </View>
       <MythologyEncyclopedia card={card} onNavigate={onNavigate} />
+      <View style={styles.panel}>
+        <Text accessibilityRole="header" style={styles.subtitle}>
+          CARACTÉRISTIQUES DU PERSONNAGE
+        </Text>
+        {!!card.epithet && (
+          <View style={{ gap: 4 }}>
+            <Text style={[styles.subtitle, { textAlign: "left" }]}>SURNOM</Text>
+            <Text style={styles.text}>{card.epithet}</Text>
+          </View>
+        )}
+        {!!card.category && (
+          <View style={{ gap: 4 }}>
+            <Text style={[styles.subtitle, { textAlign: "left" }]}>CATÉGORIE</Text>
+            <Text style={styles.text}>{card.category}</Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 }

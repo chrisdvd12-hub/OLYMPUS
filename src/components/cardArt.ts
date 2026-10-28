@@ -1,5 +1,6 @@
-// Exact complete front approved by the owner, with OLY-30 left and collection right.
-// The original frame and painting are also kept under assets/cards for future designs.
+// Archived complete Zeus front, with OLY-30 left and collection right.
+// Not used in the live card: its baked-in epithet was moved to character details.
+// Original frame, painting and complete images remain unchanged on disk.
 export const CARD_ART = {
   "olympe-30": require("../../assets/cards/zeus-divine-front-transparent.png"),
 } as const;

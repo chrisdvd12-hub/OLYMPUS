@@ -63,18 +63,19 @@ test("chaque fenêtre peinte couvre intégralement le trou réel de son cadre PN
   }
 });
 
-test("les 29 illustrations ont un cadrage explicite et un personnage visible", () => {
-  assert.equal(Object.keys(ARTWORK_FOCUS).length, 29);
+test("les 30 illustrations ont un cadrage explicite et un personnage visible", () => {
+  assert.equal(Object.keys(ARTWORK_FOCUS).length, 30);
   for (const [id, focus] of Object.entries(ARTWORK_FOCUS)) {
     const card = CARDS.find((c) => c.id === id)!;
     assert.ok(card);
     for (const width of [72, 195, 320, 440, 1500]) {
-      const { image, viewport } = artworkLayout(id, card.rarity, width);
+      const sourceAspect = id === "olympe-30" ? 914 / 1280 : 5 / 7;
+      const { image, viewport } = artworkLayout(id, card.rarity, width, sourceAspect);
       // The image covers the aperture and is never stretched.
       assert.ok(image.left <= 1e-8 && image.top <= 1e-8);
       assert.ok(image.left + image.width >= viewport.width - 1e-8);
       assert.ok(image.top + image.height >= viewport.height - 1e-8);
-      assert.ok(Math.abs(image.width / image.height - 5 / 7) < 1e-10);
+      assert.ok(Math.abs(image.width / image.height - sourceAspect) < 1e-10);
       // Face/upper body is centred horizontally in the opening, away from the rim.
       const x = (image.left + image.width * focus.x) / viewport.width;
       const y = (image.top + image.height * focus.y) / viewport.height;

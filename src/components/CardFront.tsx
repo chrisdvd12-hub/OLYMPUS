@@ -34,6 +34,8 @@ export function CardFront({
   const collection =
     EXTENSIONS.find((e) => e.id === card.extension)?.name ?? card.extension;
   const unit = width / CARD_REFERENCE.width;
+  // Long descriptions must fit the ivory panel without touching the name band.
+  const longDescription = (card.description?.length ?? 0) > 100;
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
       <View
@@ -106,22 +108,12 @@ export function CardFront({
                 color: ink,
                 fontFamily: fonts.bold,
                 fontSize: 100 * unit,
+                lineHeight: 120 * unit,
+                includeFontPadding: false,
                 textAlign: "center",
               }}
             >
               {card.name.toUpperCase()}
-            </Text>
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              style={{
-                color: ink,
-                fontFamily: fonts.semibold,
-                fontSize: 43 * unit,
-                textAlign: "center",
-              }}
-            >
-              {card.epithet}
             </Text>
           </View>
           <View style={s.description}>
@@ -130,8 +122,8 @@ export function CardFront({
               adjustsFontSizeToFit
               style={{
                 color: "#29231b",
-                fontSize: 49 * unit,
-                lineHeight: 65 * unit,
+                fontSize: (longDescription ? 39 : 49) * unit,
+                lineHeight: (longDescription ? 47 : 65) * unit,
                 textAlign: "center",
               }}
             >
