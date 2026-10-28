@@ -1,6 +1,7 @@
+import { OptimizedImage as Image } from "./OptimizedImage";
 import { artworkLayout } from "../domain/artworkLayout";
 import { CARD_ILLUSTRATIONS } from "./illustrationArt";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppText as Text } from "./AppText";
 import { RARITIES, EXTENSIONS, type Card } from "../domain/catalog";
 import { RARITY_FRAME_ART } from "./rarityFrameArt";
@@ -46,6 +47,7 @@ export function CardFront({
         {illustration ? (
           <Image
             source={illustration}
+            recyclingKey={`painting-${card.id}`}
             resizeMode="contain"
             style={{ position: "absolute", ...artwork.image }}
           />
@@ -77,6 +79,7 @@ export function CardFront({
       </View>
       <Image
         source={RARITY_FRAME_ART[card.rarity]}
+        recyclingKey={`frame-${card.rarity}`}
         resizeMode="contain"
         style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
       />

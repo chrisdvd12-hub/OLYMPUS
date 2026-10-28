@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AccessibilityInfo,
   useWindowDimensions,
-  AppState,
   Pressable,
   ScrollView,
   Switch,
@@ -11,8 +10,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { EXTENSIONS } from "../domain/catalog";
-import { PRICE, type GameState } from "../domain/boosters";
+import { PRICE } from "../domain/boosters";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
+import { useGameState, useGameSync } from "../storage/useGameState";
 import { buy, finish, refresh, savePlayerName } from "../storage/store";
 import { selectionFeedback } from "../interaction/feedback";
 import { AppText as Text } from "./AppText";
@@ -43,7 +43,7 @@ const DESCRIPTIONS = [
 ];
 export default function BoosterShop() {
   const { width } = useWindowDimensions();
-  const [state, setState] = useState<GameState | null>(null);
+  const state = useGameState();
   const [selected, setSelected] = useState(0);
   const [reduced, setReduced] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -53,30 +53,26 @@ export default function BoosterShop() {
   const [page, setPage] = useState<Page>("home");
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const lock = useRef(false);
-  const updateOffering = useCallback(() => {
-    refresh(true)
-      .then(setState)
-      .catch((e) => setError(String(e)));
-  }, []);
+  const reportError = useCallback(
+    (error: unknown) =>
+      setError(error instanceof Error ? error.message : String(error)),
+    [],
+  );
+  useGameSync(state?.dailyNextAt, reportError);
+  const retrySync = () => {
+    setError("");
+    void refresh(true, true).catch(reportError);
+  };
   useEffect(() => {
-    updateOffering();
-    void AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
+    void AccessibilityInfo.isReduceMotionEnabled()
+      .then(setReduced)
+      .catch(() => {});
     const motion = AccessibilityInfo.addEventListener(
       "reduceMotionChanged",
       setReduced,
     );
-    const app = AppState.addEventListener("change", (status) => {
-      if (status === "active") updateOffering();
-    });
-    const timer = setInterval(() => {
-      if (AppState.currentState === "active") updateOffering();
-    }, 30000);
-    return () => {
-      motion.remove();
-      app.remove();
-      clearInterval(timer);
-    };
-  }, [updateOffering]);
+    return () => motion.remove();
+  }, []);
   const open = async (source: "paid" | "daily", index = selected) => {
     if (lock.current || (source === "paid" && wheelBusy)) return;
     lock.current = true;
@@ -87,12 +83,10 @@ export default function BoosterShop() {
         source === "daily"
           ? (state?.dailyPacks?.[0] ?? "")
           : EXTENSIONS[index]!.id;
-      setState(
-        await buy(
-          extension,
-          source,
-          `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-        ),
+      await buy(
+        extension,
+        source,
+        `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       );
       selectionFeedback(!reduced);
     } catch (e) {
@@ -109,7 +103,7 @@ export default function BoosterShop() {
       const index = EXTENSIONS.findIndex(
         (e) => e.id === state.pending!.extension,
       );
-      setState(await finish(state.pending.id));
+      await finish(state.pending.id);
       if (index >= 0) setSelected(index);
       setWheelBusy(false);
       setPage(destination === "collection" ? "album" : "home");
@@ -129,6 +123,9 @@ export default function BoosterShop() {
           <Text style={styles.muted}>
             {error || "Les portes du sanctuaire s’ouvrent…"}
           </Text>
+          {!!error && (
+            <PremiumButton label="RÉESSAYER" onPress={retrySync} reduced />
+          )}
         </View>
       </SafeAreaView>
     );
@@ -218,7 +215,6 @@ export default function BoosterShop() {
           available={state.dailyPacks?.length ?? 0}
           busy={busy}
           onOpen={() => open("daily")}
-          onDue={updateOffering}
         />
       </View>
       <Animated.View
@@ -329,7 +325,7 @@ export default function BoosterShop() {
                 reduced={reduced}
                 missions={page === "missions"}
                 onSave={async (name) => {
-                  setState(await savePlayerName(name));
+                  await savePlayerName(name);
                 }}
               />
             )}
@@ -337,12 +333,20 @@ export default function BoosterShop() {
         )}
       </Animated.View>
       {!!error && (
-        <Text
-          accessibilityRole="alert"
-          style={{ color: "#ffb4a6", padding: 12 }}
-        >
-          {error}
-        </Text>
+        <View>
+          <Text
+            accessibilityRole="alert"
+            style={{ color: "#ffb4a6", padding: 12 }}
+          >
+            {error}
+          </Text>
+          <PremiumButton
+            secondary
+            reduced={reduced}
+            label="ACTUALISER LA SAUVEGARDE"
+            onPress={retrySync}
+          />
+        </View>
       )}
       <View
         style={[styles.navigation, { marginHorizontal: 10, marginBottom: 4 }]}

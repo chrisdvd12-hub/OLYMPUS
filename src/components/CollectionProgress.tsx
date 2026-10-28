@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,
@@ -12,7 +12,7 @@ import { RARITIES } from "../domain/catalog";
 import { collectionStats } from "../domain/collection";
 import { AppText as Text } from "./AppText";
 import { styles, theme } from "./theme";
-export function CollectionProgress({
+export const CollectionProgress = memo(function CollectionProgress({
   collection,
   detailed = false,
   reduced = false,
@@ -21,7 +21,7 @@ export function CollectionProgress({
   detailed?: boolean;
   reduced?: boolean;
 }) {
-  const stats = collectionStats(collection);
+  const stats = useMemo(() => collectionStats(collection), [collection]);
   const systemReduced = useReducedMotion();
   const active = useAppActivity();
   const amount = useSharedValue(stats.percent / 100);
@@ -92,4 +92,4 @@ export function CollectionProgress({
       )}
     </View>
   );
-}
+});

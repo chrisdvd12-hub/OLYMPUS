@@ -1,10 +1,12 @@
-import { Image, StyleSheet } from "react-native";
+import { memo } from "react";
+import { OptimizedImage as Image } from "./OptimizedImage";
+import { StyleSheet } from "react-native";
 
 const source = require("../../assets/cards/olympus-back.jpg");
 // Keep the supplied artwork intact: no stretching, cropping, or text overlays.
 export const CARD_ASPECT_RATIO = 5 / 7;
 
-export function CardBack() {
+export const CardBack = memo(function CardBack() {
   return (
     <Image
       source={source}
@@ -13,4 +15,4 @@ export function CardBack() {
       style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
     />
   );
-}
+});

@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { OptimizedImage as Image } from "./OptimizedImage";
+import { memo, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { resolveCard, type Card } from "../domain/catalog";
 import { CARD_ART, hasCardArt } from "./cardArt";
 import { CardFront } from "./CardFront";
 // Retain the previously approved complete Zeus front; other cards use shared masters.
-export function CardFace({
+export const CardFace = memo(function CardFace({
   card,
   compact = false,
 }: {
@@ -26,6 +27,7 @@ export function CardFace({
         <Image
           accessible={false}
           source={CARD_ART[current.id]}
+          recyclingKey={current.id}
           resizeMode="contain"
           style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
         />
@@ -34,4 +36,4 @@ export function CardFace({
       ) : null}
     </View>
   );
-}
+});

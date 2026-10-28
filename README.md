@@ -131,3 +131,10 @@ Voir [le compte rendu, les fichiers et les limites de validation](docs/PREMIUM-I
 ## Illustrations des Maîtres de l’Olympe
 
 Les 29 peintures OLY-001 à OLY-029 fournies sont associées aux cartes et au zoom, en conservant les originaux. Avec Zeus divin déjà intégré, l’extension possède ses 30 illustrations. Voir [les associations et contrôles](docs/ILLUSTRATIONS-OLYMPE.md). `npm test` contrôle également les fichiers d’illustration et leurs empreintes.
+
+
+## Synchronisation locale et rapidité
+
+La sauvegarde est désormais partagée entre les écrans par un instantané validé après COMMIT. Les rafraîchissements inutiles et la réécriture toutes les 30 secondes ont été supprimés. L’offrande s’actualise à son échéance et au retour au premier plan. Les images utilisent le cache natif Expo Image ; les originaux et cadrages sont conservés. Exécuter `npm ci` après la mise à jour pour installer cette dépendance.
+
+Voir [les changements, les mesures et les limites](docs/SYNCHRONISATION-PERFORMANCE.md). La sauvegarde reste locale à l’appareil, sans compte cloud.

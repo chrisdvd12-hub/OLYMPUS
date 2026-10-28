@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -82,78 +82,30 @@ export function CardCollectionGrid({
   );
   const update = (next: Partial<CollectionFilters>) =>
     setFilters((old) => ({ ...old, ...next }));
-  const renderItem = ({ item }: { item: Card }) => {
-    const quantity = collection[item.id] ?? 0;
-    return (
-      <Animated.View
-        entering={reduced ? undefined : FadeIn.duration(200)}
-        style={{ width: tileWidth, marginBottom: 20, gap: 6 }}
-      >
-        <Pressable
-          accessibilityRole="button"
-          disabled={!quantity}
-          accessibilityLabel={
-            quantity
-              ? `Admirer ${item.name}, ${RARITIES[item.rarity]}, ${quantity} exemplaires`
-              : `${item.number}, carte non découverte`
-          }
-          onPress={() => onInspect(item.id)}
-          style={{ width: tileWidth, aspectRatio: 5 / 7 }}
-        >
-          {quantity ? (
-            <CardFace card={item} />
-          ) : (
-            <View style={{ flex: 1, opacity: 0.34 }}>
-              <CardBack />
-            </View>
-          )}
-          {quantity > 0 && item.rarity >= 4 && (
-            <View
-              pointerEvents="none"
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: "15%",
-                right: "15%",
-                height: 2,
-                backgroundColor: item.rarity >= 5 ? theme.violet : theme.gold,
-              }}
-            />
-          )}
-        </Pressable>
-        <Text
-          numberOfLines={gallery ? 2 : 1}
-          style={[
-            styles.muted,
-            {
-              color: quantity ? theme.paper : theme.muted,
-              fontSize: gallery ? 16 : 11,
-            },
-          ]}
-        >
-          {quantity ? item.name : "À DÉCOUVRIR"}
-        </Text>
-        <Text style={[styles.muted, { fontSize: 10 }]}>
-          {item.number}
-          {quantity > 1
-            ? ` · DOUBLON ×${quantity}`
-            : quantity
-              ? ` · ${RARITIES[item.rarity]}`
-              : ""}
-        </Text>
-      </Animated.View>
-    );
-  };
+  const renderItem = useCallback(
+    ({ item }: { item: Card }) => (
+      <CollectionTile
+        item={item}
+        quantity={collection[item.id] ?? 0}
+        width={tileWidth}
+        reduced={reduced}
+        gallery={gallery}
+        onInspect={onInspect}
+      />
+    ),
+    [collection, tileWidth, reduced, gallery, onInspect],
+  );
   return (
     <FlatList
       key={columns}
       data={cards}
+      extraData={collection}
       renderItem={renderItem}
       numColumns={columns}
       keyExtractor={(card) => card.id}
-      initialNumToRender={columns * 3}
-      maxToRenderPerBatch={columns * 3}
-      windowSize={5}
+      initialNumToRender={columns * 2}
+      maxToRenderPerBatch={columns * 2}
+      windowSize={3}
       contentContainerStyle={{ paddingHorizontal: 22, paddingBottom: 30 }}
       columnWrapperStyle={
         columns > 1 ? { gap: 12, justifyContent: "center" } : undefined
@@ -295,3 +247,79 @@ export function CardCollectionGrid({
     />
   );
 }
+
+const CollectionTile = memo(function CollectionTile({
+  item,
+  quantity,
+  width,
+  reduced,
+  gallery,
+  onInspect,
+}: {
+  item: Card;
+  quantity: number;
+  width: number;
+  reduced: boolean;
+  gallery: boolean;
+  onInspect: (id: string) => void;
+}) {
+  return (
+    <Animated.View
+      entering={reduced ? undefined : FadeIn.duration(200)}
+      style={{ width: width, marginBottom: 20, gap: 6 }}
+    >
+      <Pressable
+        accessibilityRole="button"
+        disabled={!quantity}
+        accessibilityLabel={
+          quantity
+            ? `Admirer ${item.name}, ${RARITIES[item.rarity]}, ${quantity} exemplaires`
+            : `${item.number}, carte non découverte`
+        }
+        onPress={() => onInspect(item.id)}
+        style={{ width: width, aspectRatio: 5 / 7 }}
+      >
+        {quantity ? (
+          <CardFace card={item} />
+        ) : (
+          <View style={{ flex: 1, opacity: 0.34 }}>
+            <CardBack />
+          </View>
+        )}
+        {quantity > 0 && item.rarity >= 4 && (
+          <View
+            pointerEvents="none"
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: "15%",
+              right: "15%",
+              height: 2,
+              backgroundColor: item.rarity >= 5 ? theme.violet : theme.gold,
+            }}
+          />
+        )}
+      </Pressable>
+      <Text
+        numberOfLines={gallery ? 2 : 1}
+        style={[
+          styles.muted,
+          {
+            color: quantity ? theme.paper : theme.muted,
+            fontSize: gallery ? 16 : 11,
+          },
+        ]}
+      >
+        {quantity ? item.name : "À DÉCOUVRIR"}
+      </Text>
+      <Text style={[styles.muted, { fontSize: 10 }]}>
+        {item.number}
+        {quantity > 1
+          ? ` · DOUBLON ×${quantity}`
+          : quantity
+            ? ` · ${RARITIES[item.rarity]}`
+            : ""}
+      </Text>
+    </Animated.View>
+  );
+});

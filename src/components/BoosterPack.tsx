@@ -1,5 +1,6 @@
+import { OptimizedImage as Image } from "./OptimizedImage";
 import { useEffect } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,

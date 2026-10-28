@@ -1,3 +1,4 @@
+import { Image as CachedImage } from "expo-image";
 import { useCallback, useEffect, useMemo } from "react";
 import { Image, Pressable, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -125,7 +126,8 @@ export function BoosterWheelCarousel({
   useEffect(() => {
     for (const source of Object.values(PACK_ART)) {
       const uri = Image.resolveAssetSource?.(source)?.uri;
-      if (uri) void Image.prefetch(uri).catch(() => {});
+      if (uri)
+        void CachedImage.prefetch(uri, { cachePolicy: "disk" }).catch(() => {});
     }
   }, []);
   useEffect(() => {

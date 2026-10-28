@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
 import {
   cancelAnimation,
@@ -8,17 +8,31 @@ import {
   withTiming,
 } from "react-native-reanimated";
 
-export function useAppActivity() {
-  const [active, setActive] = useState(
-    AppState.currentState === "active" || AppState.currentState === null,
-  );
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", (state) => {
-      setActive(state === "active");
+const activityListeners = new Set<() => void>();
+let activitySubscription: ReturnType<typeof AppState.addEventListener> | null =
+  null;
+const activitySnapshot = () =>
+  AppState.currentState === "active" || AppState.currentState === null;
+function subscribeActivity(listener: () => void) {
+  activityListeners.add(listener);
+  if (!activitySubscription)
+    activitySubscription = AppState.addEventListener("change", () => {
+      for (const notify of activityListeners) notify();
     });
-    return () => subscription.remove();
-  }, []);
-  return active;
+  return () => {
+    activityListeners.delete(listener);
+    if (!activityListeners.size) {
+      activitySubscription?.remove();
+      activitySubscription = null;
+    }
+  };
+}
+export function useAppActivity() {
+  return useSyncExternalStore(
+    subscribeActivity,
+    activitySnapshot,
+    activitySnapshot,
+  );
 }
 
 // Loops run on the UI thread and stop in the background, on results, or in reduced motion.

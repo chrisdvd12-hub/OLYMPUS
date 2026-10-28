@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { collectionStats } from "../domain/collection";
 import type { GameState } from "../domain/boosters";
@@ -19,7 +19,10 @@ export function PlayerPanel({
   const [name, setName] = useState(state.playerName ?? "Collectionneur");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const stats = collectionStats(state.collection);
+  const stats = useMemo(
+    () => collectionStats(state.collection),
+    [state.collection],
+  );
   const goals = [
     {
       title: "Premières découvertes",

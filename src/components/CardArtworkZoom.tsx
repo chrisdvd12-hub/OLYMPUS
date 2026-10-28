@@ -1,6 +1,6 @@
+import { OptimizedImage as Image } from "./OptimizedImage";
 import { useMemo } from "react";
 import {
-  Image,
   Modal,
   Pressable,
   StyleSheet,
@@ -124,6 +124,7 @@ export function CardArtworkZoom({
                 <Animated.View style={[StyleSheet.absoluteFill, transform]}>
                   <Image
                     source={source}
+                    allowDownscaling={false}
                     resizeMode="contain"
                     style={{ width: "100%", height: "100%" }}
                   />
