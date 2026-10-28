@@ -29,11 +29,12 @@ export function wheelPose(
     // The four centers describe a clearly visible orbit on a phone screen.
     // The rear pack is physically above the center rather than hidden behind
     // the active pack, while depth still controls scale and orientation.
-    y: depth * 145,
+    y: depth * 125,
     z: (depth - 1) * 110,
     scale: 0.22 + (depth + 1) * 0.39,
     opacity: 0.4 + (depth + 1) * 0.3,
-    rotateY: -Math.sin(angle) * 58,
+    rotateY: -Math.sin(angle) * 14,
+    rotateZ: Math.sin(angle) * 3,
     zIndex: Math.round((depth + 1) * 100),
   };
 }

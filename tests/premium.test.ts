@@ -34,7 +34,15 @@ test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", 
     for (let index = 0; index < 4; index++) {
       const a = wheelPose(index, 0.43, 160);
       const b = wheelPose(index, 0.43 + turns * 4, 160);
-      for (const key of ["x", "y", "z", "scale", "opacity", "rotateY"] as const)
+      for (const key of [
+        "x",
+        "y",
+        "z",
+        "scale",
+        "opacity",
+        "rotateY",
+        "rotateZ",
+      ] as const)
         assert.ok(Math.abs(a[key] - b[key]) < 1e-8);
     }
 });
@@ -75,12 +83,13 @@ test("roue : les quatre boosters occupent des points distincts autour du centre"
     for (let b = a + 1; b < poses.length; b++) {
       const dx = poses[a]!.x - poses[b]!.x;
       const dy = poses[a]!.y - poses[b]!.y;
-      assert.ok(Math.hypot(dx, dy) > 200);
+      assert.ok(Math.hypot(dx, dy) > 195);
     }
   assert.ok(poses[0]!.y > poses[2]!.y);
   assert.equal(poses[0]!.scale, 1);
   assert.ok(poses[2]!.scale < poses[1]!.scale);
   assert.ok(poses[1]!.scale < poses[0]!.scale);
+  assert.ok(Math.abs(poses[1]!.rotateY) <= 14);
 });
 test("ouverture : l’ordre visuel va de la rareté la plus faible à la plus forte", () => {
   const input = [

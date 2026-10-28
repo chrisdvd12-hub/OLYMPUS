@@ -57,6 +57,7 @@ function WheelPack({
         { translateX: p.x },
         { translateY: p.y },
         { rotateY: `${p.rotateY}deg` },
+        { rotateZ: `${p.rotateZ}deg` },
         { scale: scale * p.scale },
       ],
     };
@@ -68,7 +69,7 @@ function WheelPack({
           position: "absolute",
           left: "50%",
           marginLeft: -124,
-          top: 105,
+          top: 70,
           width: 248,
           height: 372,
         },
@@ -218,7 +219,7 @@ export function BoosterWheelCarousel({
         <Animated.View
           collapsable={false}
           style={{
-            height: 590,
+            height: 525,
             width: "100%",
             overflow: "hidden",
             justifyContent: "center",
@@ -229,31 +230,15 @@ export function BoosterWheelCarousel({
             style={{
               position: "absolute",
               width: radius * 2,
-              height: 290,
+              height: 250,
               left: "50%",
-              top: 146,
+              top: 131,
               marginLeft: -radius,
               borderRadius: 999,
               borderWidth: 1,
               borderColor: EXTENSIONS[selected]!.color,
               backgroundColor: `${EXTENSIONS[selected]!.color}18`,
               opacity: 0.5,
-            }}
-          />
-          <View
-            pointerEvents="none"
-            style={{
-              position: "absolute",
-              width: 10,
-              height: 10,
-              borderRadius: 5,
-              left: "50%",
-              top: 286,
-              marginLeft: -5,
-              backgroundColor: theme.highlight,
-              shadowColor: theme.highlight,
-              shadowOpacity: 0.9,
-              shadowRadius: 12,
             }}
           />
           {EXTENSIONS.map((extension, index) => (
