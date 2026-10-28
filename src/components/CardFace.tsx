@@ -1,10 +1,11 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { AppText as Text } from "./AppText";
+import { Image, StyleSheet, View } from "react-native";
 import { COLORS, RARITIES, resolveCard, type Card } from "../domain/catalog";
 import { CARD_ART, hasCardArt } from "./cardArt";
 import { CardFrame } from "./CardFrame";
 import { theme } from "./theme";
 
-export function CardFace({ card }: { card: Card }) {
+export function CardFace({ card, compact = false }: { card: Card; compact?: boolean }) {
   const current = resolveCard(card);
   if (hasCardArt(current.id)) {
     return (
@@ -16,6 +17,12 @@ export function CardFace({ card }: { card: Card }) {
       />
     );
   }
+  if (compact) return (
+    <View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: theme.navy, alignItems: "center", justifyContent: "center" }]}>
+      <CardFrame rarity={current.rarity} />
+      <Text style={{ color: COLORS[current.rarity], fontSize: 18 }}>✧</Text>
+    </View>
+  );
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, s.placeholder]}>
       <CardFrame rarity={current.rarity} />

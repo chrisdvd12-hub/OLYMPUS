@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { AppText as Text } from "./AppText";
+import { useCallback, useEffect, useState, useRef } from "react";
 import {
   View,
-  Text,
   ScrollView,
   Pressable,
   Switch,
@@ -9,12 +9,14 @@ import {
   AppState,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
+import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
+import { GreekOrnament, TempleSeal } from "./GreekOrnament";
+import { CardFace } from "./CardFace";
 import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
 import { ZEUS_DIVINE } from "../domain/zeus";
 import { CardDetailModal } from "./CardDetailModal";
 import { PRICE, type GameState, type BoosterSource } from "../domain/boosters";
-import { dailyCountdown } from "../domain/daily";
+import { OfferingBadge } from "./OfferingBadge";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { buy, finish, refresh } from "../storage/store";
 import { BoosterCarousel } from "./BoosterCarousel";
@@ -29,12 +31,9 @@ export default function BoosterShop() {
   const [collection, setCollection] = useState(false);
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const lock = useRef(false);
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    if (state?.dailyNextAt !== undefined && now >= state.dailyNextAt && AppState.currentState === "active") {
-      refresh(true).then(setState).catch((e) => setError(String(e)));
-    }
-  }, [now, state?.dailyNextAt]);
+  const updateOffering = useCallback(() => {
+    refresh(true).then(setState).catch((e) => setError(String(e)));
+  }, []);
   useEffect(() => {
     refresh(true)
       .then(setState)
@@ -46,17 +45,12 @@ export default function BoosterShop() {
     );
     const app = AppState.addEventListener("change", (s) => {
       if (s === "active") {
-        setNow(Date.now());
         refresh(true)
           .then(setState)
           .catch((e) => setError(String(e)));
       }
     });
-    const clock = setInterval(() => {
-      if (AppState.currentState === "active") setNow(Date.now());
-    }, 1000);
     const timer = setInterval(() => {
-      setNow(Date.now());
       refresh(AppState.currentState === "active")
         .then(setState)
         .catch((e) => setError(String(e)));
@@ -65,7 +59,6 @@ export default function BoosterShop() {
       motion.remove();
       app.remove();
       clearInterval(timer);
-      clearInterval(clock);
     };
   }, []);
   const open = async (source: Exclude<BoosterSource, "free">) => {
@@ -127,72 +120,49 @@ export default function BoosterShop() {
   ).length;
   return (
     <SafeAreaView style={styles.screen}>
-      <LinearGradient
-        colors={["#23374b", "#080f1e", "#171e2a"]}
-        style={{ position: "absolute", inset: 0 }}
-      />
+      <SanctuaryBackdrop />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={styles.body}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.subtitle}>LE SANCTUAIRE</Text>
-            <View style={{ alignItems: "flex-end", gap: 6 }}>
-              <View style={{ alignItems: "flex-end", gap: 6, maxWidth: 210 }}>
-                <Text style={{ color: theme.gold, fontSize: 11 }}>L’OFFRANDE DES DIEUX</Text>
-                {(state.dailyPacks?.length ?? 0) > 0 ? (
-                  <>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel="Ouvrir un booster offert"
-                      disabled={busy}
-                      style={[styles.outline, { minHeight: 48, opacity: busy ? 0.4 : 1 }]}
-                      onPress={() => open("daily")}
-                    >
-                      <Text style={[styles.text, { color: theme.gold, textAlign: "center", fontSize: 13 }]}>OUVRIR UN BOOSTER</Text>
-                    </Pressable>
-                    <Text style={{ color: theme.gold, fontSize: 11 }}>{state.dailyPacks!.length} booster(s) disponible(s)</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text
-                      accessibilityLabel={`Prochaine offrande dans ${dailyCountdown(state.dailyNextAt ?? now, now)}`}
-                      style={{ color: theme.gold, fontSize: 20, fontVariant: ["tabular-nums"] }}
-                    >
-                      {dailyCountdown(state.dailyNextAt ?? now, now)}
-                    </Text>
-                    <Text style={{ color: theme.gold, fontSize: 11 }}>2 boosters aléatoires</Text>
-                  </>
-                )}
+            <View style={{ flex: 1, gap: 10, alignItems: "flex-start", paddingRight: 12 }}>
+              <TempleSeal />
+              <Text style={[styles.subtitle, { textAlign: "left", letterSpacing: 1 }]}>LE SANCTUAIRE</Text>
+              <View style={styles.wallet}>
+                <Text style={{ color: theme.highlight, fontFamily: "CinzelBold", fontSize: 12 }}>
+                  {UNLIMITED_DRACHMAS ? "∞ drachmes" : `${state.drachmas} drachmes`}
+                </Text>
               </View>
-              <Text style={{ color: theme.gold }}>
-                ◉ {UNLIMITED_DRACHMAS ? "∞ drachmes · TEST" : `${state.drachmas} drachmes`}
-              </Text>
+            </View>
+            <View style={{ flexShrink: 1, alignItems: "flex-end" }}>
+              <OfferingBadge
+                nextAt={state.dailyNextAt}
+                available={state.dailyPacks?.length ?? 0}
+                busy={busy}
+                onOpen={() => open("daily")}
+                onDue={updateOffering}
+              />
             </View>
           </View>
-          <Text style={styles.title}>OLYMPUS</Text>
-          <Text style={styles.subtitle}>DIVINE COLLECTION</Text>
+          <Text accessibilityRole="header" style={[styles.title, { fontSize: 40, lineHeight: 54, letterSpacing: 3 }]}>OLYMPUS</Text>
+          <Text style={[styles.subtitle, { letterSpacing: 4 }]}>DIVINE COLLECTION</Text>
+          <GreekOrnament />
           <Text
             style={[
               styles.text,
-              { textAlign: "center", fontFamily: "serif", fontSize: 22 },
+              { textAlign: "center", fontFamily: "CinzelSemiBold", fontSize: 22 },
             ]}
           >
             {collection ? "Votre collection" : "Les trésors des dieux"}
           </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Text style={styles.muted}>Réduire les animations</Text>
-            <Switch
-              accessibilityLabel="Réduire les animations"
-              value={reduced}
-              onValueChange={setReduced}
-            />
+          <View style={styles.navigation}>
+            <Pressable accessibilityRole="tab" accessibilityState={{ selected: !collection }} style={[styles.tab, !collection && styles.activeTab]} onPress={() => setCollection(false)}>
+              <Text style={[styles.subtitle, { letterSpacing: 1 }]}>BOUTIQUE</Text>
+            </Pressable>
+            <Pressable accessibilityRole="tab" accessibilityState={{ selected: collection }} style={[styles.tab, collection && styles.activeTab]} onPress={() => setCollection(true)}>
+              <Text style={[styles.subtitle, { letterSpacing: 1 }]}>COLLECTION</Text>
+            </Pressable>
           </View>
         </View>
         {collection ? (
@@ -202,7 +172,8 @@ export default function BoosterShop() {
             </Text>
             {EXTENSIONS.map((e) => (
               <View key={e.id} style={styles.panel}>
-                <Text style={styles.text}>{e.name}</Text>
+                <Text accessibilityRole="header" style={[styles.subtitle, { fontSize: 15, letterSpacing: 1 }]}>{e.name}</Text>
+                <GreekOrnament />
                 {CARDS.filter(
                   (c) => c.extension === e.id && state.collection[c.id],
                 ).map((c) => (
@@ -210,13 +181,15 @@ export default function BoosterShop() {
                     key={c.id}
                     accessibilityRole="button"
                     accessibilityLabel={`Voir ${c.name}, ${RARITIES[c.rarity]}`}
-                    style={{ minHeight: 48, justifyContent: "center" }}
+                    style={{ minHeight: 78, flexDirection: "row", alignItems: "center", gap: 14, borderBottomWidth: 1, borderBottomColor: "#d4af3722", paddingVertical: 10 }}
                     onPress={() => setInspectedId(c.id)}
                   >
-                    <Text style={styles.text}>
-                      {c.name} · {RARITIES[c.rarity]} · ×
-                      {state.collection[c.id]} ›
-                    </Text>
+                    <View style={{ width: 42, aspectRatio: 5 / 7 }} accessible={false}><CardFace card={c} compact /></View>
+                    <View style={{ flex: 1, gap: 3 }}>
+                      <Text style={[styles.text, { fontFamily: "CinzelSemiBold" }]}>{c.name}</Text>
+                      <Text style={[styles.muted, { textAlign: "left", fontSize: 11 }]}>{c.number} · {RARITIES[c.rarity]}</Text>
+                    </View>
+                    <Text style={[styles.text, { color: theme.highlight }]}>×{state.collection[c.id]} ›</Text>
                   </Pressable>
                 ))}
               </View>
@@ -236,6 +209,8 @@ export default function BoosterShop() {
               reduced={reduced}
             />
             <View style={styles.body}>
+              <GreekOrnament />
+              <View style={styles.panel}>
               <Text style={[styles.title, { fontSize: 21, letterSpacing: 1 }]}>
                 {ext.name}
               </Text>
@@ -287,6 +262,7 @@ export default function BoosterShop() {
                   Drachmes insuffisantes. Votre prochaine offrande est indiquée en haut à droite.
                 </Text>
               )}
+              </View>
               <Text style={styles.muted}>
                 Protection légendaire · {state.pity}/20
               </Text>
@@ -312,9 +288,11 @@ export default function BoosterShop() {
                   </Text>
                 </Pressable>
               )}
-              <Text style={styles.muted}>
-                Édition de développement · illustrations provisoires locales
-              </Text>
+              <View style={[styles.panel, { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 }]}>
+                <Text style={[styles.muted, { textAlign: "left", flex: 1 }]}>Réduire les animations</Text>
+                <Switch accessibilityLabel="Réduire les animations" trackColor={{ false: "#283546", true: "#8f742b" }} thumbColor={theme.paper} value={reduced} onValueChange={setReduced} />
+              </View>
+              <Text style={styles.muted}>Peintures classiques · Mythologie grecque</Text>
               {!!error && (
                 <Text accessibilityRole="alert" style={{ color: "#ffb4a6" }}>
                   {error}

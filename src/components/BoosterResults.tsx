@@ -1,8 +1,10 @@
+import { AppText as Text } from "./AppText";
 import { useState } from "react";
 import { CardDetailModal } from "./CardDetailModal";
-import { Text, View, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import type { Receipt } from "../domain/boosters";
 import { BoosterCardReveal } from "./BoosterCardReveal";
+import { GreekOrnament, TempleSeal } from "./GreekOrnament";
 import { styles, theme } from "./theme";
 export function BoosterResults({
   receipt,
@@ -22,7 +24,9 @@ export function BoosterResults({
     inspectedIndex === null ? null : receipt.cards[inspectedIndex];
   return (
     <View style={styles.body}>
+      <View style={{ alignItems: "center" }}><TempleSeal /></View>
       <Text style={styles.title}>VOTRE TRÉSOR</Text>
+      <GreekOrnament />
       <Text style={styles.muted}>
         7 cartes déjà enregistrées dans votre collection
       </Text>
@@ -51,7 +55,13 @@ export function BoosterResults({
             <Text
               style={{
                 color: receipt.discoveries[i] ? theme.gold : theme.muted,
-                fontSize: 10,
+                fontFamily: "CinzelSemiBold",
+                fontSize: 9,
+                lineHeight: 15,
+                backgroundColor: "#07121edb",
+                borderRadius: 4,
+                paddingVertical: 4,
+                paddingHorizontal: 2,
                 textAlign: "center",
               }}
             >
@@ -62,13 +72,13 @@ export function BoosterResults({
           </View>
         ))}
       </View>
-      <Pressable style={styles.button} onPress={onCollection}>
+      <Pressable accessibilityRole="button" style={styles.button} onPress={onCollection}>
         <Text style={styles.buttonText}>VOIR MA COLLECTION</Text>
       </Pressable>
-      <Pressable style={styles.outline} onPress={onAgain}>
+      <Pressable accessibilityRole="button" style={styles.outline} onPress={onAgain}>
         <Text style={styles.text}>OUVRIR UN AUTRE BOOSTER</Text>
       </Pressable>
-      <Pressable style={styles.outline} onPress={onShop}>
+      <Pressable accessibilityRole="button" style={styles.outline} onPress={onShop}>
         <Text style={styles.text}>RETOUR À LA BOUTIQUE</Text>
       </Pressable>
       {inspected && (

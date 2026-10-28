@@ -1,3 +1,4 @@
+import { AppText as Text } from "./AppText";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { BoosterAura } from "./BoosterAura";
 import { useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { EXTENSIONS, COLORS } from "../domain/catalog";
 import type { Receipt } from "../domain/boosters";
 import { BoosterSky, CELESTIAL_MOTIFS } from "./BoosterSky";
@@ -18,6 +19,7 @@ import { BoosterTearAnimation } from "./BoosterTearAnimation";
 import { BoosterParticles } from "./BoosterParticles";
 import { BoosterCardReveal } from "./BoosterCardReveal";
 import { BoosterResults } from "./BoosterResults";
+import { GreekOrnament } from "./GreekOrnament";
 import { styles } from "./theme";
 export function BoosterOpening({
   receipt,
@@ -102,6 +104,7 @@ export function BoosterOpening({
             <Text style={styles.title}>
               {phase === "cards" ? "RÉVÉLATION" : "L’OFFRANDE"}
             </Text>
+            <GreekOrnament />
             {phase === "fan" ? (
               <BoosterFan reduced={reduced} active={appActive} />
             ) : phase !== "cards" ? (

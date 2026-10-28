@@ -1,5 +1,6 @@
+import { AppText as Text } from "./AppText";
 import { useRef } from "react";
-import { View, Text, PanResponder, Pressable } from "react-native";
+import { View, PanResponder, Pressable } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

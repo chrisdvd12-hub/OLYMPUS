@@ -1,15 +1,16 @@
+import { AppText as Text } from "./AppText";
 import {
   Modal,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
 import { EXTENSIONS, RARITIES, findCard } from "../domain/catalog";
+import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
+import { GreekOrnament } from "./GreekOrnament";
 import { CardFace } from "./CardFace";
 import { CARD_ASPECT_RATIO } from "./CardBack";
 import { styles, theme } from "./theme";
@@ -26,17 +27,12 @@ export function CardDetailModal({
   onClose: () => void;
 }) {
   const { width } = useWindowDimensions();
-  const [fontsLoaded] = useFonts({
-    CinzelRegular: require("../../assets/fonts/Cinzel-Regular.ttf"),
-    CinzelSemiBold: require("../../assets/fonts/Cinzel-SemiBold.ttf"),
-    CinzelBold: require("../../assets/fonts/Cinzel-Bold.ttf"),
-  });
   const card = findCard(cardId);
   if (!card) return null;
   const collection = EXTENSIONS.find((e) => e.id === card.extension)?.name;
-  const regular = fontsLoaded ? "CinzelRegular" : undefined;
-  const bold = fontsLoaded ? "CinzelBold" : undefined;
-  const semibold = fontsLoaded ? "CinzelSemiBold" : undefined;
+  const regular = "CinzelRegular";
+  const bold = "CinzelBold";
+  const semibold = "CinzelSemiBold";
   return (
     <Modal
       visible
@@ -46,6 +42,7 @@ export function CardDetailModal({
     >
       <SafeAreaProvider>
         <SafeAreaView style={styles.screen}>
+          <SanctuaryBackdrop />
           <View style={s.toolbar}>
             <Text
               accessibilityRole="header"
@@ -85,6 +82,7 @@ export function CardDetailModal({
             >
               {card.name.toUpperCase()}
             </Text>
+            <GreekOrnament />
             {card.epithet && (
               <Text
                 style={[
@@ -188,6 +186,9 @@ export function CardDetailModal({
 }
 const s = StyleSheet.create({
   toolbar: {
+    backgroundColor: "#07121ee8",
+    borderBottomWidth: 1,
+    borderBottomColor: theme.line,
     paddingHorizontal: 20,
     paddingVertical: 8,
     flexDirection: "row",

@@ -114,3 +114,8 @@ Validation de cette intégration : typage strict et 12 tests réussis (dont iden
 ## Offrande des dieux — règle actuelle
 
 Une seule offrande de deux boosters d’extensions aléatoires toutes les 24 h remplace la recharge de 12 h et la section « Le cadeau quotidien ». En haut à droite de l’accueil, le compte à rebours est remplacé par « OUVRIR UN BOOSTER » dès que des boosters offerts sont disponibles. Le bouton permet de les ouvrir un par un, puis le décompte réapparaît. Échéance, extensions attribuées et ouvertures sont persistantes ; les sauvegardes et boosters déjà reçus sont conservés.
+
+
+## Interface et typographie
+
+Charte Cinzel appliquée à tous les textes de l’interface : chargement local au démarrage, trois graisses, décor de sanctuaire nocturne, ornements grecs et collection avec miniatures. Les images approuvées restent intactes. Trajan Pro n’étant pas fourni, les petites informations utilisent Cinzel Regular. Voir [la charte et les limites de validation](docs/VISUAL-CHARTER.md).
