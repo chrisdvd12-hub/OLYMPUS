@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import {
@@ -225,4 +226,48 @@ test("un ancien reçu conserve son attribution et retrouve les informations édi
   assert.equal(card.epithet, "Le Souverain Céleste");
   assert.equal(legacy.name, "Dionysos");
   assert.deepEqual(saved.collection, { "olympe-30": 2 });
+});
+
+
+test("catalogue fourni : numéros uniques, 30 fiches complètes et sept raretés par extension", () => {
+  assert.equal(new Set(CARDS.map((c) => c.number)).size, 120);
+  for (const extension of EXTENSIONS) {
+    const cards = CARDS.filter((c) => c.extension === extension.id);
+    assert.equal(cards.length, 30);
+    assert.deepEqual(Array.from({ length: 7 }, (_, rarity) => cards.filter((c) => c.rarity === rarity).length), [5, 6, 7, 5, 4, 2, 1]);
+    for (const c of cards) {
+      assert.ok(c.name && c.epithet && c.category && c.description && c.history);
+      assert.ok(c.attributes?.length && c.relations?.length);
+    }
+  }
+  assert.equal(CARDS.find((c) => c.id === "titans-30")?.name, "Chaos");
+  assert.equal(CARDS.find((c) => c.id === "heros-30")?.name, "Héraclès");
+  assert.equal(CARDS.find((c) => c.id === "creatures-30")?.name, "Phénix");
+});
+
+test("mise à jour du catalogue : la rareté des anciens reçus reste celle du tirage", () => {
+  const legacy = { id: "olympe-12", extension: "olympe", name: "Hermès", rarity: 0 };
+  assert.equal(CARDS.find((c) => c.id === legacy.id)?.rarity, 2);
+  const resolved = resolveCard(legacy);
+  assert.equal(resolved.name, "Déméter");
+  assert.equal(resolved.rarity, 0);
+  assert.equal(legacy.name, "Hermès");
+});
+
+
+test("les fiches importées correspondent au fichier fourni, hors Zeus approuvé", () => {
+  const source = JSON.parse(readFileSync(new URL("../docs/catalogue/OLYMPUS_Catalogue_120_Cartes.json", import.meta.url), "utf8"));
+  for (const row of source.cards) {
+    if (row.id === "OLY-030") continue;
+    const card = CARDS.find((c) => c.number === row.id)!;
+    assert.ok(card, row.id);
+    assert.equal(card.name, row.name);
+    assert.equal(card.epithet, row.subtitle);
+    assert.equal(card.category, row.type);
+    assert.equal(card.description, row.shortDescription);
+    assert.equal(card.history, row.lore);
+    assert.deepEqual(card.attributes, row.visualAttributes.split(",").map((s: string) => s.trim()));
+    assert.deepEqual(card.relations, row.relations.split(";").map((s: string) => s.trim()));
+    assert.equal(card.editorialNote, row.editorialNote);
+  }
 });

@@ -1,3 +1,4 @@
+import { CATALOGUE_DATA } from "./catalogueData.ts";
 import { ZEUS_DIVINE } from "./zeus.ts";
 
 export const RARITIES = [
@@ -111,39 +112,20 @@ export interface Card {
   history?: string;
   attributes?: readonly string[];
   relations?: readonly string[];
+  editorialNote?: string;
 }
-// Catalogue de démonstration : 30 identifiants par extension, tous les niveaux représentés.
-export const CARDS: Card[] = EXTENSIONS.flatMap((e) =>
-  Array.from({ length: 30 }, (_, i): Card =>
-    i === 29 && e.id === "olympe"
-      ? ZEUS_DIVINE
-      : {
-          id: `${e.id}-${i + 1}`,
-          extension: e.id,
-          name: e.names[i % 10]!,
-          rarity:
-            i < 14
-              ? 0
-              : i < 21
-                ? 1
-                : i < 25
-                  ? 2
-                  : i < 27
-                    ? 3
-                    : i === 27
-                      ? 4
-                      : i === 28
-                        ? 5
-                        : 6,
-        },
-  ),
+// Preserve save-slot identifiers; the approved Zeus front and copy take precedence.
+export const CARDS: Card[] = CATALOGUE_DATA.map((card) =>
+  card.id === ZEUS_DIVINE.id ? { ...card, ...ZEUS_DIVINE } : card,
 );
 
 const CARD_BY_ID = new Map(CARDS.map((card) => [card.id, card]));
 
 // Resolve legacy receipt snapshots against current editorial data, without changing the draw.
 export function resolveCard(card: Card): Card {
-  return CARD_BY_ID.get(card.id) ?? card;
+  const current = CARD_BY_ID.get(card.id);
+  // A pending booster keeps the rarity that was drawn before an editorial update.
+  return current ? { ...current, rarity: card.rarity } : card;
 }
 
 export function findCard(id: string): Card | undefined {

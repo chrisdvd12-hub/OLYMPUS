@@ -99,6 +99,16 @@ export function CardDetailModal({
             <Text style={[styles.muted, { fontFamily: regular }]}>
               {collection}
             </Text>
+            {card.category && (
+              <Text style={[styles.muted, { fontFamily: regular }]}>
+                {card.category}
+              </Text>
+            )}
+            {card.editorialNote && (
+              <Text style={[s.paragraph, { fontFamily: regular }]}>
+                {card.editorialNote}
+              </Text>
+            )}
             {card.description && (
               <View style={styles.panel}>
                 <Text
