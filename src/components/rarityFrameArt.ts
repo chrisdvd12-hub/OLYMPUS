@@ -1,5 +1,5 @@
 // Shared transparent frame library for all four extensions.
-// New composed card fronts require owner preview approval before use.
+// Master assets supplied by the owner; never synthesize per-card borders.
 export const RARITY_FRAME_ART = [
   require("../../assets/frames/commune.png"),
   require("../../assets/frames/peu-commune.png"),

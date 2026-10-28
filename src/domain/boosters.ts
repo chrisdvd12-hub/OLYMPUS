@@ -21,6 +21,7 @@ export interface GameState {
   collection: Record<string, number>;
   pending: Receipt | null;
   lastReceipt: Receipt | null;
+  playerName?: string;
   dailyNextAt?: number;
   dailyPacks?: string[];
 }

@@ -7,7 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { COLORS, RARITIES, resolveCard, type Card } from "../domain/catalog";
 import { CardFace } from "./CardFace";
-import { hasCardArt } from "./cardArt";
+import { discoveryFeedback } from "../interaction/feedback";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
 export function BoosterCardReveal({
@@ -32,7 +32,7 @@ export function BoosterCardReveal({
   onInspect?: () => void;
 }) {
   const current = resolveCard(card);
-  const artwork = hasCardArt(current.id);
+  const artwork = true;
   const revealing = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
@@ -45,7 +45,7 @@ export function BoosterCardReveal({
   const style = useAnimatedStyle(() => ({
     transform: [
       { perspective: 800 },
-      { rotateY: `${(1 - turn.value) * 180}deg` },
+      { rotateY: `${(revealed ? turn.value - 1 : 1 - turn.value) * 180}deg` },
     ],
   }));
   const reveal = () => {
@@ -55,6 +55,7 @@ export function BoosterCardReveal({
     }
     if (revealing.current) return;
     revealing.current = true;
+    discoveryFeedback(!reduced);
     turn.value = withTiming(0.5, {
       duration: reduced ? 0 : card.rarity >= 4 ? 1200 : 500,
     });
@@ -92,7 +93,11 @@ export function BoosterCardReveal({
             borderColor: revealed ? COLORS[card.rarity] : theme.gold,
             borderRadius: artwork && revealed ? 0 : 7,
             backgroundColor:
-              revealed && artwork ? "transparent" : revealed && card.rarity >= 5 ? "#2a173d" : "#132339",
+              revealed && artwork
+                ? "transparent"
+                : revealed && card.rarity >= 5
+                  ? "#2a173d"
+                  : "#132339",
             padding: 0,
             overflow: "hidden",
             justifyContent: "space-between",

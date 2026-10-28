@@ -9,7 +9,7 @@ export function BoosterAura({
   rarity: number;
   reduced: boolean;
 }) {
-  if (rarity < 4) return null;
+  if (rarity < 1) return null;
   const color = COLORS[rarity]!;
   return (
     <Animated.View
@@ -20,11 +20,18 @@ export function BoosterAura({
       style={{
         position: "absolute",
         inset: 0,
-        backgroundColor: rarity >= 5 ? "#080713bb" : "#32240d33",
+        backgroundColor:
+          rarity >= 5 ? "#080713bb" : rarity >= 3 ? "#20193222" : "transparent",
       }}
     >
       <Svg width="100%" height="100%" viewBox="0 0 360 600">
-        <Circle cx="180" cy="280" r="125" fill={color} opacity=".08" />
+        <Circle
+          cx="180"
+          cy="280"
+          r="125"
+          fill={color}
+          opacity={rarity >= 4 ? ".08" : ".035"}
+        />
         <Circle
           cx="180"
           cy="280"

@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { BoosterAura } from "./BoosterAura";
 import { useState, useEffect } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { EXTENSIONS, COLORS } from "../domain/catalog";
 import type { Receipt } from "../domain/boosters";
 import { BoosterSky, CELESTIAL_MOTIFS } from "./BoosterSky";
@@ -17,7 +17,7 @@ import { useAppActivity } from "../animations/openingMotion";
 import { BoosterPack } from "./BoosterPack";
 import { BoosterTearAnimation } from "./BoosterTearAnimation";
 import { BoosterParticles } from "./BoosterParticles";
-import { BoosterCardReveal } from "./BoosterCardReveal";
+import { CardRevealAnimation } from "./CardRevealAnimation";
 import { BoosterResults } from "./BoosterResults";
 import { GreekOrnament } from "./GreekOrnament";
 import { styles } from "./theme";
@@ -42,13 +42,23 @@ export function BoosterOpening({
     return () => clearTimeout(timer);
   }, [reduced, phase, appActive]);
   const float = useSharedValue(0);
+  const arrival = useSharedValue(reduced ? 1 : 0);
+  useEffect(() => {
+    if (appActive)
+      arrival.value = withTiming(1, { duration: reduced ? 0 : 650 });
+    return () => cancelAnimation(arrival);
+  }, [appActive, arrival, reduced]);
   useEffect(() => {
     if (!reduced && appActive && (phase === "present" || phase === "tear"))
       float.value = withRepeat(withTiming(-8, { duration: 1800 }), -1, true);
     return () => cancelAnimation(float);
   }, [float, reduced, appActive, phase]);
   const floating = useAnimatedStyle(() => ({
-    transform: [{ translateY: float.value }],
+    opacity: 0.65 + arrival.value * 0.35,
+    transform: [
+      { translateY: float.value + (1 - arrival.value) * 30 },
+      { scale: 0.88 + arrival.value * 0.16 },
+    ],
   }));
   useEffect(() => {
     if (phase !== "fan" || !appActive) return;
@@ -78,6 +88,26 @@ export function BoosterOpening({
         active={appActive && !complete}
         burst={torn}
       />
+      {!complete && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Passer les animations et voir les sept cartes"
+          style={{
+            alignSelf: "flex-end",
+            minHeight: 48,
+            justifyContent: "center",
+            paddingHorizontal: 18,
+            zIndex: 10,
+          }}
+          onPress={() => {
+            setTorn(true);
+            setPhase("cards");
+            setRevealed(receipt.cards.map((_card, index) => index));
+          }}
+        >
+          <Text style={styles.subtitle}>PASSER LES ANIMATIONS</Text>
+        </Pressable>
+      )}
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingTop: 24, paddingBottom: 36 }}
@@ -118,9 +148,9 @@ export function BoosterOpening({
                   <BoosterPack
                     active={appActive}
                     torn={torn}
-                    extension={EXTENSIONS.find(
-                      (e) => e.id === receipt.extension,
-                    )!}
+                    extension={
+                      EXTENSIONS.find((e) => e.id === receipt.extension)!
+                    }
                     reduced={reduced}
                   />
                 </Animated.View>
@@ -150,7 +180,7 @@ export function BoosterOpening({
                   }}
                 >
                   {receipt.cards.map((card, i) => (
-                    <BoosterCardReveal
+                    <CardRevealAnimation
                       key={i}
                       card={card}
                       index={i}

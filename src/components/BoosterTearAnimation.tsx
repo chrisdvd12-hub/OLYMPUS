@@ -1,5 +1,5 @@
 import { AppText as Text } from "./AppText";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { View, PanResponder, Pressable } from "react-native";
 import Animated, {
   useSharedValue,
@@ -18,12 +18,19 @@ export function BoosterTearAnimation({
 }) {
   const progress = useSharedValue(0);
   const fired = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
   const open = () => {
     if (fired.current) return;
     fired.current = true;
     onTear?.();
     progress.value = withTiming(1, { duration: reduced ? 0 : 550 });
-    setTimeout(onOpen, reduced ? 0 : 550);
+    timer.current = setTimeout(onOpen, reduced ? 0 : 550);
   };
   const pan = PanResponder.create({
     onStartShouldSetPanResponder: () => true,

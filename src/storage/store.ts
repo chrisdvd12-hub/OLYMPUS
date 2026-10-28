@@ -6,6 +6,7 @@ import {
   type GameState,
   type BoosterSource,
 } from "../domain/boosters";
+import { validProfileName } from "../domain/collection";
 import { grantDailyBoosters } from "../domain/daily";
 const dbPromise = SQLite.openDatabaseAsync("olympus.db");
 async function database() {
@@ -48,7 +49,11 @@ export function transact(
   queue = task.catch(() => {});
   return task;
 }
-export const buy = (extension: string, source: Exclude<BoosterSource, "free">, id: string) =>
+export const buy = (
+  extension: string,
+  source: Exclude<BoosterSource, "free">,
+  id: string,
+) =>
   transact((s) =>
     purchase(s, extension, source, id, Date.now(), Math.random, {
       unlimitedDrachmas: UNLIMITED_DRACHMAS,
@@ -56,7 +61,11 @@ export const buy = (extension: string, source: Exclude<BoosterSource, "free">, i
   );
 export const finish = (id: string) =>
   transact((s) => (s.pending?.id === id ? { ...s, pending: null } : s));
-export const refresh = (dailyVisit = false) => transact((s) => {
-  const now = Date.now();
-  return dailyVisit ? grantDailyBoosters(s, now) : s;
-});
+export const refresh = (dailyVisit = false) =>
+  transact((s) => {
+    const now = Date.now();
+    return dailyVisit ? grantDailyBoosters(s, now) : s;
+  });
+
+export const savePlayerName = (name: string) =>
+  transact((state) => ({ ...state, playerName: validProfileName(name) }));

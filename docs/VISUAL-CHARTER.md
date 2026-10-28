@@ -4,7 +4,7 @@ Tous les textes React Native passent par AppText : Cinzel Regular pour le texte 
 
 Trajan Pro Regular n’a pas été fourni et ne peut pas être distribué sans licence : Cinzel Regular sert de remplacement déclaré. Fournir le TTF/OTF et les droits de redistribution pour le remplacer. Les lettres déjà imprimées dans les illustrations approuvées restent intactes.
 
-Palette : or olympien #D4AF37, marbre clair #F5E6D0, bleu nuit #0B1E3A, fond #07121e. Les textes emploient aussi un or clair #f0d59d pour le contraste. Les illustrations et sachets conservent leurs couleurs validées et leur alpha. Aucun cadre ni rectangle opaque n’est ajouté autour des sachets.
+Palette actuelle : or antique #C8A45B, ivoire #F0E6D2, bleu égéen #192B47, bleu nuit #0B1426 et violet impérial #8056B7. Les textes emploient aussi un or clair #f0d59d pour le contraste. Les illustrations et sachets conservent leurs couleurs validées et leur alpha. Aucun cadre ni rectangle opaque n’est ajouté autour des sachets.
 
 Le fond assets/backgrounds/sanctuary-night.png est un décor original généré pour l’interface : colonnes corinthiennes, temple, ciel étoilé et pavement grec. Il ne remplace aucune illustration de carte et reste local. Des ornements SVG discrets complètent les titres et panneaux. Les rectos non fournis restent explicitement provisoires.
 

@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { ActivityIndicator, View } from "react-native";
@@ -10,6 +11,30 @@ export default function Layout() {
     CinzelSemiBold: require("../assets/fonts/Cinzel-SemiBold.ttf"),
     CinzelBold: require("../assets/fonts/Cinzel-Bold.ttf"),
   });
-  if (!loaded && !error) return <View style={{ flex: 1, backgroundColor: theme.ink, justifyContent: "center" }}><ActivityIndicator color={theme.gold} accessibilityLabel="Chargement du sanctuaire" /></View>;
-  return <><StatusBar style="light" /><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.ink } }} /></>;
+  if (!loaded && !error)
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.ink,
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator
+          color={theme.gold}
+          accessibilityLabel="Chargement du sanctuaire"
+        />
+      </View>
+    );
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: theme.ink },
+        }}
+      />
+    </GestureHandlerRootView>
+  );
 }

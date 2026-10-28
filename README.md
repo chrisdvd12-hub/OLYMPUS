@@ -119,3 +119,10 @@ Une seule offrande de deux boosters d’extensions aléatoires toutes les 24 h r
 ## Interface et typographie
 
 Charte Cinzel appliquée à tous les textes de l’interface : chargement local au démarrage, trois graisses, décor de sanctuaire nocturne, ornements grecs et collection avec miniatures. Les images approuvées restent intactes. Trajan Pro n’étant pas fourni, les petites informations utilisent Cinzel Regular. Voir [la charte et les limites de validation](docs/VISUAL-CHARTER.md).
+
+
+## Refonte premium interactive
+
+La roue `BoosterWheelCarousel` remplace le slider sur l’accueil : perspective, tours infinis, inertie et sélection centrale. L’album propose une grille filtrable, une galerie et un visualiseur 360° recto/verso avec matières réactives, zoom et encyclopédie à relations cliquables. Profil local et missions de collection sont accessibles depuis la navigation. Les ressources officielles, reçus et sauvegardes sont conservés ; les illustrations individuelles manquantes restent identifiées. L’ouverture peut être passée sans retirer de nouvelles cartes.
+
+Voir [le compte rendu, les fichiers et les limites de validation](docs/PREMIUM-IMPLEMENTATION.md). Après mise à jour, lancer `npm ci` pour installer le retour tactile Expo ajouté.

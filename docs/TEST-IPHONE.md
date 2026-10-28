@@ -58,3 +58,8 @@ Le délai de 24 h est enregistré à chaque attribution et continue pendant les 
 Sur iPhone : vérifier l’absence des sections « Le cadeau quotidien » et de l’ancienne offrande de 12 h ; contrôler l’offrande en haut à droite. À échéance, vérifier le bouton, ouvrir les deux boosters un à un, puis retrouver le compteur. Fermer pendant une révélation et vérifier que le même tirage reprend. Les cartes sont toujours enregistrées atomiquement avant l’animation et chaque booster contient sept cartes.
 
 Le jeu reste local : l’horloge du téléphone sert de référence au compteur.
+
+
+## Refonte premium : roue et cartes 360°
+
+Voir le [parcours détaillé](PREMIUM-IMPLEMENTATION.md#test-sur-iphone). L’installation `npm ci` est nécessaire après `git pull` pour `expo-haptics`. Les sauvegardes existantes sont conservées. La grille et le visualiseur ne contiennent pas de peintures inventées pour les cartes dont l’illustration n’a pas encore été fournie.

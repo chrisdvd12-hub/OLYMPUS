@@ -1,79 +1,100 @@
-import { AppText as Text } from "./AppText";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  View,
-  ScrollView,
-  Pressable,
-  Switch,
   AccessibilityInfo,
+  useWindowDimensions,
   AppState,
+  Pressable,
+  ScrollView,
+  Switch,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
-import { GreekOrnament, TempleSeal } from "./GreekOrnament";
-import { CardFace } from "./CardFace";
-import { EXTENSIONS, CARDS, RARITIES } from "../domain/catalog";
-import { ZEUS_DIVINE } from "../domain/zeus";
-import { CardDetailModal } from "./CardDetailModal";
-import { PRICE, type GameState, type BoosterSource } from "../domain/boosters";
-import { OfferingBadge } from "./OfferingBadge";
+import Animated, { FadeIn } from "react-native-reanimated";
+import { EXTENSIONS } from "../domain/catalog";
+import { PRICE, type GameState } from "../domain/boosters";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
-import { buy, finish, refresh } from "../storage/store";
-import { BoosterCarousel } from "./BoosterCarousel";
-import { BoosterOpening } from "./BoosterOpening";
+import { buy, finish, refresh, savePlayerName } from "../storage/store";
+import { selectionFeedback } from "../interaction/feedback";
+import { AppText as Text } from "./AppText";
+import { BoosterWheelCarousel } from "./BoosterWheelCarousel";
+import { BoosterOpeningSequence } from "./BoosterOpeningSequence";
+import { CardCollectionGrid } from "./CardCollectionGrid";
+import { CardDetailModal } from "./CardDetailModal";
+import { CollectionProgress } from "./CollectionProgress";
+import { PremiumButton } from "./PremiumButton";
+import { PlayerPanel } from "./PlayerPanel";
+import { OfferingBadge } from "./OfferingBadge";
+import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
+import { GreekOrnament } from "./GreekOrnament";
 import { styles, theme } from "./theme";
+
+type Page = "home" | "album" | "missions" | "profile";
+const PAGES = [
+  ["home", "SANCTUAIRE"],
+  ["album", "ALBUM"],
+  ["missions", "MISSIONS"],
+  ["profile", "PROFIL"],
+] as const;
+const DESCRIPTIONS = [
+  "Les divinités qui veillent sur le ciel, les mers et les mortels.",
+  "Les puissances primordiales et les ancêtres des dieux.",
+  "Les figures dont les récits traversent les siècles.",
+  "Les êtres fascinants des légendes grecques.",
+];
 export default function BoosterShop() {
+  const { width } = useWindowDimensions();
   const [state, setState] = useState<GameState | null>(null);
   const [selected, setSelected] = useState(0);
   const [reduced, setReduced] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [wheelBusy, setWheelBusy] = useState(false);
+  const [wheelVisible, setWheelVisible] = useState(true);
   const [error, setError] = useState("");
-  const [collection, setCollection] = useState(false);
+  const [page, setPage] = useState<Page>("home");
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const lock = useRef(false);
   const updateOffering = useCallback(() => {
-    refresh(true).then(setState).catch((e) => setError(String(e)));
-  }, []);
-  useEffect(() => {
     refresh(true)
       .then(setState)
       .catch((e) => setError(String(e)));
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
+  }, []);
+  useEffect(() => {
+    updateOffering();
+    void AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
     const motion = AccessibilityInfo.addEventListener(
       "reduceMotionChanged",
       setReduced,
     );
-    const app = AppState.addEventListener("change", (s) => {
-      if (s === "active") {
-        refresh(true)
-          .then(setState)
-          .catch((e) => setError(String(e)));
-      }
+    const app = AppState.addEventListener("change", (status) => {
+      if (status === "active") updateOffering();
     });
     const timer = setInterval(() => {
-      refresh(AppState.currentState === "active")
-        .then(setState)
-        .catch((e) => setError(String(e)));
+      if (AppState.currentState === "active") updateOffering();
     }, 30000);
     return () => {
       motion.remove();
       app.remove();
       clearInterval(timer);
     };
-  }, []);
-  const open = async (source: Exclude<BoosterSource, "free">) => {
-    if (lock.current) return;
+  }, [updateOffering]);
+  const open = async (source: "paid" | "daily", index = selected) => {
+    if (lock.current || (source === "paid" && wheelBusy)) return;
     lock.current = true;
     setBusy(true);
     setError("");
     try {
+      const extension =
+        source === "daily"
+          ? (state?.dailyPacks?.[0] ?? "")
+          : EXTENSIONS[index]!.id;
       setState(
         await buy(
-          source === "daily" ? state?.dailyPacks?.[0] ?? "" : EXTENSIONS[selected]!.id,
+          extension,
           source,
           `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         ),
       );
+      selectionFeedback(!reduced);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -82,26 +103,40 @@ export default function BoosterShop() {
     }
   };
   const exit = async (destination: "shop" | "collection" | "again") => {
-    if (!state?.pending) return;
+    if (!state?.pending || lock.current) return;
+    lock.current = true;
     try {
+      const index = EXTENSIONS.findIndex(
+        (e) => e.id === state.pending!.extension,
+      );
       setState(await finish(state.pending.id));
-      setCollection(destination === "collection");
+      if (index >= 0) setSelected(index);
+      setWheelBusy(false);
+      setPage(destination === "collection" ? "album" : "home");
     } catch (e) {
       setError(String(e));
+    } finally {
+      lock.current = false;
     }
   };
   if (!state)
     return (
       <SafeAreaView style={styles.screen}>
-        <Text style={[styles.text, { padding: 30 }]}>
-          {error || "Ouverture des portes de l’Olympe…"}
-        </Text>
+        <SanctuaryBackdrop />
+        <View style={[styles.body, { flex: 1, justifyContent: "center" }]}>
+          <Text style={styles.title}>OLYMPUS</Text>
+          <GreekOrnament />
+          <Text style={styles.muted}>
+            {error || "Les portes du sanctuaire s’ouvrent…"}
+          </Text>
+        </View>
       </SafeAreaView>
     );
   if (state.pending)
     return (
       <SafeAreaView style={styles.screen}>
-        <BoosterOpening
+        <BoosterOpeningSequence
+          key={state.pending.id}
           receipt={state.pending}
           reduced={reduced}
           onExit={exit}
@@ -114,198 +149,225 @@ export default function BoosterShop() {
       </SafeAreaView>
     );
   const canAfford = UNLIMITED_DRACHMAS || state.drachmas >= PRICE;
-  const ext = EXTENSIONS[selected]!;
-  const owned = CARDS.filter(
-    (c) => c.extension === ext.id && state.collection[c.id],
-  ).length;
+  const extension = EXTENSIONS[selected]!;
+  const switchPage = (next: Page) => {
+    setPage(next);
+    setWheelVisible(true);
+    setWheelBusy(false);
+    selectionFeedback(!reduced);
+  };
   return (
     <SafeAreaView style={styles.screen}>
       <SanctuaryBackdrop />
-      <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
-        <View style={styles.body}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <View style={{ flex: 1, gap: 10, alignItems: "flex-start", paddingRight: 12 }}>
-              <TempleSeal />
-              <Text style={[styles.subtitle, { textAlign: "left", letterSpacing: 1 }]}>LE SANCTUAIRE</Text>
-              <View style={styles.wallet}>
-                <Text style={{ color: theme.highlight, fontFamily: "CinzelBold", fontSize: 12 }}>
-                  {UNLIMITED_DRACHMAS ? "∞ drachmes" : `${state.drachmas} drachmes`}
-                </Text>
-              </View>
-            </View>
-            <View style={{ flexShrink: 1, alignItems: "flex-end" }}>
-              <OfferingBadge
-                nextAt={state.dailyNextAt}
-                available={state.dailyPacks?.length ?? 0}
-                busy={busy}
-                onOpen={() => open("daily")}
-                onDue={updateOffering}
-              />
-            </View>
-          </View>
-          <Text accessibilityRole="header" style={[styles.title, { fontSize: 40, lineHeight: 54, letterSpacing: 3 }]}>OLYMPUS</Text>
-          <Text style={[styles.subtitle, { letterSpacing: 4 }]}>DIVINE COLLECTION</Text>
-          <GreekOrnament />
+      <View
+        style={{
+          paddingHorizontal: 18,
+          paddingVertical: 12,
+          flexDirection: "row",
+          gap: 12,
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ flex: 1, gap: 6 }}>
           <Text
+            accessibilityRole="header"
             style={[
-              styles.text,
-              { textAlign: "center", fontFamily: "CinzelSemiBold", fontSize: 22 },
+              styles.title,
+              {
+                textAlign: "left",
+                fontSize: width < 360 ? 20 : 27,
+                lineHeight: 36,
+              },
             ]}
           >
-            {collection ? "Votre collection" : "Les trésors des dieux"}
+            OLYMPUS
           </Text>
-          <View style={styles.navigation}>
-            <Pressable accessibilityRole="tab" accessibilityState={{ selected: !collection }} style={[styles.tab, !collection && styles.activeTab]} onPress={() => setCollection(false)}>
-              <Text style={[styles.subtitle, { letterSpacing: 1 }]}>BOUTIQUE</Text>
-            </Pressable>
-            <Pressable accessibilityRole="tab" accessibilityState={{ selected: collection }} style={[styles.tab, collection && styles.activeTab]} onPress={() => setCollection(true)}>
-              <Text style={[styles.subtitle, { letterSpacing: 1 }]}>COLLECTION</Text>
-            </Pressable>
-          </View>
-        </View>
-        {collection ? (
-          <View style={styles.body}>
-            <Text style={styles.muted}>
-              {Object.keys(state.collection).length} / 120 découvertes
+          <Text
+            style={[
+              styles.subtitle,
+              { fontSize: 9, letterSpacing: 1.5, textAlign: "left" },
+            ]}
+          >
+            DIVINE COLLECTION
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Ouvrir mon profil"
+            style={{ minHeight: 44, justifyContent: "center" }}
+            onPress={() => switchPage("profile")}
+          >
+            <Text numberOfLines={1} style={[styles.text, { fontSize: 12 }]}>
+              {state.playerName ?? "Collectionneur"} ›
             </Text>
-            {EXTENSIONS.map((e) => (
-              <View key={e.id} style={styles.panel}>
-                <Text accessibilityRole="header" style={[styles.subtitle, { fontSize: 15, letterSpacing: 1 }]}>{e.name}</Text>
-                <GreekOrnament />
-                {CARDS.filter(
-                  (c) => c.extension === e.id && state.collection[c.id],
-                ).map((c) => (
-                  <Pressable
-                    key={c.id}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Voir ${c.name}, ${RARITIES[c.rarity]}`}
-                    style={{ minHeight: 78, flexDirection: "row", alignItems: "center", gap: 14, borderBottomWidth: 1, borderBottomColor: "#d4af3722", paddingVertical: 10 }}
-                    onPress={() => setInspectedId(c.id)}
-                  >
-                    <View style={{ width: 42, aspectRatio: 5 / 7 }} accessible={false}><CardFace card={c} compact /></View>
-                    <View style={{ flex: 1, gap: 3 }}>
-                      <Text style={[styles.text, { fontFamily: "CinzelSemiBold" }]}>{c.name}</Text>
-                      <Text style={[styles.muted, { textAlign: "left", fontSize: 11 }]}>{c.number} · {RARITIES[c.rarity]}</Text>
-                    </View>
-                    <Text style={[styles.text, { color: theme.highlight }]}>×{state.collection[c.id]} ›</Text>
-                  </Pressable>
-                ))}
-              </View>
-            ))}
-            <Pressable
-              style={styles.button}
-              onPress={() => setCollection(false)}
-            >
-              <Text style={styles.buttonText}>RETOUR À LA BOUTIQUE</Text>
-            </Pressable>
-          </View>
+          </Pressable>
+          <Text
+            style={{
+              color: theme.highlight,
+              fontFamily: "CinzelBold",
+              fontSize: 12,
+            }}
+          >
+            {UNLIMITED_DRACHMAS
+              ? "∞ drachmes · TEST"
+              : `${state.drachmas} drachmes`}
+          </Text>
+        </View>
+        <OfferingBadge
+          nextAt={state.dailyNextAt}
+          available={state.dailyPacks?.length ?? 0}
+          busy={busy}
+          onOpen={() => open("daily")}
+          onDue={updateOffering}
+        />
+      </View>
+      <Animated.View
+        key={page}
+        entering={reduced ? undefined : FadeIn.duration(240)}
+        style={{ flex: 1 }}
+      >
+        {page === "album" ? (
+          <CardCollectionGrid
+            collection={state.collection}
+            reduced={reduced}
+            onInspect={setInspectedId}
+          />
         ) : (
-          <>
-            <BoosterCarousel
-              selected={selected}
-              onSelect={setSelected}
-              reduced={reduced}
-            />
-            <View style={styles.body}>
-              <GreekOrnament />
-              <View style={styles.panel}>
-              <Text style={[styles.title, { fontSize: 21, letterSpacing: 1 }]}>
-                {ext.name}
-              </Text>
-              <Text style={styles.muted}>
-                {owned} / 30 cartes possédées · {Math.round((owned / 30) * 100)}{" "}
-                %
-              </Text>
-              <View
-                accessibilityRole="progressbar"
-                accessibilityValue={{ min: 0, max: 30, now: owned }}
-                style={{ height: 4, backgroundColor: "#343d48" }}
-              >
-                <View
-                  style={{
-                    height: 4,
-                    width: `${(owned / 30) * 100}%`,
-                    backgroundColor: theme.gold,
-                  }}
+          <ScrollView
+            scrollEventThrottle={100}
+            onScroll={(e) => {
+              if (page === "home")
+                setWheelVisible(e.nativeEvent.contentOffset.y < 600);
+            }}
+            contentContainerStyle={{ paddingBottom: 28 }}
+          >
+            {page === "home" ? (
+              <>
+                <View style={[styles.body, { paddingVertical: 8 }]}>
+                  <CollectionProgress
+                    collection={state.collection}
+                    reduced={reduced}
+                  />
+                </View>
+                <BoosterWheelCarousel
+                  selected={selected}
+                  onSelect={setSelected}
+                  onOpen={(index) => open("paid", index)}
+                  onBusy={setWheelBusy}
+                  reduced={reduced}
+                  visible={wheelVisible}
                 />
-              </View>
-              <Text style={styles.muted}>
-                7 cartes · Rare ou supérieure garantie
-              </Text>
-              <Text
-                style={[
-                  styles.text,
-                  { textAlign: "center", color: theme.gold },
-                ]}
-              >
-                {UNLIMITED_DRACHMAS
-                  ? "MODE TEST · OUVERTURES ILLIMITÉES"
-                  : `${PRICE} DRACHMES`}
-              </Text>
-              <Pressable
-                disabled={busy || !canAfford}
-                accessibilityRole="button"
-                style={[
-                  styles.button,
-                  { opacity: busy || !canAfford ? 0.4 : 1 },
-                ]}
-                onPress={() => open("paid")}
-              >
-                <Text style={styles.buttonText}>
-                  {busy ? "ENREGISTREMENT…" : "OUVRIR UN BOOSTER"}
-                </Text>
-              </Pressable>
-              {!canAfford && (
-                <Text style={styles.muted}>
-                  Drachmes insuffisantes. Votre prochaine offrande est indiquée en haut à droite.
-                </Text>
-              )}
-              </View>
-              <Text style={styles.muted}>
-                Protection légendaire · {state.pity}/20
-              </Text>
-              <Pressable
-                style={styles.outline}
-                onPress={() => setCollection(true)}
-              >
-                <Text style={styles.text}>MA COLLECTION</Text>
-              </Pressable>
-              {ext.id === ZEUS_DIVINE.extension && (
-                <Pressable
-                  accessibilityRole="button"
-                  style={styles.outline}
-                  onPress={() => setInspectedId(ZEUS_DIVINE.id)}
-                >
+                <View style={[styles.body, { gap: 12 }]}>
+                  <GreekOrnament />
                   <Text
+                    style={[styles.title, { fontSize: 21, lineHeight: 30 }]}
+                  >
+                    {extension.name}
+                  </Text>
+                  <Text style={styles.muted}>{DESCRIPTIONS[selected]}</Text>
+                  <Text style={[styles.subtitle, { letterSpacing: 1 }]}>
+                    7 CARTES · {PRICE} DRACHMES
+                  </Text>
+                  <Text style={styles.muted}>
+                    Une rare ou supérieure garantie
+                  </Text>
+                  <PremiumButton
+                    disabled={busy || wheelBusy || !canAfford}
+                    reduced={reduced}
+                    onPress={() => open("paid")}
+                    label={busy ? "ENREGISTREMENT…" : "OUVRIR UN BOOSTER"}
+                  />
+                  {UNLIMITED_DRACHMAS && (
+                    <Text style={styles.muted}>
+                      Mode test · aucune drachme débitée
+                    </Text>
+                  )}
+                  {!canAfford && (
+                    <Text style={styles.muted}>
+                      Drachmes insuffisantes. Votre offrande gratuite reste
+                      disponible à échéance.
+                    </Text>
+                  )}
+                  <Text style={styles.muted}>
+                    Protection légendaire · {state.pity}/20
+                  </Text>
+                  <View
                     style={[
-                      styles.text,
-                      { color: theme.gold, textAlign: "center" },
+                      styles.panel,
+                      {
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      },
                     ]}
                   >
-                    VOIR ZEUS DIVIN
-                  </Text>
-                </Pressable>
-              )}
-              <View style={[styles.panel, { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 }]}>
-                <Text style={[styles.muted, { textAlign: "left", flex: 1 }]}>Réduire les animations</Text>
-                <Switch accessibilityLabel="Réduire les animations" trackColor={{ false: "#283546", true: "#8f742b" }} thumbColor={theme.paper} value={reduced} onValueChange={setReduced} />
-              </View>
-              <Text style={styles.muted}>Peintures classiques · Mythologie grecque</Text>
-              {!!error && (
-                <Text accessibilityRole="alert" style={{ color: "#ffb4a6" }}>
-                  {error}
-                </Text>
-              )}
-            </View>
-          </>
+                    <Text
+                      style={[styles.muted, { flex: 1, textAlign: "left" }]}
+                    >
+                      Réduire les animations
+                    </Text>
+                    <Switch
+                      accessibilityLabel="Réduire les animations"
+                      value={reduced}
+                      onValueChange={setReduced}
+                      trackColor={{ true: "#8f742b", false: "#283546" }}
+                      thumbColor={theme.paper}
+                    />
+                  </View>
+                  <Pressable
+                    accessibilityRole="button"
+                    style={styles.outline}
+                    onPress={() => setInspectedId("olympe-30")}
+                  >
+                    <Text style={styles.text}>ADMIRER ZEUS DIVIN</Text>
+                  </Pressable>
+                </View>
+              </>
+            ) : (
+              <PlayerPanel
+                state={state}
+                reduced={reduced}
+                missions={page === "missions"}
+                onSave={async (name) => {
+                  setState(await savePlayerName(name));
+                }}
+              />
+            )}
+          </ScrollView>
         )}
-      </ScrollView>
+      </Animated.View>
+      {!!error && (
+        <Text
+          accessibilityRole="alert"
+          style={{ color: "#ffb4a6", padding: 12 }}
+        >
+          {error}
+        </Text>
+      )}
+      <View
+        style={[styles.navigation, { marginHorizontal: 10, marginBottom: 4 }]}
+      >
+        {PAGES.map(([id, label]) => (
+          <Pressable
+            key={id}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: page === id }}
+            onPress={() => switchPage(id)}
+            style={[styles.tab, page === id && styles.activeTab]}
+          >
+            <Text
+              style={[styles.subtitle, { letterSpacing: 0.3, fontSize: 10 }]}
+            >
+              {label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
       {inspectedId && (
         <CardDetailModal
           cardId={inspectedId}
           quantity={state.collection[inspectedId] ?? 0}
+          collection={state.collection}
           reduced={reduced}
           onClose={() => setInspectedId(null)}
         />

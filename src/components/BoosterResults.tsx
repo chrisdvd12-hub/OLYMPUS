@@ -4,6 +4,7 @@ import { CardDetailModal } from "./CardDetailModal";
 import { View, Pressable } from "react-native";
 import type { Receipt } from "../domain/boosters";
 import { BoosterCardReveal } from "./BoosterCardReveal";
+import { PremiumButton } from "./PremiumButton";
 import { GreekOrnament, TempleSeal } from "./GreekOrnament";
 import { styles, theme } from "./theme";
 export function BoosterResults({
@@ -24,7 +25,9 @@ export function BoosterResults({
     inspectedIndex === null ? null : receipt.cards[inspectedIndex];
   return (
     <View style={styles.body}>
-      <View style={{ alignItems: "center" }}><TempleSeal /></View>
+      <View style={{ alignItems: "center" }}>
+        <TempleSeal />
+      </View>
       <Text style={styles.title}>VOTRE TRÉSOR</Text>
       <GreekOrnament />
       <Text style={styles.muted}>
@@ -72,15 +75,23 @@ export function BoosterResults({
           </View>
         ))}
       </View>
-      <Pressable accessibilityRole="button" style={styles.button} onPress={onCollection}>
-        <Text style={styles.buttonText}>VOIR MA COLLECTION</Text>
-      </Pressable>
-      <Pressable accessibilityRole="button" style={styles.outline} onPress={onAgain}>
-        <Text style={styles.text}>OUVRIR UN AUTRE BOOSTER</Text>
-      </Pressable>
-      <Pressable accessibilityRole="button" style={styles.outline} onPress={onShop}>
-        <Text style={styles.text}>RETOUR À LA BOUTIQUE</Text>
-      </Pressable>
+      <PremiumButton
+        reduced={reduced}
+        label="VOIR MA COLLECTION"
+        onPress={onCollection}
+      />
+      <PremiumButton
+        reduced={reduced}
+        secondary
+        label="OUVRIR UN AUTRE BOOSTER"
+        onPress={onAgain}
+      />
+      <PremiumButton
+        reduced={reduced}
+        secondary
+        label="RETOUR À LA BOUTIQUE"
+        onPress={onShop}
+      />
       {inspected && (
         <CardDetailModal
           cardId={inspected.id}
