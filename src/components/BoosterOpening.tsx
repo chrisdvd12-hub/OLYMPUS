@@ -7,7 +7,7 @@ import Animated, {
   cancelAnimation,
 } from "react-native-reanimated";
 import { BoosterAura } from "./BoosterAura";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { View, ScrollView, Pressable } from "react-native";
 import { EXTENSIONS, COLORS } from "../domain/catalog";
 import type { Receipt } from "../domain/boosters";
@@ -21,6 +21,7 @@ import { CardRevealAnimation } from "./CardRevealAnimation";
 import { BoosterResults } from "./BoosterResults";
 import { GreekOrnament } from "./GreekOrnament";
 import { styles } from "./theme";
+import { finalRevealHold, sortCardsForReveal } from "../domain/reveal";
 export function BoosterOpening({
   receipt,
   reduced,
@@ -36,6 +37,11 @@ export function BoosterOpening({
   const appActive = useAppActivity();
   const [torn, setTorn] = useState(false);
   const [revealed, setRevealed] = useState<number[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const orderedCards = useMemo(
+    () => sortCardsForReveal(receipt.cards),
+    [receipt.cards],
+  );
   useEffect(() => {
     if (phase !== "present" || !appActive) return;
     const timer = setTimeout(() => setPhase("tear"), reduced ? 0 : 1500);
@@ -66,9 +72,18 @@ export function BoosterOpening({
     return () => clearTimeout(t);
   }, [phase, reduced, appActive]);
   const last = revealed.length
-    ? receipt.cards[revealed[revealed.length - 1]!]!
+    ? orderedCards[revealed[revealed.length - 1]!]!
     : null;
-  const complete = revealed.length === 7;
+  const allRevealed = revealed.length === orderedCards.length;
+  useEffect(() => {
+    if (!allRevealed || !last || showResults) return;
+    const timer = setTimeout(
+      () => setShowResults(true),
+      finalRevealHold(last.rarity, reduced),
+    );
+    return () => clearTimeout(timer);
+  }, [allRevealed, last, reduced, showResults]);
+  const complete = showResults;
   return (
     <View style={styles.screen}>
       <BoosterSky
@@ -80,6 +95,7 @@ export function BoosterOpening({
           key={revealed.length}
           rarity={last?.rarity ?? 0}
           reduced={reduced || !appActive}
+          final={allRevealed}
         />
       )}
       <BoosterParticles
@@ -102,7 +118,8 @@ export function BoosterOpening({
           onPress={() => {
             setTorn(true);
             setPhase("cards");
-            setRevealed(receipt.cards.map((_card, index) => index));
+            setRevealed(orderedCards.map((_card, index) => index));
+            setShowResults(true);
           }}
         >
           <Text style={styles.subtitle}>PASSER LES ANIMATIONS</Text>
@@ -112,7 +129,7 @@ export function BoosterOpening({
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingTop: 24, paddingBottom: 36 }}
       >
-        {revealed.length === 7 ? (
+        {complete ? (
           <BoosterResults
             receipt={receipt}
             reduced={reduced}
@@ -159,6 +176,9 @@ export function BoosterOpening({
                     onTear={() => setTorn(true)}
                     reduced={reduced}
                     onOpen={() => setPhase("fan")}
+                    color={
+                      EXTENSIONS.find((e) => e.id === receipt.extension)!.color
+                    }
                   />
                 ) : (
                   <Text style={styles.muted}>
@@ -179,12 +199,13 @@ export function BoosterOpening({
                     gap: 9,
                   }}
                 >
-                  {receipt.cards.map((card, i) => (
+                  {orderedCards.map((card, i) => (
                     <CardRevealAnimation
-                      key={i}
+                      key={`${card.id}-${i}`}
                       card={card}
                       index={i}
                       enabled={i === revealed.length}
+                      final={i === orderedCards.length - 1}
                       reduced={reduced}
                       revealed={revealed.includes(i)}
                       onReveal={() =>

@@ -8,9 +8,11 @@ import { COLORS } from "../domain/catalog";
 export function BoosterAura({
   rarity,
   reduced,
+  final = false,
 }: {
   rarity: number;
   reduced: boolean;
+  final?: boolean;
 }) {
   const glow = useOpeningLoop(!reduced && rarity >= 2, 7000);
   const orbit = useAnimatedStyle(() => ({ transform: [{ rotate: `${glow.value * 360}deg` }] }));
@@ -37,7 +39,19 @@ export function BoosterAura({
           cy="280"
           r="125"
           fill={color}
-          opacity={rarity === 6 ? ".24" : rarity >= 4 ? ".16" : ".07"}
+          opacity={
+            final
+              ? rarity === 6
+                ? ".38"
+                : rarity >= 4
+                  ? ".26"
+                  : ".14"
+              : rarity === 6
+                ? ".24"
+                : rarity >= 4
+                  ? ".16"
+                  : ".07"
+          }
         />
         <Circle
           cx="180"

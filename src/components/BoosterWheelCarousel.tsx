@@ -69,7 +69,7 @@ function WheelPack({
           position: "absolute",
           left: "50%",
           marginLeft: -124,
-          top: 22,
+          top: 70,
           width: 248,
           height: 372,
         },
@@ -114,7 +114,7 @@ export function BoosterWheelCarousel({
   const position = useSharedValue(selected);
   const anchor = useSharedValue(0);
   const scale = Math.min(1.12, Math.max(0.73, width / 440));
-  const radius = Math.min(width * 0.39, 245);
+  const radius = Math.min(width * 0.39, 220);
   const notify = useCallback((index: number) => onSelect(index), [onSelect]);
   useAnimatedReaction(
     () => wrapIndex(position.value),
@@ -219,7 +219,7 @@ export function BoosterWheelCarousel({
         <Animated.View
           collapsable={false}
           style={{
-            height: 372 * scale + 66,
+            height: 520,
             width: "100%",
             overflow: "hidden",
             justifyContent: "center",
@@ -229,13 +229,33 @@ export function BoosterWheelCarousel({
             pointerEvents="none"
             style={{
               position: "absolute",
-              left: "20%",
-              right: "20%",
-              bottom: 12,
-              height: 30,
-              borderRadius: 150,
-              backgroundColor: EXTENSIONS[selected]!.color,
-              opacity: 0.22,
+              width: radius * 2,
+              height: 164,
+              left: "50%",
+              top: 174,
+              marginLeft: -radius,
+              borderRadius: 999,
+              borderWidth: 1,
+              borderColor: EXTENSIONS[selected]!.color,
+              backgroundColor: `${EXTENSIONS[selected]!.color}18`,
+              transform: [{ rotateX: "58deg" }],
+              opacity: 0.7,
+            }}
+          />
+          <View
+            pointerEvents="none"
+            style={{
+              position: "absolute",
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              left: "50%",
+              top: 251,
+              marginLeft: -5,
+              backgroundColor: theme.highlight,
+              shadowColor: theme.highlight,
+              shadowOpacity: 0.9,
+              shadowRadius: 12,
             }}
           />
           {EXTENSIONS.map((extension, index) => (

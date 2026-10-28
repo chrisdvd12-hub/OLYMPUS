@@ -16,6 +16,13 @@ La branche `restore/v0.2-before-visual-performance-20261028` conserve le commit 
 - Les petits écrans inférieurs à 360 points utilisent deux colonnes dans l’album et une offrande quotidienne compacte.
 - OLY-049 Éos reste explicitement indisponible : son PNG source est tronqué et n’est ni remplacé ni inventé.
 
+## Roue et ouverture des boosters
+
+- Les quatre boosters suivent désormais une orbite elliptique complète avec profondeur, inclinaison, échelle et opacité propres à leur position. Le booster arrière reste visible et ne partage plus les coordonnées du booster actif.
+- La déchirure utilise un geste horizontal exécuté par Gesture Handler et Reanimated sur le thread UI. Le sceau suit le doigt, la couture s'illumine avec la couleur de l'extension et le haut de l'emballage se détache après le geste.
+- Les sept cartes sont présentées par rareté croissante. Le reçu persistant et son ordre d'origine restent inchangés.
+- La dernière carte se retourne plus lentement, puis reste visible sous un halo adapté à sa rareté avant l'affichage du récapitulatif.
+
 ## Objectifs restant à mesurer
 
 - L’objectif est 60 FPS sur les appareils compatibles. Il ne peut être confirmé qu’avec une version de production sur appareil physique.

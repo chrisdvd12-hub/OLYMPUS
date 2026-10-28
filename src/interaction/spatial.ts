@@ -26,11 +26,13 @@ export function wheelPose(
   const depth = Math.cos(angle);
   return {
     x: Math.sin(angle) * radius,
-    y: (1 - depth) * 23,
-    z: (depth - 1) * 100,
-    scale: 0.58 + (depth + 1) * 0.21,
-    opacity: 0.22 + (depth + 1) * 0.39,
-    rotateY: -Math.sin(angle) * 58,
+    // A vertical ellipse keeps the rear pack visible instead of stacking it
+    // directly behind the selected pack at the same screen coordinates.
+    y: depth * 82,
+    z: (depth - 1) * 125,
+    scale: 0.42 + (depth + 1) * 0.29,
+    opacity: 0.35 + (depth + 1) * 0.325,
+    rotateY: -Math.sin(angle) * 48,
     zIndex: Math.round((depth + 1) * 100),
   };
 }

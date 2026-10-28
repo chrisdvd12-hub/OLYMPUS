@@ -12,6 +12,7 @@ import { CardFace } from "./CardFace";
 import { discoveryFeedback } from "../interaction/feedback";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
+import { revealTiming } from "../domain/reveal";
 export function BoosterCardReveal({
   card,
   index,
@@ -22,6 +23,7 @@ export function BoosterCardReveal({
   fullWidth = false,
   enabled = true,
   onInspect,
+  final = false,
 }: {
   card: Card;
   index: number;
@@ -32,6 +34,7 @@ export function BoosterCardReveal({
   fullWidth?: boolean;
   enabled?: boolean;
   onInspect?: () => void;
+  final?: boolean;
 }) {
   const current = resolveCard(card);
   const active = useAppActivity();
@@ -61,15 +64,16 @@ export function BoosterCardReveal({
     if (revealing.current) return;
     revealing.current = true;
     discoveryFeedback(!reduced);
+    const timing = revealTiming(card.rarity, final, reduced);
     turn.value = withTiming(0.5, {
-      duration: reduced ? 0 : card.rarity >= 4 ? 1200 : 500,
+      duration: timing.firstHalf,
     });
     timer.current = setTimeout(
       () => {
-        turn.value = withTiming(1, { duration: reduced ? 0 : 300 });
+        turn.value = withTiming(1, { duration: timing.secondHalf });
         onReveal();
       },
-      reduced ? 0 : card.rarity >= 4 ? 1200 : 500,
+      timing.firstHalf,
     );
   };
   return (

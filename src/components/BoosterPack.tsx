@@ -37,9 +37,14 @@ export function BoosterPack({
   const cap = useAnimatedStyle(() => ({
     opacity: 1 - tear.value,
     transform: [
-      { translateY: -tear.value * 60 },
-      { rotate: `${tear.value * -12}deg` },
+      { translateX: tear.value * 38 },
+      { translateY: -tear.value * 92 },
+      { rotate: `${tear.value * -20}deg` },
     ],
+  }));
+  const seam = useAnimatedStyle(() => ({
+    opacity: tear.value * 0.9,
+    transform: [{ scaleX: 0.2 + tear.value * 1.1 }],
   }));
   return (
     <View
@@ -62,6 +67,7 @@ export function BoosterPack({
           style={s.image}
         />
       </Animated.View>
+      <Animated.View pointerEvents="none" style={[s.seam, seam]} />
       <BoosterShimmer
         active={active && !reduced && !torn}
         source={source}
@@ -98,5 +104,17 @@ const s = StyleSheet.create({
     right: 0,
     height: SEAL_HEIGHT,
     overflow: "hidden",
+  },
+  seam: {
+    position: "absolute",
+    top: SEAL_HEIGHT - 2,
+    left: "8%",
+    right: "8%",
+    height: 4,
+    borderRadius: 4,
+    backgroundColor: "#fff2bd",
+    shadowColor: "#ffffff",
+    shadowOpacity: 1,
+    shadowRadius: 12,
   },
 });

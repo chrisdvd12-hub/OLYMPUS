@@ -23,6 +23,11 @@ import {
   resolveGraphicsTier,
 } from "../src/performance/graphicsProfiles.ts";
 import { summarizeFrameTimes } from "../src/performance/frameMetrics.ts";
+import {
+  finalRevealHold,
+  revealTiming,
+  sortCardsForReveal,
+} from "../src/domain/reveal.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
   for (const turns of [-100, -3, -1, 1, 4, 100])
@@ -63,6 +68,47 @@ test("roue : le booster ouvert appartient toujours à l’extension sélectionn�
       bought.pending!.cards.every((card) => card.extension === extension.id),
     );
   }
+});
+test("roue : les quatre boosters occupent des points distincts autour du centre", () => {
+  const poses = [0, 1, 2, 3].map((index) => wheelPose(index, 0, 160));
+  for (let a = 0; a < poses.length; a++)
+    for (let b = a + 1; b < poses.length; b++) {
+      const dx = poses[a]!.x - poses[b]!.x;
+      const dy = poses[a]!.y - poses[b]!.y;
+      assert.ok(Math.hypot(dx, dy) > 1);
+    }
+  assert.ok(poses[0]!.y > poses[2]!.y);
+  assert.equal(poses[0]!.scale, 1);
+  assert.ok(poses[2]!.scale < poses[1]!.scale);
+});
+test("ouverture : l’ordre visuel va de la rareté la plus faible à la plus forte", () => {
+  const input = [
+    CARDS.find((card) => card.rarity === 5)!,
+    CARDS.find((card) => card.rarity === 0)!,
+    CARDS.find((card) => card.rarity === 3)!,
+    CARDS.filter((card) => card.rarity === 0)[1]!,
+    CARDS.find((card) => card.rarity === 6)!,
+  ];
+  const originalIds = input.map((card) => card.id);
+  const ordered = sortCardsForReveal(input);
+  assert.deepEqual(
+    ordered.map((card) => card.rarity),
+    [0, 0, 3, 5, 6],
+  );
+  assert.deepEqual(input.map((card) => card.id), originalIds);
+  assert.equal(ordered[0]!.id, input[1]!.id);
+  assert.equal(ordered[1]!.id, input[3]!.id);
+});
+test("ouverture : la dernière carte se révèle et reste éclairée plus longtemps", () => {
+  const normal = revealTiming(6, false, false);
+  const final = revealTiming(6, true, false);
+  assert.ok(final.firstHalf > normal.firstHalf);
+  assert.ok(final.secondHalf > normal.secondHalf);
+  assert.ok(finalRevealHold(6, false) >= final.secondHalf);
+  assert.deepEqual(revealTiming(6, true, true), {
+    firstHalf: 0,
+    secondHalf: 0,
+  });
 });
 test("visualiseur : 360 degrés sans limite, inclinaison bornée, inertie modérée", () => {
   for (const yaw of [-1080, -360, 0, 360, 1080])
