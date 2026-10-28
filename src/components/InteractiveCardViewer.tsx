@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -47,6 +47,7 @@ export function InteractiveCardViewer({
   const { width, height } = useWindowDimensions();
   const [zoom, setZoom] = useState(false);
   const [cardVisible, setCardVisible] = useState(true);
+  const cardVisibleRef = useRef(true);
   const active = useAppActivity();
   const yaw = useSharedValue(0);
   const pitch = useSharedValue(0);
@@ -150,9 +151,14 @@ export function InteractiveCardViewer({
           <ScrollView
             scrollEventThrottle={100}
             onScroll={(e) =>
-              setCardVisible(
-                e.nativeEvent.contentOffset.y < (cardWidth * 7) / 5 + 70,
-              )
+              (() => {
+                const visible =
+                  e.nativeEvent.contentOffset.y < (cardWidth * 7) / 5 + 70;
+                if (visible !== cardVisibleRef.current) {
+                  cardVisibleRef.current = visible;
+                  setCardVisible(visible);
+                }
+              })()
             }
             contentContainerStyle={{ padding: 20, paddingBottom: 40, gap: 18 }}
           >

@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useOpeningLoop } from "../animations/openingMotion";
+import { useGraphicsQuality } from "../performance/graphicsQuality";
 
 const MOTES = Array.from({ length: 18 }, (_, i) => ({
   left: 8 + ((i * 37) % 84),
@@ -106,7 +107,11 @@ export function BoosterParticles({
   active?: boolean;
   burst?: boolean;
 }) {
-  const clock = useOpeningLoop(active && !reduced, 11000);
+  const quality = useGraphicsQuality();
+  const clock = useOpeningLoop(
+    active && !reduced && quality.animateAmbientEffects,
+    11000,
+  );
   const release = useSharedValue(1);
   useEffect(() => {
     if (burst && active && !reduced) {
@@ -134,7 +139,7 @@ export function BoosterParticles({
       importantForAccessibility="no-hide-descendants"
       style={StyleSheet.absoluteFill}
     >
-      {MOTES.map((_, i) => (
+      {MOTES.slice(0, quality.particleCount).map((_, i) => (
         <Mote key={i} index={i} clock={clock} color={color} />
       ))}
       <Animated.View
@@ -154,7 +159,7 @@ export function BoosterParticles({
           wave,
         ]}
       />
-      {Array.from({ length: 14 }, (_, i) => (
+      {Array.from({ length: quality.sparkCount }, (_, i) => (
         <Spark key={i} index={i} progress={release} color={color} />
       ))}
     </View>

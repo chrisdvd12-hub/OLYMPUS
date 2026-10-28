@@ -1,5 +1,7 @@
 # OLYMPUS — Divine Collection
 
+Version de test 0.2 : qualité graphique adaptative, diagnostic de cadence sur appareil et procédure complète dans [`docs/VERSION-0.2-VISUAL-PERFORMANCE.md`](docs/VERSION-0.2-VISUAL-PERFORMANCE.md).
+
 **Mode test actif : drachmes illimitées.** La boutique affiche ∞ et les ouvertures principales ne débitent pas le solde réel.
 
 ## Tester sur iPhone depuis un iPad

@@ -18,6 +18,8 @@ import {
 } from "../src/domain/collection.ts";
 import { CARDS, EXTENSIONS } from "../src/domain/catalog.ts";
 import { initialState, purchase } from "../src/domain/boosters.ts";
+import { chooseGraphicsTier } from "../src/performance/graphicsProfiles.ts";
+import { summarizeFrameTimes } from "../src/performance/frameMetrics.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
   for (const turns of [-100, -3, -1, 1, 4, 100])
@@ -166,4 +168,19 @@ test("matière : les reflets suivent réellement l’orientation et restent cont
   assert.notEqual(materialResponse(0, 0), materialResponse(0, 35));
   assert.ok(Math.abs(materialResponse(0, 0) - materialResponse(360, 0)) < 1e-8);
   assert.notEqual(materialResponse(0, 0, 0), materialResponse(0, 0, 1));
+});
+
+test("qualité graphique : adaptation déterministe à la charge d'affichage", () => {
+  assert.equal(chooseGraphicsTier({ width: 390, height: 844, pixelRatio: 3, platform: "ios" }), "high");
+  assert.equal(chooseGraphicsTier({ width: 1024, height: 1366, pixelRatio: 2, platform: "ios" }), "balanced");
+  assert.equal(chooseGraphicsTier({ width: 1440, height: 2960, pixelRatio: 3, platform: "android" }), "economy");
+  assert.equal(chooseGraphicsTier({ width: 390, height: 844, pixelRatio: 3, reducedMotion: true }), "economy");
+});
+
+test("diagnostic : FPS, P95 et images longues restent des mesures séparées", () => {
+  const metrics = summarizeFrameTimes([16, 16, 17, 18, 40]);
+  assert.equal(metrics.samples, 5);
+  assert.equal(metrics.longFrames, 1);
+  assert.equal(metrics.p95FrameMs, 40);
+  assert.ok(metrics.fps > 40 && metrics.fps < 60);
 });

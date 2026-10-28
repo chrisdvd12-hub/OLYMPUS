@@ -18,6 +18,7 @@ import Animated, {
 import { useOpeningLoop } from "../animations/openingMotion";
 import { RARITY_FRAME_ART } from "./rarityFrameArt";
 import type { Card } from "../domain/catalog";
+import { useGraphicsQuality } from "../performance/graphicsQuality";
 
 export const MATERIALS = [
   {
@@ -73,10 +74,11 @@ export function CardMaterialEffects({
   active: boolean;
   reduced: boolean;
 }) {
+  const quality = useGraphicsQuality();
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const material = MATERIALS[card.rarity]!;
   const shimmer = useOpeningLoop(
-    active && !reduced && card.rarity >= 2,
+    active && !reduced && card.rarity >= 2 && quality.animateAmbientEffects,
     7200 - card.rarity * 500,
     true,
   );
@@ -159,7 +161,15 @@ export function CardMaterialEffects({
           />
           {card.rarity >= 2 && (
             <AnimatedG animatedProps={sparkle}>
-              {Array.from({ length: card.rarity === 6 ? 32 : card.rarity >= 5 ? 22 : card.rarity * 3 }, (_, i) => (
+              {Array.from({
+                length: Math.max(
+                  2,
+                  Math.round(
+                    (card.rarity === 6 ? 32 : card.rarity >= 5 ? 22 : card.rarity * 3) *
+                      quality.cardSparkleScale,
+                  ),
+                ),
+              }, (_, i) => (
                 <Path
                   key={i}
                   d={`M${25 + ((i * 83) % 460)} ${35 + ((i * 117) % 620) - (i % 3 ? 3 : 7)} l2 ${i % 3 ? 2 : 5} l${i % 3 ? 2 : 5} 2 l-${i % 3 ? 2 : 5} 2 l-2 ${i % 3 ? 2 : 5} l-2 -${i % 3 ? 2 : 5} l-${i % 3 ? 2 : 5} -2 l${i % 3 ? 2 : 5} -2 Z`}

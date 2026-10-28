@@ -5,6 +5,7 @@ import type { GameState } from "../domain/boosters";
 import { AppText as Text } from "./AppText";
 import { CollectionProgress } from "./CollectionProgress";
 import { fonts, styles, theme } from "./theme";
+import { PerformanceDiagnostics } from "./PerformanceDiagnostics";
 export function PlayerPanel({
   state,
   onSave,
@@ -121,6 +122,7 @@ export function PlayerPanel({
         detailed
         reduced={reduced}
       />
+      <PerformanceDiagnostics />
     </View>
   );
 }

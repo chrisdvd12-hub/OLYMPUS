@@ -12,6 +12,7 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 import { useOpeningLoop } from "../animations/openingMotion";
+import { useGraphicsQuality } from "../performance/graphicsQuality";
 
 const STARS = Array.from({ length: 54 }, (_, i) => ({
   x: 10 + ((i * 73 + 19) % 340),
@@ -116,11 +117,13 @@ export function BoosterSky({
   extension: string;
   active: boolean;
 }) {
+  const quality = useGraphicsQuality();
   const { width, height } = useWindowDimensions();
-  const drift = useOpeningLoop(active, 18000, true);
-  const breath = useOpeningLoop(active, 6500, true);
-  const orbit = useOpeningLoop(active, 110000);
-  const comet = useOpeningLoop(active, 13000);
+  const animated = active && quality.animateAmbientEffects;
+  const drift = useOpeningLoop(animated, 18000, true);
+  const breath = useOpeningLoop(animated, 6500, true);
+  const orbit = useOpeningLoop(animated, 110000);
+  const comet = useOpeningLoop(animated, 13000);
   const near = useAnimatedStyle(() => ({
     opacity: 0.54 + breath.value * 0.36,
     transform: [
@@ -220,9 +223,11 @@ export function BoosterSky({
       <Animated.View style={[StyleSheet.absoluteFill, far]}>
         <StarField parity={0} />
       </Animated.View>
-      <Animated.View style={[StyleSheet.absoluteFill, near]}>
-        <StarField parity={1} />
-      </Animated.View>
+      {quality.animatedSkyLayers > 1 && (
+        <Animated.View style={[StyleSheet.absoluteFill, near]}>
+          <StarField parity={1} />
+        </Animated.View>
+      )}
       <Animated.View
         style={[
           {
@@ -293,7 +298,7 @@ export function BoosterSky({
           ))}
         </Svg>
       </Animated.View>
-      {active && (
+      {animated && (
         <Animated.View
           style={[
             {

@@ -49,6 +49,7 @@ export default function BoosterShop() {
   const [busy, setBusy] = useState(false);
   const [wheelBusy, setWheelBusy] = useState(false);
   const [wheelVisible, setWheelVisible] = useState(true);
+  const wheelVisibleRef = useRef(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState<Page>("home");
   const [inspectedId, setInspectedId] = useState<string | null>(null);
@@ -215,6 +216,7 @@ export default function BoosterShop() {
           available={state.dailyPacks?.length ?? 0}
           busy={busy}
           onOpen={() => open("daily")}
+          compact={width < 360}
         />
       </View>
       <Animated.View
@@ -232,8 +234,13 @@ export default function BoosterShop() {
           <ScrollView
             scrollEventThrottle={100}
             onScroll={(e) => {
-              if (page === "home")
-                setWheelVisible(e.nativeEvent.contentOffset.y < 600);
+              if (page === "home") {
+                const visible = e.nativeEvent.contentOffset.y < 600;
+                if (visible !== wheelVisibleRef.current) {
+                  wheelVisibleRef.current = visible;
+                  setWheelVisible(visible);
+                }
+              }
             }}
             contentContainerStyle={{ paddingBottom: 28 }}
           >

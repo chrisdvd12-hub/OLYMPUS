@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import { ActivityIndicator, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "../src/components/theme";
+import { GraphicsQualityProvider } from "../src/performance/graphicsQuality";
 export default function Layout() {
   const [loaded, error] = useFonts({
     CinzelRegular: require("../assets/fonts/Cinzel-Regular.ttf"),
@@ -28,13 +29,15 @@ export default function Layout() {
     );
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.ink },
-        }}
-      />
+      <GraphicsQualityProvider>
+        <StatusBar style="light" />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: theme.ink },
+          }}
+        />
+      </GraphicsQualityProvider>
     </GestureHandlerRootView>
   );
 }

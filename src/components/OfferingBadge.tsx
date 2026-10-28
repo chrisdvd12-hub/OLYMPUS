@@ -11,11 +11,13 @@ export function OfferingBadge({
   available,
   busy,
   onOpen,
+  compact = false,
 }: {
   nextAt?: number;
   available: number;
   busy: boolean;
   onOpen: () => void;
+  compact?: boolean;
 }) {
   const [now, setNow] = useState(Date.now);
   const active = useAppActivity();
@@ -26,8 +28,13 @@ export function OfferingBadge({
     return () => clearInterval(timer);
   }, [active]);
   return (
-    <View style={styles.offering}>
-      <Text style={[styles.subtitle, { fontSize: 10, letterSpacing: 0.4 }]}>
+    <View style={[styles.offering, compact && { maxWidth: 150, padding: 7 }]}>
+      <Text
+        style={[
+          styles.subtitle,
+          { fontSize: compact ? 8 : 10, letterSpacing: 0.4 },
+        ]}
+      >
         L’OFFRANDE DES DIEUX
       </Text>
       {available > 0 ? (
@@ -63,7 +70,7 @@ export function OfferingBadge({
             style={{
               color: theme.highlight,
               fontFamily: fonts.bold,
-              fontSize: 22,
+              fontSize: compact ? 18 : 22,
               lineHeight: 30,
               fontVariant: ["tabular-nums"],
             }}

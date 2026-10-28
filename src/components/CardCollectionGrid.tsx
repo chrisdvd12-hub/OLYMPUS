@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from "react";
 import {
   FlatList,
+  Platform,
   Pressable,
   ScrollView,
   TextInput,
@@ -75,7 +76,9 @@ export function CardCollectionGrid({
       ? 6
       : width >= 700
         ? 5
-        : 3;
+        : width < 360
+          ? 2
+          : 3;
   const tileWidth = Math.min(
     gallery ? 400 : 200,
     (width - 44 - (columns - 1) * 12) / columns,
@@ -106,6 +109,7 @@ export function CardCollectionGrid({
       initialNumToRender={columns * 2}
       maxToRenderPerBatch={columns * 2}
       windowSize={3}
+      removeClippedSubviews={Platform.OS === "android"}
       contentContainerStyle={{ paddingHorizontal: 22, paddingBottom: 30 }}
       columnWrapperStyle={
         columns > 1 ? { gap: 12, justifyContent: "center" } : undefined
