@@ -74,6 +74,13 @@ export const ARTWORK_FOCUS: Readonly<Record<string, ArtworkFocus>> = {
   "titans-28": { x: 0.51, y: 0.25 },
   "titans-29": { x: 0.49, y: 0.15 },
   "titans-30": { x: 0.51, y: 0.16 },
+  "heros-1": { x: 0.6, y: 0.26 },
+  "heros-2": { x: 0.55, y: 0.18 },
+  "heros-3": { x: 0.46, y: 0.24 },
+  "heros-4": { x: 0.52, y: 0.29 },
+  "heros-5": { x: 0.55, y: 0.21 },
+  "heros-6": { x: 0.55, y: 0.21 },
+  "heros-8": { x: 0.58, y: 0.2 },
 };
 export function artworkLayout(
   cardId: string,

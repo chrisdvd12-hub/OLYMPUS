@@ -61,4 +61,11 @@ export const CARD_ILLUSTRATIONS: Readonly<Record<string, ImageSourcePropType>> =
   "titans-28": require("../../assets/cards/illustrations/titans-partie-4/OLY-058_Cronos.png"),
   "titans-29": require("../../assets/cards/illustrations/titans-partie-4/OLY-059_Gaia.png"),
   "titans-30": require("../../assets/cards/illustrations/titans-partie-4/OLY-060_Chaos.png"),
+  "heros-1": require("../../assets/cards/illustrations/heros-partie-1/OLY-061_Iolaos.png"),
+  "heros-2": require("../../assets/cards/illustrations/heros-partie-1/OLY-062_Megara.png"),
+  "heros-3": require("../../assets/cards/illustrations/heros-partie-1/OLY-063_Philemon.png"),
+  "heros-4": require("../../assets/cards/illustrations/heros-partie-1/OLY-064_Baucis.png"),
+  "heros-5": require("../../assets/cards/illustrations/heros-partie-1/OLY-065_Acaste.png"),
+  "heros-6": require("../../assets/cards/illustrations/heros-partie-1/OLY-066_Orphee.png"),
+  "heros-8": require("../../assets/cards/illustrations/heros-partie-1/OLY-068_Penelope.png"),
 };

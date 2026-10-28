@@ -462,5 +462,61 @@
     "width": 750,
     "height": 1050,
     "sha256": "85db00312239c4d7c371f091289ac2a1f423b095d270698e0831e43266abaf53"
+  },
+  {
+    "catalogueId": "OLY-061",
+    "cardId": "heros-1",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-061_Iolaos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "ddd75df4e1aac2d3ee519b3c470d5de0947d56266787caa68d1cfb79d85e383c"
+  },
+  {
+    "catalogueId": "OLY-062",
+    "cardId": "heros-2",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-062_Megara.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "d467b329151a9521d7a3d7dc0b0e61acfb3a7ffdbe76869b73a8bd415918939b"
+  },
+  {
+    "catalogueId": "OLY-063",
+    "cardId": "heros-3",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-063_Philemon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "febf20ffd010af4d969888f19b4b3a6f45a5262fbd5823bad3ba7693b46e2aa4"
+  },
+  {
+    "catalogueId": "OLY-064",
+    "cardId": "heros-4",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-064_Baucis.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c4c5ed196d42974c9dc9a00e972efa6e4acd5ae489019f0e31558035db0d3bf5"
+  },
+  {
+    "catalogueId": "OLY-065",
+    "cardId": "heros-5",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-065_Acaste.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "be2cf00b553ce685bfdc33be949c263f67487e4d58b0014399be8c8dad69cafe"
+  },
+  {
+    "catalogueId": "OLY-066",
+    "cardId": "heros-6",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-066_Orphee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "59d4cd952e3a036feb5b0c231b6777598f4c269f55d6a5457e4cde14975b00a6"
+  },
+  {
+    "catalogueId": "OLY-068",
+    "cardId": "heros-8",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-068_Penelope.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "33bce5119c2572649c259e5cd04130d04a5ebbd1f059ef091c86d63fbe9aad95"
   }
 ]

@@ -6,5 +6,13 @@
     "sourceArchive": "OLYMPIENS_extension_2_partie_3.zip",
     "sha256": "85b650bfd74626e491ebe6afa09659bd3cd4630077f9385ff3156eb070aab419",
     "reason": "PNG fourni tronqué : décodage complet impossible. Source originale conservée localement ; image non publiée et non affichée."
+  },
+  {
+    "catalogueId": "OLY-067",
+    "cardId": "heros-7",
+    "filename": "OLY-067_Eurydice.png",
+    "sourceArchive": "OLYMPIENS_extension_3_partie_1.zip",
+    "sha256": "fd07f552f2907d155f6028334fba897a8b51ad5fc3d9ea395f2e9f5a6c88ebfb",
+    "reason": "PNG fourni tronqué : décodage complet impossible. Source originale conservée localement ; image non publiée et non affichée."
   }
 ]

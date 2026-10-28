@@ -9,6 +9,7 @@ const catalogue = JSON.parse(fs.readFileSync(path.join(root, 'docs/catalogue/OLY
 const indices = [
   { file: 'assets/cards/illustrations/INDEX.csv', separator: ',', filenameColumn: 3 },
   ...[1, 2, 3, 4].map(part => ({ file: `assets/cards/illustrations/titans-partie-${part}/INDEX.csv`, separator: ';', filenameColumn: 2 })),
+  { file: 'assets/cards/illustrations/heros-partie-1/INDEX.csv', separator: ';', filenameColumn: 4 },
 ];
 // Preserve supplied index entries even when a source cannot be decoded.
 // The import report records why it remains a placeholder instead of a live resource.
