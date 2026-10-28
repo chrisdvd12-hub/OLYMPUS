@@ -12,12 +12,15 @@ export function CardFace({
   compact?: boolean;
 }) {
   const current = resolveCard(card);
-  const [width, setWidth] = useState(250);
+  const [width, setWidth] = useState(0);
   return (
     <View
       pointerEvents="none"
       style={StyleSheet.absoluteFill}
-      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+      onLayout={(e) => {
+        const next = e.nativeEvent.layout.width;
+        if (next > 0) setWidth(next);
+      }}
     >
       {hasCardArt(current.id) ? (
         <Image
@@ -26,9 +29,9 @@ export function CardFace({
           resizeMode="contain"
           style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
         />
-      ) : (
+      ) : width > 0 ? (
         <CardFront card={current} width={width} compact={compact} />
-      )}
+      ) : null}
     </View>
   );
 }

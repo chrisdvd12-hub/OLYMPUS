@@ -1,3 +1,4 @@
+import { artworkLayout } from "../domain/artworkLayout";
 import { CARD_ILLUSTRATIONS } from "./illustrationArt";
 import { Image, StyleSheet, View } from "react-native";
 import { AppText as Text } from "./AppText";
@@ -22,6 +23,12 @@ export function CardFront({
   compact?: boolean;
 }) {
   const illustration = CARD_ILLUSTRATIONS[card.id];
+  const artwork = artworkLayout(
+    card.id,
+    card.rarity,
+    width,
+    card.id === "olympe-30" ? 914 / 1280 : 5 / 7,
+  );
   const ink = card.rarity === 0 || card.rarity === 4 ? "#29231b" : theme.paper;
   const collection =
     EXTENSIONS.find((e) => e.id === card.extension)?.name ?? card.extension;
@@ -31,10 +38,7 @@ export function CardFront({
       <View
         style={{
           position: "absolute",
-          left: "11%",
-          right: "11%",
-          top: "8%",
-          height: "57%",
+          ...artwork.viewport,
           overflow: "hidden",
           backgroundColor: theme.navy,
         }}
@@ -42,8 +46,8 @@ export function CardFront({
         {illustration ? (
           <Image
             source={illustration}
-            resizeMode="cover"
-            style={StyleSheet.absoluteFill}
+            resizeMode="contain"
+            style={{ position: "absolute", ...artwork.image }}
           />
         ) : (
           <View
