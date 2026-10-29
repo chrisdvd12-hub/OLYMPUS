@@ -60,4 +60,6 @@ for (const entry of entries) {
   assert.equal(png.width * 7, png.height * 5, 'Le ratio doit rester 5:7');
 }
 console.log(`${entries.length} illustrations originales : catalogue, index, associations, dimensions et empreintes vérifiés.`);
-console.log(`Sources en attente : ${[...unavailableIndexedCards.keys()].join(', ')} (non affichées ; détails dans assets/illustrations.unavailable.json).`);
+console.log(unavailableIndexedCards.size
+  ? `Sources en attente : ${[...unavailableIndexedCards.keys()].join(', ')} (non affichées ; détails dans assets/illustrations.unavailable.json).`
+  : 'Sources en attente : aucune.');

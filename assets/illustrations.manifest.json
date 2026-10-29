@@ -376,6 +376,14 @@
     "sha256": "e06397e8a0148e605b21c3bb5fe0760da66dfec6c7bfa98577ac1922d176bd96"
   },
   {
+    "catalogueId": "OLY-049",
+    "cardId": "titans-19",
+    "path": "assets/cards/illustrations/titans-partie-3/OLY-049_Eos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "99340c77c5786a78c5f6afe2fa2f11b05454a101e0f4856c5643ad1fff4ba179"
+  },
+  {
     "catalogueId": "OLY-050",
     "cardId": "titans-20",
     "path": "assets/cards/illustrations/titans-partie-3/OLY-050_Metis.png",
@@ -510,6 +518,14 @@
     "width": 750,
     "height": 1050,
     "sha256": "59d4cd952e3a036feb5b0c231b6777598f4c269f55d6a5457e4cde14975b00a6"
+  },
+  {
+    "catalogueId": "OLY-067",
+    "cardId": "heros-7",
+    "path": "assets/cards/illustrations/heros-partie-1/OLY-067_Eurydice.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "81599eb81ae1fc8494295adc4965eb0ad1d7ea05a47627dfe038d5c1c6dfb7ed"
   },
   {
     "catalogueId": "OLY-068",
@@ -726,6 +742,38 @@
     "width": 750,
     "height": 1050,
     "sha256": "ae34e3defebf8db44a3b5f85320a0634d47dd1a34c2b221c83eec144039742fc"
+  },
+  {
+    "catalogueId": "OLY-095",
+    "cardId": "creatures-5",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-095_Centaure.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6e92dd38a8f0167b43bb61f4da836318e7e51c34fa3373760a50751dec986241"
+  },
+  {
+    "catalogueId": "OLY-096",
+    "cardId": "creatures-6",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-096_Sphinx.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "4230622b447c9cd6602ce176ab7c0c7a3668c50856f281ea1daedfe4af5283fe"
+  },
+  {
+    "catalogueId": "OLY-097",
+    "cardId": "creatures-7",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-097_Sirene.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c857918787ea52955195b7c20784031100187c7df41a5b901af5504a0bc52bf6"
+  },
+  {
+    "catalogueId": "OLY-098",
+    "cardId": "creatures-8",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-098_Gorgone.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "533249124e72b82c5999366b3269b81d04a284a687a6c89df2d6e58460aa15b1"
   },
   {
     "catalogueId": "OLY-099",

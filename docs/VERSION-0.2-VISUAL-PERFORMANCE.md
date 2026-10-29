@@ -14,7 +14,7 @@ La branche `restore/v0.2-before-visual-performance-20261028` conserve le commit 
 - Le profil joueur permet aussi de conserver un choix `AUTO`, `HIGH`, `BALANCED` ou `ECONOMY` dans un stockage SQLite séparé de la sauvegarde de collection.
 - Les images sont chargées avec `expo-image`, cache mémoire/disque, redimensionnement natif et liste virtualisée. `npm run check:memory` calcule également la surface décodée théorique des illustrations suivies.
 - Les petits écrans inférieurs à 360 points utilisent deux colonnes dans l’album et une offrande quotidienne compacte.
-- OLY-049 Éos reste explicitement indisponible : son PNG source est tronqué et n’est ni remplacé ni inventé.
+- OLY-049 Éos utilise désormais le remplacement complet fourni par le propriétaire, normalisé en PNG 750 × 1050 sans contenu inventé.
 
 ## Roue et ouverture des boosters
 

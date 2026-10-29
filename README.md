@@ -47,7 +47,7 @@ Compte de démonstration : 500 drachmes, deux charges gratuites. Aucun gain réc
 
 Ce livrable constitue une base fonctionnelle à valider sur appareil, pas une version commerciale définitive.
 
-- Les 120 peintures individuelles, descriptions et fiches définitives manquent. Chaque carte affiche « ART PROVISOIRE ».
+- Les 120 cartes disposent désormais de leur illustration officielle dans l’application. Les 119 PNG suivis par le manifeste, complétés par l’illustration dédiée de Zeus divin, couvrent tout le catalogue.
 - Les sept cadres maîtres officiels sont partagés par toutes les extensions. Les noms seuls sont centrés dans les cartouches ; les surnoms figurent en bas des fiches, dans les caractéristiques. Zeus divin utilise également cet assemblage ; son ancien recto complet reste archivé.
 - Les quatre sachets individuels sont intégrés en PNG transparents. Les JPG originaux sont conservés comme références. Il manque encore le décor peint du temple pour la boutique.
 - Brillance animée, balayage de découpe, particules douces et retournements sont présents. Flottement, retrait de la languette, apparition en éventail puis grille, rayons légendaires, constellation mythique et halo divin sont intégrés sous une forme simplifiée. La déchirure physique réaliste et la mise en scène commerciale définitive restent à finaliser.
@@ -144,4 +144,4 @@ Voir [les changements, les mesures et les limites](docs/SYNCHRONISATION-PERFORMA
 
 ## Illustrations des Titans — quatre archives intégrées
 
-Les quatre archives OLY-031 à OLY-060 fournissent 29 PNG valides, intégrés sans retouche des originaux. Éos OLY-049 est tronqué dans la source reçue : sa carte conserve le remplacement temporaire en attendant un PNG valide. Les quatre INDEX, les associations et les empreintes sont vérifiés ; les données et sauvegardes sont conservées. Les variantes de Cronos et Gaïa gardent leurs illustrations distinctes. Avec les 30 Olympiens, 59 cartes disposent maintenant d’une peinture ; les 60 illustrations des Héros et Créatures restent à fournir, ainsi que le remplacement d’Éos. Voir [le détail des fichiers et des validations](docs/ILLUSTRATIONS-TITANS.md).
+Les quatre extensions disposent de leurs peintures. Les six remplacements reçus pour Éos, Eurydice, Centaure, Sphinx, Sirène et Gorgone ont été normalisés au ratio maître 5:7, enregistrés dans le manifeste et reliés à leurs identifiants catalogue. Les INDEX, associations, dimensions et empreintes sont vérifiés ; les données et sauvegardes sont conservées. Voir [le détail des Titans](docs/ILLUSTRATIONS-TITANS.md).
