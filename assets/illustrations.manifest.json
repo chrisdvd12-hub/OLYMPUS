@@ -694,5 +694,37 @@
     "width": 750,
     "height": 1050,
     "sha256": "084ddc7d88835047406af265210f7c176116d99b8c1e405b2e3c304535fbfcdb"
+  },
+  {
+    "catalogueId": "OLY-091",
+    "cardId": "creatures-1",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-091_Satyre.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "0ae8631c47c4c13c908a5bf42c58ff818492283eefad99a37e16486577f4e09e"
+  },
+  {
+    "catalogueId": "OLY-092",
+    "cardId": "creatures-2",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-092_Nymphe_des_Sources.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "b6e3b9e586404763df6651d90542e356336e1afad21b581f77d0c102e85422eb"
+  },
+  {
+    "catalogueId": "OLY-093",
+    "cardId": "creatures-3",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-093_Dryade.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "690aad28226b350aec372953985024269c8b76cee6b3413bbe8ebbbd9f3f93e4"
+  },
+  {
+    "catalogueId": "OLY-094",
+    "cardId": "creatures-4",
+    "path": "assets/cards/illustrations/creatures-partie-1/OLY-094_Harpie.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "ae34e3defebf8db44a3b5f85320a0634d47dd1a34c2b221c83eec144039742fc"
   }
 ]

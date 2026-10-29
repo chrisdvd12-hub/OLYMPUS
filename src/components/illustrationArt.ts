@@ -90,4 +90,8 @@ export const CARD_ILLUSTRATIONS: Readonly<Record<string, ImageSourcePropType>> =
   "heros-28": require("../../assets/cards/illustrations/heros-partie-4/OLY-088_Achille.png"),
   "heros-29": require("../../assets/cards/illustrations/heros-partie-4/OLY-089_Persee.png"),
   "heros-30": require("../../assets/cards/illustrations/heros-partie-4/OLY-090_Heracles.png"),
+  "creatures-1": require("../../assets/cards/illustrations/creatures-partie-1/OLY-091_Satyre.png"),
+  "creatures-2": require("../../assets/cards/illustrations/creatures-partie-1/OLY-092_Nymphe_des_Sources.png"),
+  "creatures-3": require("../../assets/cards/illustrations/creatures-partie-1/OLY-093_Dryade.png"),
+  "creatures-4": require("../../assets/cards/illustrations/creatures-partie-1/OLY-094_Harpie.png"),
 };

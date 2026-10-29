@@ -103,6 +103,10 @@ export const ARTWORK_FOCUS: Readonly<Record<string, ArtworkFocus>> = {
   "heros-28": { x: 0.55, y: 0.17 },
   "heros-29": { x: 0.55, y: 0.17 },
   "heros-30": { x: 0.52, y: 0.2 },
+  "creatures-1": { x: 0.55, y: 0.15 },
+  "creatures-2": { x: 0.55, y: 0.16 },
+  "creatures-3": { x: 0.57, y: 0.17 },
+  "creatures-4": { x: 0.59, y: 0.19 },
 };
 export function artworkLayout(
   cardId: string,

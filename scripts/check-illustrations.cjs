@@ -11,6 +11,7 @@ const indices = [
   ...[1, 2, 3, 4].map(part => ({ file: `assets/cards/illustrations/titans-partie-${part}/INDEX.csv`, separator: ';', filenameColumn: 2 })),
   { file: 'assets/cards/illustrations/heros-partie-1/INDEX.csv', separator: ';', filenameColumn: 4 },
   ...[2, 3, 4].map(part => ({ file: `assets/cards/illustrations/heros-partie-${part}/INDEX.csv`, separator: ';', filenameColumn: 4 })),
+  { file: 'assets/cards/illustrations/creatures-partie-1/INDEX.csv', separator: ';', filenameColumn: 4 },
 ];
 // Preserve supplied index entries even when a source cannot be decoded.
 // The import report records why it remains a placeholder instead of a live resource.
@@ -35,7 +36,7 @@ for (const entry of unavailable) {
   assert.ok(source, id);
   const extension = ['olympe', 'titans', 'heros', 'creatures'][source.extensionNumber - 1];
   assert.equal(cardId, `${extension}-${source.numberInExtension}`);
-  assert.match(entry.sha256, /^[a-f0-9]{64}$/);
+  assert.match(entry.sha256 ?? entry.archiveSha256, /^[a-f0-9]{64}$/);
   assert.ok(entry.reason && entry.sourceArchive, `Motif ou archive source manquante : ${id}`);
   assert.ok(indexFiles.has(id), `Absence non documentée dans les index : ${id}`);
   assert.equal(path.basename(indexFiles.get(id)), entry.filename);
@@ -59,4 +60,4 @@ for (const entry of entries) {
   assert.equal(png.width * 7, png.height * 5, 'Le ratio doit rester 5:7');
 }
 console.log(`${entries.length} illustrations originales : catalogue, index, associations, dimensions et empreintes vérifiés.`);
-console.log(`Source en attente : ${[...unavailableIndexedCards.keys()].join(', ')} (PNG fourni tronqué, non affiché).`);
+console.log(`Sources en attente : ${[...unavailableIndexedCards.keys()].join(', ')} (non affichées ; détails dans assets/illustrations.unavailable.json).`);
