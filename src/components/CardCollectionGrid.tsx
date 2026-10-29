@@ -49,10 +49,12 @@ function FilterChip({
 }
 export function CardCollectionGrid({
   collection,
+  recentDiscoveries = [],
   reduced,
   onInspect,
 }: {
   collection: Record<string, number>;
+  recentDiscoveries?: readonly string[];
   reduced: boolean;
   onInspect: (id: string) => void;
 }) {
@@ -61,14 +63,18 @@ export function CardCollectionGrid({
     possession: "all",
     sort: "number",
   });
-  const [gallery, setGallery] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "gallery">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [details, setDetails] = useState(false);
   const cards = useMemo(
-    () => filterCollection(collection, filters),
-    [collection, filters],
+    () => filterCollection(collection, { ...filters, newCardIds: recentDiscoveries }),
+    [collection, filters, recentDiscoveries],
   );
-  const columns = gallery
+  const gallery = viewMode === "gallery";
+  const list = viewMode === "list";
+  const columns = list
+    ? 1
+    : gallery
     ? width >= 700
       ? 2
       : 1
@@ -93,10 +99,11 @@ export function CardCollectionGrid({
         width={tileWidth}
         reduced={reduced}
         gallery={gallery}
+        list={list}
         onInspect={onInspect}
       />
     ),
-    [collection, tileWidth, reduced, gallery, onInspect],
+    [collection, tileWidth, reduced, gallery, list, onInspect],
   );
   return (
     <FlatList
@@ -153,9 +160,19 @@ export function CardCollectionGrid({
               onPress={() => setShowFilters((old) => !old)}
             />
             <FilterChip
+              label="GRILLE"
+              selected={viewMode === "grid"}
+              onPress={() => setViewMode("grid")}
+            />
+            <FilterChip
+              label="LISTE"
+              selected={viewMode === "list"}
+              onPress={() => setViewMode("list")}
+            />
+            <FilterChip
               label="GALERIE"
-              selected={gallery}
-              onPress={() => setGallery((old) => !old)}
+              selected={viewMode === "gallery"}
+              onPress={() => setViewMode("gallery")}
             />
             <FilterChip
               label="PROGRESSION"
@@ -214,6 +231,7 @@ export function CardCollectionGrid({
                     ["owned", "POSSÉDÉES"],
                     ["missing", "MANQUANTES"],
                     ["duplicates", "DOUBLONS"],
+                    ["new", "NOUVELLES"],
                   ] as const
                 ).map(([possession, label]) => (
                   <FilterChip
@@ -258,6 +276,7 @@ const CollectionTile = memo(function CollectionTile({
   width,
   reduced,
   gallery,
+  list,
   onInspect,
 }: {
   item: Card;
@@ -265,13 +284,15 @@ const CollectionTile = memo(function CollectionTile({
   width: number;
   reduced: boolean;
   gallery: boolean;
+  list: boolean;
   onInspect: (id: string) => void;
 }) {
   return (
     <Animated.View
       entering={reduced ? undefined : FadeIn.duration(200)}
-      style={{ width: width, marginBottom: 20, gap: 6 }}
+      style={{ width: width, marginBottom: list ? 10 : 20, gap: 6 }}
     >
+      <View style={list ? { flexDirection: "row", alignItems: "center", gap: 14 } : undefined}>
       <Pressable
         accessibilityRole="button"
         disabled={!quantity}
@@ -281,7 +302,7 @@ const CollectionTile = memo(function CollectionTile({
             : `${item.number}, carte non découverte`
         }
         onPress={() => onInspect(item.id)}
-        style={{ width: width, aspectRatio: 5 / 7 }}
+        style={{ width: list ? 84 : width, aspectRatio: 5 / 7 }}
       >
         {quantity ? (
           <CardFace card={item} />
@@ -304,6 +325,7 @@ const CollectionTile = memo(function CollectionTile({
           />
         )}
       </Pressable>
+      <View style={list ? { flex: 1, gap: 4 } : { gap: 4 }}>
       <Text
         numberOfLines={gallery ? 2 : 1}
         style={[
@@ -324,6 +346,8 @@ const CollectionTile = memo(function CollectionTile({
             ? ` · ${RARITIES[item.rarity]}`
             : ""}
       </Text>
+      </View>
+      </View>
     </Animated.View>
   );
 });

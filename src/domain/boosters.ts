@@ -1,4 +1,11 @@
 import { CARDS, EXTENSIONS, WEIGHTS, type Card } from "./catalog.ts";
+import {
+  createProgression,
+  DEFAULT_SETTINGS,
+  recordBoosterOpening,
+  type GameSettings,
+  type ProgressionState,
+} from "./progression.ts";
 export const PACK_SIZE = 7;
 export const PRICE = 100;
 export const RECHARGE_MS = 12 * 60 * 60 * 1000;
@@ -24,6 +31,8 @@ export interface GameState {
   playerName?: string;
   dailyNextAt?: number;
   dailyPacks?: string[];
+  progression?: ProgressionState;
+  settings?: GameSettings;
 }
 export const initialState = (now: number): GameState => ({
   version: 1,
@@ -34,6 +43,8 @@ export const initialState = (now: number): GameState => ({
   collection: {},
   pending: null,
   lastReceipt: null,
+  progression: createProgression(now),
+  settings: DEFAULT_SETTINGS,
 });
 export function rarityDraw(min = 0, rng: () => number = Math.random): number {
   const value = rng();
@@ -117,7 +128,7 @@ export function purchase(
     createdAt: now,
     source,
   };
-  return {
+  const purchased = {
     ...state,
     drachmas: state.drachmas - cost,
     freeCharges: state.freeCharges - (source === "free" ? 1 : 0),
@@ -129,4 +140,5 @@ export function purchase(
     pending: receipt,
     lastReceipt: receipt,
   };
+  return recordBoosterOpening(purchased, receipt);
 }

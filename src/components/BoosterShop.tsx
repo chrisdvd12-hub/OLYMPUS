@@ -10,11 +10,19 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { EXTENSIONS } from "../domain/catalog";
-import { PRICE } from "../domain/boosters";
+import { PRICE, RECHARGE_MS } from "../domain/boosters";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { useGameState, useGameSync } from "../storage/useGameState";
-import { buy, finish, refresh, savePlayerName } from "../storage/store";
-import { selectionFeedback } from "../interaction/feedback";
+import {
+  buy,
+  claimAchievementReward,
+  claimMissionReward,
+  finish,
+  refresh,
+  savePlayerName,
+  saveSettings,
+} from "../storage/store";
+import { selectionFeedback, setFeedbackEnabled } from "../interaction/feedback";
 import { AppText as Text } from "./AppText";
 import { BoosterWheelCarousel } from "./BoosterWheelCarousel";
 import { BoosterOpeningSequence } from "./BoosterOpeningSequence";
@@ -59,7 +67,15 @@ export default function BoosterShop() {
       setError(error instanceof Error ? error.message : String(error)),
     [],
   );
-  useGameSync(state?.dailyNextAt, reportError);
+  const freeNextAt =
+    state && state.freeCharges < 2 ? state.rechargeAt + RECHARGE_MS : undefined;
+  const nextSyncAt =
+    state?.dailyNextAt === undefined
+      ? freeNextAt
+      : freeNextAt === undefined
+        ? state.dailyNextAt
+        : Math.min(state.dailyNextAt, freeNextAt);
+  useGameSync(nextSyncAt, reportError);
   const retrySync = () => {
     setError("");
     void refresh(true, true).catch(reportError);
@@ -74,7 +90,10 @@ export default function BoosterShop() {
     );
     return () => motion.remove();
   }, []);
-  const open = async (source: "paid" | "daily", index = selected) => {
+  useEffect(() => {
+    setFeedbackEnabled(state?.settings?.vibrationsEnabled ?? true);
+  }, [state?.settings?.vibrationsEnabled]);
+  const open = async (source: "paid" | "free" | "daily", index = selected) => {
     if (lock.current || (source === "paid" && wheelBusy)) return;
     lock.current = true;
     setBusy(true);
@@ -89,7 +108,7 @@ export default function BoosterShop() {
         source,
         `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       );
-      selectionFeedback(!reduced);
+      selectionFeedback(!reduced && (state?.settings?.vibrationsEnabled ?? true));
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -152,7 +171,7 @@ export default function BoosterShop() {
     setPage(next);
     setWheelVisible(true);
     setWheelBusy(false);
-    selectionFeedback(!reduced);
+    selectionFeedback(!reduced && (state.settings?.vibrationsEnabled ?? true));
   };
   return (
     <SafeAreaView style={styles.screen}>
@@ -227,6 +246,7 @@ export default function BoosterShop() {
         {page === "album" ? (
           <CardCollectionGrid
             collection={state.collection}
+            recentDiscoveries={state.progression?.recentDiscoveries}
             reduced={reduced}
             onInspect={setInspectedId}
           />
@@ -280,6 +300,19 @@ export default function BoosterShop() {
                     onPress={() => open("paid")}
                     label={busy ? "ENREGISTREMENT…" : "OUVRIR UN BOOSTER"}
                   />
+                  {state.freeCharges > 0 ? (
+                    <PremiumButton
+                      secondary
+                      disabled={busy || wheelBusy}
+                      reduced={reduced}
+                      onPress={() => open("free")}
+                      label={`UTILISER UN BOOSTER GRATUIT · ${state.freeCharges}/2`}
+                    />
+                  ) : (
+                    <Text style={styles.muted}>
+                      Prochaine charge gratuite en cours de préparation · stockage 0/2
+                    </Text>
+                  )}
                   {UNLIMITED_DRACHMAS && (
                     <Text style={styles.muted}>
                       Mode test · aucune drachme débitée
@@ -334,6 +367,9 @@ export default function BoosterShop() {
                 onSave={async (name) => {
                   await savePlayerName(name);
                 }}
+                onClaimMission={claimMissionReward}
+                onClaimAchievement={claimAchievementReward}
+                onSaveSettings={saveSettings}
               />
             )}
           </ScrollView>

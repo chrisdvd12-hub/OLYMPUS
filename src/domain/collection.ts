@@ -3,8 +3,9 @@ export interface CollectionFilters {
   extension?: string;
   rarity?: number;
   query?: string;
-  possession?: "all" | "owned" | "missing" | "duplicates";
+  possession?: "all" | "owned" | "missing" | "duplicates" | "new";
   sort?: "number" | "name" | "rarity";
+  newCardIds?: readonly string[];
 }
 export function normalizedName(value: string): string {
   return value
@@ -32,7 +33,8 @@ export function filterCollection(
         filters.possession === "all" ||
         (filters.possession === "owned" && quantity > 0) ||
         (filters.possession === "missing" && quantity === 0) ||
-        (filters.possession === "duplicates" && quantity > 1))
+        (filters.possession === "duplicates" && quantity > 1) ||
+        (filters.possession === "new" && !!filters.newCardIds?.includes(card.id)))
     );
   }).sort((a, b) =>
     filters.sort === "name"

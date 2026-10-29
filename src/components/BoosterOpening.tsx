@@ -193,8 +193,19 @@ export function BoosterOpening({
             ) : (
               <>
                 <Text style={styles.muted}>
-                  Choisissez la carte à révéler · {revealed.length}/7
+                  Choisissez la carte à révéler · {orderedCards.length - revealed.length} restante{orderedCards.length - revealed.length > 1 ? "s" : ""}
                 </Text>
+                {revealed.length < orderedCards.length ? (
+                  <Pressable
+                    accessibilityRole="button"
+                    style={styles.outline}
+                    onPress={() =>
+                      setRevealed(orderedCards.map((_card, index) => index))
+                    }
+                  >
+                    <Text style={styles.subtitle}>TOUT RÉVÉLER</Text>
+                  </Pressable>
+                ) : null}
                 <View
                   style={{
                     flexDirection: "row",

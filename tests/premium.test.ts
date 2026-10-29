@@ -165,6 +165,13 @@ test("album : recherche accentuée, numéro, extension, rareté, possession, dou
     filterCollection(collection, { possession: "missing" }).length,
     117,
   );
+  assert.deepEqual(
+    filterCollection(collection, {
+      possession: "new",
+      newCardIds: ["olympe-30", "heros-30"],
+    }).map((card) => card.id),
+    ["olympe-30", "heros-30"],
+  );
   assert.equal(
     filterCollection(collection, { query: "Hebe" })[0]!.name,
     "Hébé",

@@ -1,5 +1,6 @@
-import type { GameState } from "../domain/boosters.ts";
+import { RECHARGE_MS, recharge, type GameState } from "../domain/boosters.ts";
 import { grantDailyBoosters } from "../domain/daily.ts";
+import { currentProgression, recordLogin } from "../domain/progression.ts";
 export interface StatePersistence {
   read(): Promise<GameState>;
   transact(update: (state: GameState) => GameState): Promise<GameState>;
@@ -29,6 +30,10 @@ export function shareCommittedState(
     shared.lastReceipt = previous.lastReceipt;
   if (equalValue(previous.dailyPacks, next.dailyPacks) && "dailyPacks" in next)
     shared.dailyPacks = previous.dailyPacks;
+  if (equalValue(previous.progression, next.progression) && "progression" in next)
+    shared.progression = previous.progression;
+  if (equalValue(previous.settings, next.settings) && "settings" in next)
+    shared.settings = previous.settings;
   const keys = Object.keys(shared) as (keyof GameState)[];
   return keys.length === Object.keys(previous).length &&
     keys.every((key) => Object.is(previous[key], shared[key]))
@@ -81,14 +86,28 @@ export function createStateCoordinator(
       const task = enqueue(async () => {
         let state = snapshot && !reload ? snapshot : await persistence.read();
         const timestamp = now();
-        if (
+        const progress = currentProgression(state.progression, timestamp);
+        const offeringDue =
           dailyVisit &&
-          (state.dailyNextAt === undefined || timestamp >= state.dailyNextAt)
-        ) {
-          // Recheck in the transaction: overlapping requests cannot award twice.
-          state = await persistence.transact((current) =>
-            grantDailyBoosters(current, timestamp, rng),
-          );
+          (state.dailyNextAt === undefined || timestamp >= state.dailyNextAt);
+        const freeChargeDue =
+          state.freeCharges < 2 && timestamp >= state.rechargeAt + RECHARGE_MS;
+        const loginDue =
+          dailyVisit &&
+          (!state.progression ||
+            state.progression.daily.key !== progress.daily.key ||
+            progress.daily.loggedIn < 1);
+        if (offeringDue || freeChargeDue || loginDue) {
+          // Recheck every condition in the transaction: overlapping requests cannot award twice.
+          state = await persistence.transact((current) => {
+            let next = recharge(current, timestamp);
+            if (
+              dailyVisit &&
+              (next.dailyNextAt === undefined || timestamp >= next.dailyNextAt)
+            )
+              next = grantDailyBoosters(next, timestamp, rng);
+            return dailyVisit ? recordLogin(next, timestamp) : next;
+          });
         }
         return publish(state);
       });
