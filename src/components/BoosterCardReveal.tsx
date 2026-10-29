@@ -19,6 +19,11 @@ import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
 import { cardFlipPose, revealTiming } from "../domain/reveal";
 import { DivineCardReveal } from "./DivineCardReveal";
+import { RarityCardReveal } from "./RarityCardReveal";
+import {
+  isSupportedRevealRarity,
+  RARITY_PARTICLE_EFFECTS,
+} from "../domain/rarityRevealParticles";
 export function BoosterCardReveal({
   card,
   index,
@@ -53,24 +58,27 @@ export function BoosterCardReveal({
   const artwork = true;
   const revealing = useRef(false);
   const turn = useSharedValue(revealed ? 1 : 0);
-  const divineBurst = useSharedValue(1);
-  const divinePlayed = useSharedValue(revealed);
+  const revealBurst = useSharedValue(1);
+  const revealEffectPlayed = useSharedValue(revealed);
   const [cardWidth, setCardWidth] = useState(0);
-  const divineEnabled = card.rarity === 6 && !reduced;
+  const borderRevealEnabled = card.rarity >= 2 && !reduced;
+  const revealEffectDuration = isSupportedRevealRarity(card.rarity)
+    ? RARITY_PARTICLE_EFFECTS[card.rarity].duration
+    : 2700;
   useAnimatedReaction(
     () => turn.get(),
     (value, previous) => {
       if (
-        divineEnabled &&
-        !divinePlayed.get() &&
+        borderRevealEnabled &&
+        !revealEffectPlayed.get() &&
         value >= 0.5 &&
         (previous ?? 0) < 0.5
       ) {
-        divinePlayed.set(true);
-        divineBurst.set(0);
-        divineBurst.set(
+        revealEffectPlayed.set(true);
+        revealBurst.set(0);
+        revealBurst.set(
           withTiming(1, {
-            duration: 2700,
+            duration: revealEffectDuration,
             easing: Easing.out(Easing.cubic),
           }),
         );
@@ -101,10 +109,10 @@ export function BoosterCardReveal({
   }, [revealed, turn]);
   useEffect(
     () => () => {
-      cancelAnimation(divineBurst);
+      cancelAnimation(revealBurst);
       cancelAnimation(turn);
     },
-    [divineBurst, turn],
+    [revealBurst, turn],
   );
   const measureCard = useCallback((event: LayoutChangeEvent) => {
     const next = event.nativeEvent.layout.width;
@@ -204,7 +212,15 @@ export function BoosterCardReveal({
         </Animated.View>
         {card.rarity === 6 && autoReveal ? (
           <DivineCardReveal
-            progress={divineBurst}
+            progress={revealBurst}
+            width={cardWidth}
+            reduced={reduced || !active}
+          />
+        ) : null}
+        {isSupportedRevealRarity(card.rarity) && autoReveal ? (
+          <RarityCardReveal
+            rarity={card.rarity}
+            progress={revealBurst}
             width={cardWidth}
             reduced={reduced || !active}
           />

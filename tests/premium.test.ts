@@ -35,6 +35,11 @@ import {
   DIVINE_PARTICLE_COUNT,
   divineCohortWaves,
 } from "../src/domain/divineReveal.ts";
+import {
+  createRarityParticles,
+  RARITY_PARTICLE_EFFECTS,
+  rarityParticleWaves,
+} from "../src/domain/rarityRevealParticles.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
   for (const turns of [-100, -3, -1, 1, 4, 100])
@@ -158,6 +163,34 @@ test("révélation Divine : 180 particules partent uniquement des quatre bordure
       new Set(particles.map((particle) => particle.cohort)).size,
       divineCohortWaves(tier) * 4,
     );
+  }
+});
+test("révélations Rare à Mythique : quantités validées et centre dégagé", () => {
+  assert.deepEqual(
+    [2, 3, 4, 5].map((rarity) =>
+      RARITY_PARTICLE_EFFECTS[rarity as 2 | 3 | 4 | 5].count,
+    ),
+    [65, 28, 100, 120],
+  );
+  for (const rarity of [2, 3, 4, 5] as const) {
+    for (const tier of ["high", "balanced", "economy"] as const) {
+      const particles = createRarityParticles(
+        rarity,
+        300,
+        420,
+        rarityParticleWaves(tier),
+      );
+      assert.equal(particles.length, RARITY_PARTICLE_EFFECTS[rarity].count);
+      assert.ok(
+        particles.every(
+          (particle) =>
+            particle.x < 0 ||
+            particle.x > 300 ||
+            particle.y < 0 ||
+            particle.y > 420,
+        ),
+      );
+    }
   }
 });
 test("retournement : une trajectoire 3D unique reste continue au passage sur la tranche", () => {
