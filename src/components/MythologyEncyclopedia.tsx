@@ -4,6 +4,7 @@ import { RARITIES } from "../domain/catalog";
 import { relatedCards } from "../domain/collection";
 import { AppText as Text } from "./AppText";
 import { fonts, styles, theme } from "./theme";
+import { OlympusIcon, OlympusMarblePanel, OlympusSectionTitle } from "./OlympusUI";
 export function MythologyEncyclopedia({
   card,
   onNavigate,
@@ -29,18 +30,14 @@ export function MythologyEncyclopedia({
           {card.history ?? "Non renseignées dans le catalogue."}
         </Text>
       </View>
-      <View style={styles.panel}>
-        <Text accessibilityRole="header" style={styles.subtitle}>
-          ATTRIBUTS ET SYMBOLES
-        </Text>
+      <OlympusMarblePanel>
+        <OlympusSectionTitle>ATTRIBUTS ET SYMBOLES</OlympusSectionTitle>
         <Text style={styles.text}>
           {card.attributes?.join(" · ") ?? "Non renseignés dans le catalogue."}
         </Text>
-      </View>
-      <View style={styles.panel}>
-        <Text accessibilityRole="header" style={styles.subtitle}>
-          RELATIONS MYTHOLOGIQUES
-        </Text>
+      </OlympusMarblePanel>
+      <OlympusMarblePanel>
+        <OlympusSectionTitle>RELATIONS MYTHOLOGIQUES</OlympusSectionTitle>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {card.relations?.map((name) => {
             const matches = relatedCards(name);
@@ -51,12 +48,13 @@ export function MythologyEncyclopedia({
                   accessibilityRole="button"
                   accessibilityLabel={`Lire ${name}, ${RARITIES[match.rarity]}`}
                   onPress={() => onNavigate(match.id)}
-                  style={[styles.outline, { paddingHorizontal: 10 }]}
+                  style={[styles.outline, { paddingHorizontal: 10, flexDirection: "row", gap: 6 }]}
                 >
                   <Text style={{ color: theme.highlight, fontSize: 12 }}>
                     {name}
-                    {matches.length > 1 ? ` · ${RARITIES[match.rarity]}` : ""} ›
+                    {matches.length > 1 ? ` · ${RARITIES[match.rarity]}` : ""}
                   </Text>
+                  <OlympusIcon name="next" size={15} color={theme.highlight} />
                 </Pressable>
               ))
             ) : (
@@ -66,12 +64,12 @@ export function MythologyEncyclopedia({
             );
           })}
         </View>
-      </View>
+      </OlympusMarblePanel>
       {!!card.editorialNote && (
-        <View style={styles.panel}>
-          <Text style={styles.subtitle}>NOTE ÉDITORIALE</Text>
+        <OlympusMarblePanel>
+          <OlympusSectionTitle>NOTE ÉDITORIALE</OlympusSectionTitle>
           <Text style={styles.text}>{card.editorialNote}</Text>
-        </View>
+        </OlympusMarblePanel>
       )}
     </View>
   );

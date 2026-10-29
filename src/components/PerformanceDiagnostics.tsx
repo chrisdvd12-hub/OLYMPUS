@@ -5,6 +5,7 @@ import { useGraphicsQuality } from "../performance/graphicsQuality";
 import type { GraphicsPreference } from "../performance/graphicsProfiles";
 import { AppText as Text } from "./AppText";
 import { styles, theme } from "./theme";
+import { OlympusMarblePanel, OlympusSectionTitle } from "./OlympusUI";
 
 const SAMPLE_MS = 10_000;
 
@@ -40,8 +41,8 @@ export function PerformanceDiagnostics() {
 
   const pixels = Math.round(width * height * PixelRatio.get() ** 2);
   return (
-    <View style={styles.panel}>
-      <Text style={styles.subtitle}>DIAGNOSTIC DE FLUIDITÉ</Text>
+    <OlympusMarblePanel>
+      <OlympusSectionTitle>DIAGNOSTIC DE FLUIDITÉ</OlympusSectionTitle>
       <Text style={styles.muted}>
         Profil {quality.tier.toUpperCase()} · automatique {quality.automaticTier.toUpperCase()} · {Platform.OS} · {(pixels / 1_000_000).toFixed(1)} Mpx
       </Text>
@@ -49,9 +50,9 @@ export function PerformanceDiagnostics() {
         {(
           [
             ["auto", "AUTO"],
-            ["high", "HIGH"],
-            ["balanced", "BALANCED"],
-            ["economy", "ECONOMY"],
+            ["high", "ÉLEVÉ"],
+            ["balanced", "STANDARD"],
+            ["economy", "ÉCONOMIQUE"],
           ] as const satisfies readonly (readonly [GraphicsPreference, string])[]
         ).map(([value, label]) => (
           <Pressable
@@ -90,6 +91,6 @@ export function PerformanceDiagnostics() {
           {metrics.fps.toFixed(1)} FPS JS · moyenne {metrics.averageFrameMs.toFixed(1)} ms · P95 {metrics.p95FrameMs.toFixed(1)} ms · {metrics.longFrames} images au-delà de 32 ms
         </Text>
       )}
-    </View>
+    </OlympusMarblePanel>
   );
 }

@@ -31,6 +31,8 @@ import { CardArtworkZoom } from "./CardArtworkZoom";
 import { CardDetailPanel } from "./CardDetailPanel";
 import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
 import { styles, theme } from "./theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { OlympusIcon } from "./OlympusUI";
 export function InteractiveCardViewer({
   card,
   quantity,
@@ -121,6 +123,7 @@ export function InteractiveCardViewer({
       <GestureHandlerRootView style={styles.screen}>
         <SafeAreaView style={styles.screen}>
           <SanctuaryBackdrop />
+          <LinearGradient pointerEvents="none" colors={["#06101a80", "#10243acb", "#050b13ee"]} style={{ position: "absolute", inset: 0 }} />
           <View
             style={{
               flexDirection: "row",
@@ -223,7 +226,7 @@ export function InteractiveCardViewer({
                   yaw.value = withTiming(yaw.value - 45, { duration });
                 }}
               >
-                <Text>↶</Text>
+                <OlympusIcon name="previous" size={21} color={theme.highlight} />
               </Pressable>
               <Pressable
                 accessibilityRole="button"
@@ -252,7 +255,7 @@ export function InteractiveCardViewer({
                   yaw.value = withTiming(yaw.value + 45, { duration });
                 }}
               >
-                <Text>↷</Text>
+                <OlympusIcon name="next" size={21} color={theme.highlight} />
               </Pressable>
               <Pressable
                 accessibilityRole="button"

@@ -18,36 +18,12 @@ import { AppText as Text } from "./AppText";
 import { fonts, styles, theme } from "./theme";
 import { PerformanceDiagnostics } from "./PerformanceDiagnostics";
 import { PACK_ART } from "./packArt";
+import { OlympusIcon, OlympusMarblePanel, OlympusProgressBar, OlympusSectionTitle, OlympusStatCard } from "./OlympusUI";
 
 const DATE = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium" });
 
 function ProgressBar({ value, max }: { value: number; max: number }) {
-  const percent = Math.min(100, Math.round((value / Math.max(1, max)) * 100));
-  return (
-    <View style={{ height: 5, backgroundColor: "#192b47", borderRadius: 3, overflow: "hidden" }}>
-      <View style={{ width: `${percent}%`, height: "100%", backgroundColor: theme.gold }} />
-    </View>
-  );
-}
-
-function StatTile({ value, label, compact }: { value: number; label: string; compact: boolean }) {
-  return (
-    <View style={[profileStyles.statTile, { width: compact ? "48%" : "23%" }]}>
-      <View style={profileStyles.statMark}><View style={profileStyles.statMarkInner} /></View>
-      <Text style={profileStyles.statValue}>{value}</Text>
-      <Text style={profileStyles.statLabel}>{label}</Text>
-    </View>
-  );
-}
-
-function SectionTitle({ children }: { children: string }) {
-  return (
-    <View style={profileStyles.sectionHeading}>
-      <View style={profileStyles.headingLine} />
-      <Text style={profileStyles.sectionTitle}>{children}</Text>
-      <View style={profileStyles.headingLine} />
-    </View>
-  );
+  return <OlympusProgressBar value={value} max={max} />;
 }
 
 export function PlayerPanel({
@@ -57,6 +33,7 @@ export function PlayerPanel({
   onClaimAchievement,
   onSaveSettings,
   missions = false,
+  achievementsOnly = false,
   reduced = false,
 }: {
   state: GameState;
@@ -65,6 +42,7 @@ export function PlayerPanel({
   onClaimAchievement: (id: string) => Promise<unknown>;
   onSaveSettings: (settings: Partial<GameSettings>) => Promise<unknown>;
   missions?: boolean;
+  achievementsOnly?: boolean;
   reduced?: boolean;
 }) {
   const { width } = useWindowDimensions();
@@ -104,50 +82,52 @@ export function PlayerPanel({
     }
   };
 
-  if (missions)
+  if (missions || achievementsOnly)
     return (
-      <View style={styles.body}>
-        <Text style={styles.title}>MISSIONS</Text>
-        <Text style={styles.muted}>Des objectifs persistants fondés uniquement sur votre collection.</Text>
-        {(["daily", "weekly"] as const).map((period) => (
+      <View style={[styles.body, profileStyles.body]}>
+        <Text style={[styles.title, profileStyles.pageTitle]}>{achievementsOnly ? "PANTHÉON DES SUCCÈS" : "MISSIONS"}</Text>
+        <Text style={styles.muted}>{achievementsOnly ? "Les hauts faits de votre collection sont gravés dans le marbre." : "Des objectifs persistants fondés uniquement sur votre collection."}</Text>
+        {missions ? (["daily", "weekly"] as const).map((period) => (
           <View key={period} style={{ gap: 12 }}>
-            <Text style={styles.subtitle}>{period === "daily" ? "QUOTIDIENNES" : "HEBDOMADAIRES"}</Text>
+            <OlympusSectionTitle>{period === "daily" ? "OFFRANDES QUOTIDIENNES" : "RITES HEBDOMADAIRES"}</OlympusSectionTitle>
             {missionItems.filter((item) => item.definition.id.startsWith(`${period}-`)).map((item) => (
-              <View key={item.definition.id} style={styles.panel}>
-                <Text style={[styles.subtitle, { textAlign: "left" }]}>{item.definition.title}</Text>
-                <Text style={[styles.text, { fontSize: 12 }]}>{item.definition.description}</Text>
-                <ProgressBar value={item.value} max={item.definition.target} />
-                <Text style={[styles.muted, { textAlign: "left", color: theme.highlight }]}>
-                  {Math.min(item.value, item.definition.target)} / {item.definition.target} · {item.definition.reward} drachmes
-                </Text>
+              <OlympusMarblePanel key={item.definition.id} entering style={[item.complete && !item.claimed && profileStyles.completedPanel]}>
+                <View style={profileStyles.objectiveHeading}>
+                  <View style={profileStyles.objectiveIcon}><OlympusIcon name="missions" size={23} /></View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.subtitle, { textAlign: "left" }]}>{item.definition.title}</Text>
+                    <Text style={[styles.text, { fontSize: 12 }]}>{item.definition.description}</Text>
+                  </View>
+                </View>
+                <OlympusProgressBar value={item.value} max={item.definition.target} reduced={reduced} />
+                <View style={profileStyles.rewardRow}>
+                  <Text style={[styles.muted, { color: theme.highlight }]}>{Math.min(item.value, item.definition.target)} / {item.definition.target}</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}><OlympusIcon name="drachma" size={16} /><Text style={[styles.muted, { color: theme.highlight }]}>{item.definition.reward}</Text></View>
+                </View>
                 {item.complete && !item.claimed ? (
                   <Pressable accessibilityRole="button" disabled={!!busy} style={styles.button} onPress={() => void claim("mission", item.definition.id)}>
                     <Text style={styles.buttonText}>{busy === item.definition.id ? "ATTRIBUTION…" : "RÉCLAMER"}</Text>
                   </Pressable>
-                ) : (
-                  <Text style={styles.muted}>{item.claimed ? "RÉCOMPENSE RÉCLAMÉE" : "EN COURS"}</Text>
-                )}
-              </View>
+                ) : <Text style={styles.muted}>{item.claimed ? "RÉCOMPENSE RÉCLAMÉE" : "EN COURS"}</Text>}
+              </OlympusMarblePanel>
             ))}
           </View>
-        ))}
-        <Text style={styles.title}>PANTHÉON DES SUCCÈS</Text>
-        {achievements.map((item) => (
-          <View key={item.definition.id} style={[styles.panel, { opacity: item.complete ? 1 : 0.72 }]}>
-            <Text style={[styles.subtitle, { textAlign: "left" }]}>{item.definition.title}</Text>
-            <Text style={styles.text}>{item.definition.description}</Text>
-            <ProgressBar value={item.value} max={item.definition.target} />
-            <Text style={[styles.muted, { textAlign: "left" }]}>
-              {Math.min(item.value, item.definition.target)} / {item.definition.target}
-              {item.complete ? ` · DÉBLOQUÉ LE ${DATE.format(progression.unlockedAchievements[item.definition.id] ?? Date.now())}` : ""}
-            </Text>
-            {item.complete && !item.claimed ? (
-              <Pressable accessibilityRole="button" disabled={!!busy} style={styles.button} onPress={() => void claim("achievement", item.definition.id)}>
-                <Text style={styles.buttonText}>{busy === item.definition.id ? "ATTRIBUTION…" : `RÉCLAMER · ${item.definition.reward}`}</Text>
-              </Pressable>
-            ) : null}
-          </View>
-        ))}
+        )) : null}
+        {achievementsOnly ? achievements.map((item, index) => (
+          <OlympusMarblePanel key={item.definition.id} entering style={[profileStyles.achievementCard, { opacity: item.complete ? 1 : 0.76 }]}>
+            <View style={[profileStyles.largeMedal, item.complete && profileStyles.largeMedalUnlocked]}>
+              <OlympusIcon name={item.complete ? "achievements" : "lock"} size={31} color={item.complete ? theme.highlight : "#69717c"} />
+              <Text style={profileStyles.medalNumber}>{String(index + 1).padStart(2, "0")}</Text>
+            </View>
+            <View style={{ flex: 1, gap: 7 }}>
+              <Text style={[styles.subtitle, { textAlign: "left" }]}>{item.definition.title}</Text>
+              <Text style={[styles.text, { fontSize: 12 }]}>{item.definition.description}</Text>
+              <OlympusProgressBar value={item.value} max={item.definition.target} reduced={reduced} color={item.complete ? theme.gold : "#8290a0"} />
+              <Text style={[styles.muted, { textAlign: "left" }]}>{Math.min(item.value, item.definition.target)} / {item.definition.target}{item.complete ? ` · ${DATE.format(progression.unlockedAchievements[item.definition.id] ?? Date.now())}` : ""}</Text>
+              {item.complete && !item.claimed ? <Pressable accessibilityRole="button" disabled={!!busy} style={styles.button} onPress={() => void claim("achievement", item.definition.id)}><Text style={styles.buttonText}>{busy === item.definition.id ? "ATTRIBUTION…" : `RÉCLAMER · ${item.definition.reward}`}</Text></Pressable> : null}
+            </View>
+          </OlympusMarblePanel>
+        )) : null}
         {!!message ? <Text accessibilityLiveRegion="polite" style={styles.text}>{message}</Text> : null}
       </View>
     );
@@ -177,8 +157,8 @@ export function PlayerPanel({
         <View style={[profileStyles.avatarRing, compact && { width: 84, height: 84, borderRadius: 42 }]}>
           <View style={profileStyles.avatarInner}>
             <Text style={profileStyles.avatarInitial}>{(state.playerName ?? "C").trim().charAt(0).toUpperCase()}</Text>
-            <View style={profileStyles.avatarLaurelLeft}><Text style={profileStyles.laurelText}>❮</Text></View>
-            <View style={profileStyles.avatarLaurelRight}><Text style={profileStyles.laurelText}>❯</Text></View>
+            <View style={profileStyles.avatarLaurelLeft}><OlympusIcon name="laurel" size={27} /></View>
+            <View style={profileStyles.avatarLaurelRight}><OlympusIcon name="laurel" size={27} /></View>
           </View>
           <View style={profileStyles.levelSeal}><Text style={profileStyles.levelSealText}>{level}</Text></View>
         </View>
@@ -205,7 +185,7 @@ export function PlayerPanel({
               style={profileStyles.editButton}
               onPress={() => editingName ? void saveName() : setEditingName(true)}
             >
-              <Text style={profileStyles.editButtonText}>{editingName ? "✓" : "✎"}</Text>
+              <OlympusIcon name={editingName ? "check" : "edit"} size={19} color={theme.highlight} />
             </Pressable>
           </View>
           <Text style={profileStyles.rank}>NIVEAU {level} · {collectorTitle(level).toUpperCase()}</Text>
@@ -220,14 +200,14 @@ export function PlayerPanel({
       </View>
 
       <View style={profileStyles.statsGrid}>
-        <StatTile value={stats.owned} label="CARTES UNIQUES" compact={compact} />
-        <StatTile value={stats.duplicates} label="DOUBLONS" compact={compact} />
-        <StatTile value={progression.boostersOpened} label="BOOSTERS OUVERTS" compact={compact} />
-        <StatTile value={exceptional} label="CARTES EXCEPTIONNELLES" compact={compact} />
+        <OlympusStatCard value={stats.owned} label="CARTES UNIQUES" icon="cards" compact={compact} />
+        <OlympusStatCard value={stats.duplicates} label="DOUBLONS" icon="duplicates" compact={compact} />
+        <OlympusStatCard value={progression.boostersOpened} label="BOOSTERS OUVERTS" icon="booster" compact={compact} />
+        <OlympusStatCard value={exceptional} label="CARTES EXCEPTIONNELLES" icon="level" compact={compact} />
       </View>
 
       <View style={profileStyles.premiumPanel}>
-        <SectionTitle>PROGRESSION GLOBALE</SectionTitle>
+        <OlympusSectionTitle>PROGRESSION GLOBALE</OlympusSectionTitle>
         <View style={profileStyles.globalProgressRow}>
           <View style={profileStyles.globalTrack}>
             <View style={[profileStyles.globalFill, { width: `${stats.percent}%` }]} />
@@ -239,7 +219,7 @@ export function PlayerPanel({
 
       <View style={[profileStyles.featureRow, compact && profileStyles.featureColumn]}>
         <View style={[profileStyles.premiumPanel, profileStyles.favoritePanel]}>
-          <SectionTitle>EXTENSION FAVORITE</SectionTitle>
+          <OlympusSectionTitle>EXTENSION FAVORITE</OlympusSectionTitle>
           {favoriteExtension && preferred?.owned ? (
             <View style={profileStyles.favoriteContent}>
               <Image source={PACK_ART[favoriteExtension.id]} contentFit="contain" transition={120} style={profileStyles.favoritePack} />
@@ -252,7 +232,7 @@ export function PlayerPanel({
           ) : <Text style={styles.muted}>Ouvrez un booster pour révéler votre affinité.</Text>}
         </View>
         <View style={[profileStyles.premiumPanel, profileStyles.achievementPreview]}>
-          <SectionTitle>{`SUCCÈS · ${completedAchievements}/${achievements.length}`}</SectionTitle>
+          <OlympusSectionTitle>{`SUCCÈS · ${completedAchievements}/${achievements.length}`}</OlympusSectionTitle>
           <View style={profileStyles.medalRow}>
             {achievements.slice(0, 5).map((item, index) => (
               <View key={item.definition.id} style={[profileStyles.medal, item.complete && profileStyles.medalUnlocked]}>
@@ -265,7 +245,7 @@ export function PlayerPanel({
       </View>
 
       <View style={profileStyles.premiumPanel}>
-        <SectionTitle>RÉPARTITION DES RARETÉS</SectionTitle>
+        <OlympusSectionTitle>RÉPARTITION DES RARETÉS</OlympusSectionTitle>
         <View style={profileStyles.rarityRow}>
           {stats.byRarity.map((rarity) => (
             <View key={rarity.rarity} style={profileStyles.rarityItem}>
@@ -282,7 +262,7 @@ export function PlayerPanel({
       </View>
 
       <View style={profileStyles.premiumPanel}>
-        <SectionTitle>DOUBLONS</SectionTitle>
+        <OlympusSectionTitle>DOUBLONS</OlympusSectionTitle>
         {CARDS.filter((card) => (state.collection[card.id] ?? 0) > 1).slice(0, 8).map((card) => (
           <View key={card.id} style={profileStyles.listRow}>
             <Text style={profileStyles.listPrimary}>{card.number} · {card.name}</Text>
@@ -292,7 +272,7 @@ export function PlayerPanel({
         {stats.duplicates === 0 ? <Text style={styles.muted}>Aucun doublon pour le moment.</Text> : null}
       </View>
       <View style={profileStyles.premiumPanel}>
-        <SectionTitle>PRÉFÉRENCES</SectionTitle>
+        <OlympusSectionTitle>PRÉFÉRENCES</OlympusSectionTitle>
         {([ ["musicEnabled", "Musique"], ["soundEffectsEnabled", "Effets sonores"], ["vibrationsEnabled", "Vibrations"] ] as const).map(([key, label]) => (
           <View key={key} style={profileStyles.settingRow}>
             <Text style={styles.text}>{label}</Text>
@@ -311,14 +291,14 @@ export function PlayerPanel({
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {(["auto", "high", "balanced", "economy"] as GraphicsPreference[]).map((quality) => (
             <Pressable key={quality} accessibilityRole="button" accessibilityState={{ selected: preference === quality }} style={[styles.outline, preference === quality && styles.activeTab]} onPress={() => setPreference(quality)}>
-              <Text style={styles.muted}>{quality.toUpperCase()}</Text>
+              <Text style={styles.muted}>{{ auto: "AUTO", high: "ÉLEVÉ", balanced: "STANDARD", economy: "ÉCONOMIQUE" }[quality]}</Text>
             </Pressable>
           ))}
         </View>
         <Text style={styles.muted}>Les sons restent silencieux tant qu’aucune ressource originale ou licenciée n’est fournie.</Text>
       </View>
       <View style={profileStyles.premiumPanel}>
-        <SectionTitle>HISTORIQUE RÉCENT</SectionTitle>
+        <OlympusSectionTitle>HISTORIQUE RÉCENT</OlympusSectionTitle>
         {progression.history.slice(0, 8).map((entry) => (
           <View key={entry.id} style={profileStyles.listRow}>
             <Text style={profileStyles.listPrimary}>{EXTENSIONS.find((extension) => extension.id === entry.extension)?.name}</Text>
@@ -375,7 +355,7 @@ const profileStyles = StyleSheet.create({
   },
   avatarInitial: { color: theme.highlight, fontFamily: fonts.bold, fontSize: 43, textShadowColor: "#d4af37", textShadowRadius: 9 },
   avatarLaurelLeft: { position: "absolute", left: 7, bottom: 13, transform: [{ rotate: "-24deg" }] },
-  avatarLaurelRight: { position: "absolute", right: 7, bottom: 13, transform: [{ rotate: "24deg" }] },
+  avatarLaurelRight: { position: "absolute", right: 7, bottom: 13, transform: [{ rotate: "-24deg" }, { scaleX: -1 }] },
   laurelText: { color: theme.gold, fontFamily: fonts.bold, fontSize: 18 },
   levelSeal: { position: "absolute", bottom: -8, alignSelf: "center", width: 31, height: 31, borderRadius: 16, backgroundColor: "#0a1c31", borderWidth: 2, borderColor: theme.gold, alignItems: "center", justifyContent: "center" },
   levelSealText: { color: theme.highlight, fontFamily: fonts.bold, fontSize: 13 },
@@ -431,4 +411,12 @@ const profileStyles = StyleSheet.create({
   listPrimary: { flex: 1, color: theme.paper, fontFamily: fonts.regular, fontSize: 11, lineHeight: 17 },
   listSecondary: { color: theme.muted, fontFamily: fonts.semibold, fontSize: 9, lineHeight: 15, textAlign: "right" },
   settingRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, minHeight: 44, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: theme.line },
+  completedPanel: { borderColor: "#e1c168", shadowColor: theme.gold, shadowOpacity: 0.3, shadowRadius: 12 },
+  objectiveHeading: { flexDirection: "row", alignItems: "center", gap: 12 },
+  objectiveIcon: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: theme.line, backgroundColor: "#10243a", alignItems: "center", justifyContent: "center" },
+  rewardRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
+  achievementCard: { flexDirection: "row", alignItems: "center", gap: 14 },
+  largeMedal: { width: 76, height: 88, borderRadius: 14, borderWidth: 1, borderColor: "#586574", backgroundColor: "#07111e", alignItems: "center", justifyContent: "center", gap: 5 },
+  largeMedalUnlocked: { borderColor: theme.gold, backgroundColor: "#392b12", shadowColor: theme.gold, shadowOpacity: 0.45, shadowRadius: 10 },
+  medalNumber: { color: theme.muted, fontFamily: fonts.bold, fontSize: 9, letterSpacing: 1 },
 });

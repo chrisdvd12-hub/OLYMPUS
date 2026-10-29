@@ -4,6 +4,7 @@ import { AppText as Text } from "./AppText";
 import { useAppActivity } from "../animations/openingMotion";
 import { dailyCountdown } from "../domain/daily";
 import { fonts, styles, theme } from "./theme";
+import { OlympusIcon } from "./OlympusUI";
 
 // Keep the ticking clock local: the carousel and collection do not render each second.
 export function OfferingBadge({
@@ -29,6 +30,7 @@ export function OfferingBadge({
   }, [active]);
   return (
     <View style={[styles.offering, compact && { maxWidth: 150, padding: 7 }]}>
+      <OlympusIcon name="gift" size={compact ? 18 : 23} color={theme.highlight} />
       <Text
         style={[
           styles.subtitle,

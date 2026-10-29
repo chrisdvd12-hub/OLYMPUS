@@ -4,6 +4,7 @@ import { AppText as Text } from "./AppText";
 import { GreekOrnament } from "./GreekOrnament";
 import { MythologyEncyclopedia } from "./MythologyEncyclopedia";
 import { styles } from "./theme";
+import { OlympusMarblePanel, OlympusSectionTitle } from "./OlympusUI";
 export function CardDetailPanel({
   card,
   quantity,
@@ -26,14 +27,12 @@ export function CardDetailPanel({
       <Text style={styles.muted}>
         {EXTENSIONS.find((e) => e.id === card.extension)?.name}
       </Text>
-      <View style={styles.panel}>
+      <OlympusMarblePanel>
         <Text style={styles.text}>{card.description}</Text>
-      </View>
+      </OlympusMarblePanel>
       <MythologyEncyclopedia card={card} onNavigate={onNavigate} />
-      <View style={styles.panel}>
-        <Text accessibilityRole="header" style={styles.subtitle}>
-          CARACTÉRISTIQUES DU PERSONNAGE
-        </Text>
+      <OlympusMarblePanel>
+        <OlympusSectionTitle>CARACTÉRISTIQUES DU PERSONNAGE</OlympusSectionTitle>
         {!!card.epithet && (
           <View style={{ gap: 4 }}>
             <Text style={[styles.subtitle, { textAlign: "left" }]}>SURNOM</Text>
@@ -46,7 +45,7 @@ export function CardDetailPanel({
             <Text style={styles.text}>{card.category}</Text>
           </View>
         )}
-      </View>
+      </OlympusMarblePanel>
     </View>
   );
 }

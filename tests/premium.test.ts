@@ -29,6 +29,7 @@ import {
   revealTiming,
   sortCardsForReveal,
 } from "../src/domain/reveal.ts";
+import { RARITY_REVEAL_EFFECTS, rarityRevealEffect } from "../src/domain/rarityEffects.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
   for (const turns of [-100, -3, -1, 1, 4, 100])
@@ -120,6 +121,16 @@ test("ouverture : la dernière carte se révèle et reste éclairée plus longte
     firstHalf: 0,
     secondHalf: 0,
   });
+});
+test("révélation : les sept raretés ont une identité croissante et réutilisable", () => {
+  assert.equal(RARITY_REVEAL_EFFECTS.length, 7);
+  assert.equal(new Set(RARITY_REVEAL_EFFECTS.map((effect) => effect.key)).size, 7);
+  for (let rarity = 1; rarity < 7; rarity++) {
+    assert.ok(RARITY_REVEAL_EFFECTS[rarity]!.haloOpacity > RARITY_REVEAL_EFFECTS[rarity - 1]!.haloOpacity);
+    assert.ok(RARITY_REVEAL_EFFECTS[rarity]!.revealDuration > RARITY_REVEAL_EFFECTS[rarity - 1]!.revealDuration);
+  }
+  assert.equal(rarityRevealEffect(99).key, "divine");
+  assert.equal(rarityRevealEffect(-1).key, "stone");
 });
 test("retournement : une trajectoire 3D unique reste continue au passage sur la tranche", () => {
   const before = cardFlipPose(0.499);

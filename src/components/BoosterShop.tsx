@@ -8,9 +8,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn, useAnimatedStyle } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 import { EXTENSIONS } from "../domain/catalog";
 import { PRICE, RECHARGE_MS } from "../domain/boosters";
+import { collectorLevel, currentProgression } from "../domain/progression";
 import { UNLIMITED_DRACHMAS } from "../config/testing";
 import { useGameState, useGameSync } from "../storage/useGameState";
 import {
@@ -35,20 +37,30 @@ import { OfferingBadge } from "./OfferingBadge";
 import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
 import { GreekOrnament } from "./GreekOrnament";
 import { styles, theme } from "./theme";
+import { OlympusBottomNavigation, OlympusIcon, OlympusLoadingScreen, type OlympusIconName } from "./OlympusUI";
+import { useOpeningLoop } from "../animations/openingMotion";
 
-type Page = "home" | "album" | "missions" | "profile";
+type Page = "home" | "album" | "missions" | "success" | "profile";
 const PAGES = [
-  ["home", "SANCTUAIRE"],
-  ["album", "ALBUM"],
-  ["missions", "MISSIONS"],
-  ["profile", "PROFIL"],
-] as const;
+  ["home", "SANCTUAIRE", "sanctuary"],
+  ["album", "ALBUM", "album"],
+  ["missions", "MISSIONS", "missions"],
+  ["success", "SUCCÈS", "achievements"],
+  ["profile", "PROFIL", "profile"],
+] as const satisfies readonly (readonly [Page, string, OlympusIconName])[];
 const DESCRIPTIONS = [
   "Les divinités qui veillent sur le ciel, les mers et les mortels.",
   "Les puissances primordiales et les ancêtres des dieux.",
   "Les figures dont les récits traversent les siècles.",
   "Les êtres fascinants des légendes grecques.",
 ];
+const PAGE_OVERLAYS: Record<Page, readonly [string, string, string]> = {
+  home: ["#06101a00", "#0b142622", "#06101a88"],
+  album: ["#071426aa", "#102842c7", "#07111ee8"],
+  missions: ["#21170788", "#0b1b2dcc", "#07111eee"],
+  success: ["#1a10298f", "#151d36d8", "#070d19ee"],
+  profile: ["#0714267a", "#0b1d32c4", "#07111edb"],
+};
 export default function BoosterShop() {
   const { width } = useWindowDimensions();
   const state = useGameState();
@@ -61,6 +73,8 @@ export default function BoosterShop() {
   const [error, setError] = useState("");
   const [page, setPage] = useState<Page>("home");
   const [inspectedId, setInspectedId] = useState<string | null>(null);
+  const logoClock = useOpeningLoop(!reduced, 6500, true);
+  const logoGlow = useAnimatedStyle(() => ({ opacity: 0.92 + logoClock.value * 0.08, transform: [{ scale: 1 + logoClock.value * 0.006 }] }));
   const lock = useRef(false);
   const reportError = useCallback(
     (error: unknown) =>
@@ -137,14 +151,10 @@ export default function BoosterShop() {
     return (
       <SafeAreaView style={styles.screen}>
         <SanctuaryBackdrop />
-        <View style={[styles.body, { flex: 1, justifyContent: "center" }]}>
-          <Text style={styles.title}>OLYMPUS</Text>
-          <GreekOrnament />
-          <Text style={styles.muted}>
-            {error || "Les portes du sanctuaire s’ouvrent…"}
-          </Text>
+        <View style={{ flex: 1 }}>
+          <OlympusLoadingScreen message={error || "Les portes du sanctuaire s’ouvrent…"} />
           {!!error && (
-            <PremiumButton label="RÉESSAYER" onPress={retrySync} reduced />
+            <View style={{ padding: 22 }}><PremiumButton label="RÉESSAYER" onPress={retrySync} reduced /></View>
           )}
         </View>
       </SafeAreaView>
@@ -167,6 +177,8 @@ export default function BoosterShop() {
     );
   const canAfford = UNLIMITED_DRACHMAS || state.drachmas >= PRICE;
   const extension = EXTENSIONS[selected]!;
+  const profileProgression = currentProgression(state.progression, Date.now());
+  const playerLevel = collectorLevel(profileProgression.xp);
   const switchPage = (next: Page) => {
     setPage(next);
     setWheelVisible(true);
@@ -187,19 +199,9 @@ export default function BoosterShop() {
         }}
       >
         <View style={{ flex: 1, gap: 6 }}>
-          <Text
-            accessibilityRole="header"
-            style={[
-              styles.title,
-              {
-                textAlign: "left",
-                fontSize: width < 360 ? 20 : 27,
-                lineHeight: 36,
-              },
-            ]}
-          >
-            OLYMPUS
-          </Text>
+          <Animated.View style={logoGlow}>
+            <Text accessibilityRole="header" style={[styles.title, { textAlign: "left", fontSize: width < 360 ? 20 : 27, lineHeight: 36 }]}>OLYMPUS</Text>
+          </Animated.View>
           <Text
             style={[
               styles.subtitle,
@@ -208,16 +210,25 @@ export default function BoosterShop() {
           >
             DIVINE COLLECTION
           </Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Ouvrir mon profil"
-            style={{ minHeight: 44, justifyContent: "center" }}
-            onPress={() => switchPage("profile")}
-          >
-            <Text numberOfLines={1} style={[styles.text, { fontSize: 12 }]}>
-              {state.playerName ?? "Collectionneur"} ›
-            </Text>
-          </Pressable>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Ouvrir mon profil"
+              style={{ minHeight: 44, flex: 1, flexDirection: "row", alignItems: "center", gap: 8 }}
+              onPress={() => switchPage("profile")}
+            >
+              <View style={{ width: 34, height: 34, borderRadius: 17, borderWidth: 1, borderColor: theme.gold, backgroundColor: theme.navy, alignItems: "center", justifyContent: "center" }}>
+                <Text style={{ color: theme.highlight, fontFamily: "CinzelBold", fontSize: 14 }}>{(state.playerName ?? "C").trim().charAt(0).toUpperCase()}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text numberOfLines={1} style={[styles.text, { fontSize: 11, lineHeight: 17 }]}>{state.playerName ?? "Collectionneur"}</Text>
+                <Text style={[styles.muted, { textAlign: "left", fontSize: 8, lineHeight: 13 }]}>NIVEAU {playerLevel}</Text>
+              </View>
+            </Pressable>
+            <Pressable accessibilityRole="button" accessibilityLabel="Ouvrir les paramètres" onPress={() => switchPage("profile")} style={{ width: 42, height: 42, borderWidth: 1, borderColor: theme.line, borderRadius: 7, alignItems: "center", justifyContent: "center", backgroundColor: "#0a1d32dd" }}>
+              <OlympusIcon name="settings" size={20} />
+            </Pressable>
+          </View>
           <Text
             style={{
               color: theme.highlight,
@@ -243,6 +254,7 @@ export default function BoosterShop() {
         entering={reduced ? undefined : FadeIn.duration(240)}
         style={{ flex: 1 }}
       >
+        <LinearGradient pointerEvents="none" colors={[...PAGE_OVERLAYS[page]]} style={{ position: "absolute", inset: 0 }} />
         {page === "album" ? (
           <CardCollectionGrid
             collection={state.collection}
@@ -364,6 +376,7 @@ export default function BoosterShop() {
                 state={state}
                 reduced={reduced}
                 missions={page === "missions"}
+                achievementsOnly={page === "success"}
                 onSave={async (name) => {
                   await savePlayerName(name);
                 }}
@@ -391,24 +404,8 @@ export default function BoosterShop() {
           />
         </View>
       )}
-      <View
-        style={[styles.navigation, { marginHorizontal: 10, marginBottom: 4 }]}
-      >
-        {PAGES.map(([id, label]) => (
-          <Pressable
-            key={id}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: page === id }}
-            onPress={() => switchPage(id)}
-            style={[styles.tab, page === id && styles.activeTab]}
-          >
-            <Text
-              style={[styles.subtitle, { letterSpacing: 0.3, fontSize: 10 }]}
-            >
-              {label}
-            </Text>
-          </Pressable>
-        ))}
+      <View style={{ marginHorizontal: 10, marginBottom: 4 }}>
+        <OlympusBottomNavigation items={PAGES} active={page} compact={width < 390} onSelect={(id) => switchPage(id as Page)} />
       </View>
       {inspectedId && (
         <CardDetailModal

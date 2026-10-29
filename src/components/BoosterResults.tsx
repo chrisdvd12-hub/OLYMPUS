@@ -7,6 +7,7 @@ import { BoosterCardReveal } from "./BoosterCardReveal";
 import { PremiumButton } from "./PremiumButton";
 import { GreekOrnament, TempleSeal } from "./GreekOrnament";
 import { styles, theme } from "./theme";
+import { OlympusMarblePanel, OlympusSectionTitle, OlympusStatCard } from "./OlympusUI";
 export function BoosterResults({
   receipt,
   reduced = false,
@@ -33,14 +34,13 @@ export function BoosterResults({
       <Text style={styles.muted}>
         7 cartes déjà enregistrées dans votre collection
       </Text>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: 6,
-        }}
-      >
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <OlympusStatCard compact icon="cards" value={receipt.discoveries.filter(Boolean).length} label="NOUVELLES CARTES" />
+        <OlympusStatCard compact icon="duplicates" value={receipt.discoveries.filter((value) => !value).length} label="DOUBLONS" />
+      </View>
+      <OlympusMarblePanel>
+        <OlympusSectionTitle>LES SEPT PRÉSENTS</OlympusSectionTitle>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 6 }}>
         {receipt.cards.map((card, i) => (
           <View key={i} style={{ width: "23%", alignItems: "center" }}>
             <View style={{ width: "100%", alignItems: "center" }}>
@@ -74,7 +74,8 @@ export function BoosterResults({
             </Text>
           </View>
         ))}
-      </View>
+        </View>
+      </OlympusMarblePanel>
       <PremiumButton
         reduced={reduced}
         label="VOIR MA COLLECTION"

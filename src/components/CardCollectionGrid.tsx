@@ -10,12 +10,13 @@ import {
 } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { EXTENSIONS, RARITIES, type Card } from "../domain/catalog";
-import { filterCollection, type CollectionFilters } from "../domain/collection";
+import { collectionStats, filterCollection, type CollectionFilters } from "../domain/collection";
 import { AppText as Text } from "./AppText";
 import { CardFace } from "./CardFace";
 import { CardBack } from "./CardBack";
 import { CollectionProgress } from "./CollectionProgress";
 import { fonts, styles, theme } from "./theme";
+import { OlympusIcon, OlympusMarblePanel, OlympusProgressBar, OlympusSectionTitle } from "./OlympusUI";
 function FilterChip({
   label,
   selected,
@@ -70,6 +71,7 @@ export function CardCollectionGrid({
     () => filterCollection(collection, { ...filters, newCardIds: recentDiscoveries }),
     [collection, filters, recentDiscoveries],
   );
+  const progress = useMemo(() => collectionStats(collection), [collection]);
   const gallery = viewMode === "gallery";
   const list = viewMode === "list";
   const columns = list
@@ -128,31 +130,33 @@ export function CardCollectionGrid({
       }
       ListHeaderComponent={
         <View style={{ paddingVertical: 18, gap: 14 }}>
-          <Text accessibilityRole="header" style={styles.title}>
-            L’ALBUM DIVIN
-          </Text>
+          <Text accessibilityRole="header" style={styles.title}>BIBLIOTHÈQUE DES MYTHES</Text>
+          <OlympusSectionTitle>L’ALBUM DIVIN</OlympusSectionTitle>
           <CollectionProgress
             collection={collection}
             detailed={details}
             reduced={reduced}
           />
-          <TextInput
-            accessibilityLabel="Rechercher par nom ou numéro"
-            placeholder="Nom ou numéro de carte…"
-            placeholderTextColor={theme.muted}
-            value={filters.query ?? ""}
-            onChangeText={(query) => update({ query })}
-            style={{
-              fontFamily: fonts.regular,
-              color: theme.paper,
-              borderWidth: 1,
-              borderColor: theme.line,
-              borderRadius: 6,
-              padding: 14,
-              backgroundColor: "#0b1426ee",
-              minHeight: 48,
-            }}
-          />
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+            {progress.byExtension.map((extension) => (
+              <OlympusMarblePanel key={extension.id} style={{ width: width < 520 ? "48%" : "23%", padding: 10, gap: 6 }}>
+                <Text numberOfLines={2} style={[styles.subtitle, { fontSize: 8, lineHeight: 12 }]}>{extension.name}</Text>
+                <OlympusProgressBar value={extension.owned} max={extension.total} color={extension.color} reduced={reduced} />
+                <Text style={[styles.muted, { fontSize: 9, lineHeight: 13 }]}>{extension.owned} / {extension.total}</Text>
+              </OlympusMarblePanel>
+            ))}
+          </View>
+          <View style={{ minHeight: 50, flexDirection: "row", alignItems: "center", gap: 10, borderWidth: 1, borderColor: theme.line, borderRadius: 7, paddingHorizontal: 13, backgroundColor: "#07182af0" }}>
+            <OlympusIcon name="search" size={20} color={theme.highlight} />
+            <TextInput
+              accessibilityLabel="Rechercher par nom ou numéro"
+              placeholder="Nom ou numéro de carte…"
+              placeholderTextColor={theme.muted}
+              value={filters.query ?? ""}
+              onChangeText={(query) => update({ query })}
+              style={{ flex: 1, fontFamily: fonts.regular, color: theme.paper, minHeight: 48 }}
+            />
+          </View>
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
             <FilterChip
               label="FILTRES"

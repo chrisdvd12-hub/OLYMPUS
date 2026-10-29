@@ -22,6 +22,7 @@ import { BoosterResults } from "./BoosterResults";
 import { GreekOrnament } from "./GreekOrnament";
 import { styles } from "./theme";
 import { finalRevealHold, sortCardsForReveal } from "../domain/reveal";
+import { OlympusGoldButton } from "./OlympusUI";
 export function BoosterOpening({
   receipt,
   reduced,
@@ -152,9 +153,7 @@ export function BoosterOpening({
               {CELESTIAL_MOTIFS[receipt.extension]?.title ??
                 "LE DESTIN VOUS ATTEND"}
             </Text>
-            <Text style={styles.title}>
-              {phase === "cards" ? "RÉVÉLATION" : "L’OFFRANDE"}
-            </Text>
+            <Text style={styles.title}>{phase === "cards" ? "RÉVÉLATION" : "L’OFFRANDE"}</Text>
             <GreekOrnament />
             {phase === "fan" ? (
               <BoosterFan reduced={reduced} active={appActive} />
@@ -196,15 +195,7 @@ export function BoosterOpening({
                   Choisissez la carte à révéler · {orderedCards.length - revealed.length} restante{orderedCards.length - revealed.length > 1 ? "s" : ""}
                 </Text>
                 {revealed.length < orderedCards.length ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    style={styles.outline}
-                    onPress={() =>
-                      setRevealed(orderedCards.map((_card, index) => index))
-                    }
-                  >
-                    <Text style={styles.subtitle}>TOUT RÉVÉLER</Text>
-                  </Pressable>
+                  <OlympusGoldButton secondary icon="cards" label="TOUT RÉVÉLER" onPress={() => setRevealed(orderedCards.map((_card, index) => index))} />
                 ) : null}
                 <View
                   style={{

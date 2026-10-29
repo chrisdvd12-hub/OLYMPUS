@@ -23,8 +23,9 @@ import { selectionFeedback } from "../interaction/feedback";
 import { useAppActivity } from "../animations/openingMotion";
 import { BoosterPackView } from "./BoosterPackView";
 import { PACK_ART } from "./packArt";
-import { AppText as Text } from "./AppText";
 import { styles, theme } from "./theme";
+import { OlympusIcon } from "./OlympusUI";
+import { BoosterParticles } from "./BoosterParticles";
 
 function WheelPack({
   extension,
@@ -225,6 +226,7 @@ export function BoosterWheelCarousel({
             justifyContent: "center",
           }}
         >
+          <BoosterParticles color={EXTENSIONS[selected]!.color} reduced={reduced} active={active} />
           <View
             pointerEvents="none"
             style={{
@@ -241,6 +243,10 @@ export function BoosterWheelCarousel({
               opacity: 0.5,
             }}
           />
+          <View pointerEvents="none" style={{ position: "absolute", left: "50%", bottom: 28, marginLeft: -145, width: 290, height: 66, borderRadius: 145, borderWidth: 1, borderColor: `${EXTENSIONS[selected]!.color}99`, backgroundColor: "#071421c9", transform: [{ perspective: 700 }, { rotateX: "62deg" }] }}>
+            <View style={{ position: "absolute", inset: 9, borderRadius: 130, borderWidth: 1, borderColor: theme.line }} />
+            <View style={{ position: "absolute", inset: 21, borderRadius: 110, backgroundColor: `${EXTENSIONS[selected]!.color}28` }} />
+          </View>
           {EXTENSIONS.map((extension, index) => (
             <WheelPack
               key={extension.id}
@@ -271,7 +277,7 @@ export function BoosterWheelCarousel({
           style={styles.outline}
           onPress={() => moveTo(Math.round(position.value) - 1)}
         >
-          <Text style={{ color: theme.highlight }}>‹</Text>
+          <OlympusIcon name="previous" size={20} color={theme.highlight} />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -279,7 +285,7 @@ export function BoosterWheelCarousel({
           style={styles.outline}
           onPress={() => moveTo(Math.round(position.value) + 1)}
         >
-          <Text style={{ color: theme.highlight }}>›</Text>
+          <OlympusIcon name="next" size={20} color={theme.highlight} />
         </Pressable>
       </View>
     </View>
