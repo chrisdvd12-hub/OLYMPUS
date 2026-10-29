@@ -30,6 +30,11 @@ import {
   sortCardsForReveal,
 } from "../src/domain/reveal.ts";
 import { RARITY_REVEAL_EFFECTS, rarityRevealEffect } from "../src/domain/rarityEffects.ts";
+import {
+  createDivineParticles,
+  DIVINE_PARTICLE_COUNT,
+  divineCohortWaves,
+} from "../src/domain/divineReveal.ts";
 
 test("roue infinie : chaque tour complet conserve la pose, dans les deux sens", () => {
   for (const turns of [-100, -3, -1, 1, 4, 100])
@@ -131,6 +136,29 @@ test("révélation : les sept raretés ont une identité croissante et réutilis
   }
   assert.equal(rarityRevealEffect(99).key, "divine");
   assert.equal(rarityRevealEffect(-1).key, "stone");
+});
+test("révélation Divine : 180 particules partent uniquement des quatre bordures", () => {
+  for (const tier of ["high", "balanced", "economy"] as const) {
+    const particles = createDivineParticles(300, 420, divineCohortWaves(tier));
+    assert.equal(particles.length, DIVINE_PARTICLE_COUNT);
+    assert.deepEqual(
+      particles.reduce<Record<string, number>>((count, particle) => {
+        count[particle.edge] = (count[particle.edge] ?? 0) + 1;
+        assert.ok(
+          particle.x === 0 ||
+            particle.x === 300 ||
+            particle.y === 0 ||
+            particle.y === 420,
+        );
+        return count;
+      }, {}),
+      { top: 45, right: 45, bottom: 45, left: 45 },
+    );
+    assert.equal(
+      new Set(particles.map((particle) => particle.cohort)).size,
+      divineCohortWaves(tier) * 4,
+    );
+  }
 });
 test("retournement : une trajectoire 3D unique reste continue au passage sur la tranche", () => {
   const before = cardFlipPose(0.499);

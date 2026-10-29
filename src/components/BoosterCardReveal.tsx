@@ -1,8 +1,10 @@
-import { useCallback, useRef, useEffect } from "react";
-import { Pressable } from "react-native";
+import { useCallback, useRef, useEffect, useState } from "react";
+import { Pressable, type LayoutChangeEvent } from "react-native";
 import Animated, {
+  cancelAnimation,
   Easing,
   interpolate,
+  useAnimatedReaction,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
@@ -16,6 +18,7 @@ import { discoveryFeedback } from "../interaction/feedback";
 import { CardBack, CARD_ASPECT_RATIO } from "./CardBack";
 import { theme } from "./theme";
 import { cardFlipPose, revealTiming } from "../domain/reveal";
+import { DivineCardReveal } from "./DivineCardReveal";
 export function BoosterCardReveal({
   card,
   index,
@@ -50,6 +53,30 @@ export function BoosterCardReveal({
   const artwork = true;
   const revealing = useRef(false);
   const turn = useSharedValue(revealed ? 1 : 0);
+  const divineBurst = useSharedValue(1);
+  const divinePlayed = useSharedValue(revealed);
+  const [cardWidth, setCardWidth] = useState(0);
+  const divineEnabled = card.rarity === 6 && !reduced;
+  useAnimatedReaction(
+    () => turn.get(),
+    (value, previous) => {
+      if (
+        divineEnabled &&
+        !divinePlayed.get() &&
+        value >= 0.5 &&
+        (previous ?? 0) < 0.5
+      ) {
+        divinePlayed.set(true);
+        divineBurst.set(0);
+        divineBurst.set(
+          withTiming(1, {
+            duration: 2700,
+            easing: Easing.out(Easing.cubic),
+          }),
+        );
+      }
+    },
+  );
   const backStyle = useAnimatedStyle(() => ({
     transform: [
       { perspective: 1000 },
@@ -72,6 +99,19 @@ export function BoosterCardReveal({
   useEffect(() => {
     if (revealed && !revealing.current) turn.set(1);
   }, [revealed, turn]);
+  useEffect(
+    () => () => {
+      cancelAnimation(divineBurst);
+      cancelAnimation(turn);
+    },
+    [divineBurst, turn],
+  );
+  const measureCard = useCallback((event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.width;
+    setCardWidth((currentWidth) =>
+      Math.abs(currentWidth - next) > 0.5 ? next : currentWidth,
+    );
+  }, []);
   const reveal = useCallback(() => {
     if (onSelect) {
       onSelect();
@@ -131,6 +171,7 @@ export function BoosterCardReveal({
       }}
     >
       <Animated.View
+        onLayout={measureCard}
         style={[
           {
             aspectRatio: CARD_ASPECT_RATIO,
@@ -139,7 +180,7 @@ export function BoosterCardReveal({
             borderRadius: artwork && revealed ? 0 : 7,
             backgroundColor: "transparent",
             padding: 0,
-            overflow: "hidden",
+            overflow: "visible",
             justifyContent: "space-between",
             alignItems: "center",
             shadowColor: COLORS[card.rarity],
@@ -161,6 +202,13 @@ export function BoosterCardReveal({
             reduced={reduced}
           />
         </Animated.View>
+        {card.rarity === 6 && autoReveal ? (
+          <DivineCardReveal
+            progress={divineBurst}
+            width={cardWidth}
+            reduced={reduced || !active}
+          />
+        ) : null}
         <Animated.View
           pointerEvents="none"
           style={[
