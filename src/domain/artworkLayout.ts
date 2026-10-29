@@ -2,12 +2,12 @@
 // A small overlap stays beneath the opaque ornaments to avoid empty edge strips.
 export const FRAME_APERTURES = [
   { x: 0.111, y: 0.073, width: 0.78, height: 0.598 },
-  { x: 0.123, y: 0.073, width: 0.755, height: 0.562 },
-  { x: 0.115, y: 0.071, width: 0.772, height: 0.591 },
-  { x: 0.12, y: 0.071, width: 0.761, height: 0.582 },
-  { x: 0.118, y: 0.07, width: 0.765, height: 0.576 },
-  { x: 0.106, y: 0.07, width: 0.79, height: 0.57 },
-  { x: 0.115, y: 0.072, width: 0.77, height: 0.589 },
+  { x: 0.127, y: 0.072, width: 0.747, height: 0.561 },
+  { x: 0.114, y: 0.07, width: 0.772, height: 0.576 },
+  { x: 0.119, y: 0.069, width: 0.762, height: 0.585 },
+  { x: 0.118, y: 0.071, width: 0.766, height: 0.555 },
+  { x: 0.107, y: 0.069, width: 0.787, height: 0.57 },
+  { x: 0.121, y: 0.072, width: 0.759, height: 0.572 },
 ] as const;
 export interface ArtworkFocus {
   x: number;
