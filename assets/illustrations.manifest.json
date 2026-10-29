@@ -726,5 +726,181 @@
     "width": 750,
     "height": 1050,
     "sha256": "ae34e3defebf8db44a3b5f85320a0634d47dd1a34c2b221c83eec144039742fc"
+  },
+  {
+    "catalogueId": "OLY-099",
+    "cardId": "creatures-9",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-099_Pegase.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "61d69ad6bd4bc08d4694adb10ce9108826930b8ee1f60bb2a60e5e8c92ae85e1"
+  },
+  {
+    "catalogueId": "OLY-100",
+    "cardId": "creatures-10",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-100_Cerbere.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c1351acd485bc79beb6eb9eda508a845e301a0fe6da9be78e55e865b29dce873"
+  },
+  {
+    "catalogueId": "OLY-101",
+    "cardId": "creatures-11",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-101_Griffon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "dec8e7021e8a693bff6f24ca59b0965dad3cfd643574e7e3e58270ae686c1c95"
+  },
+  {
+    "catalogueId": "OLY-102",
+    "cardId": "creatures-12",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-102_Hippocampe.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e9ff213ac3092f9e663aa7a1b71215366eaacddff8ca13ab639dda445b7bee4e"
+  },
+  {
+    "catalogueId": "OLY-103",
+    "cardId": "creatures-13",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-103_Chimere.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "25e8a473567eb6a54c792c19a07b61fc31eefe787ce4cce4f5ea7e234fc0d068"
+  },
+  {
+    "catalogueId": "OLY-104",
+    "cardId": "creatures-14",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-104_Minotaure.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "7d33a185d529ffd80db8613f3d39dfead77dc0a83790c2b4ebf5474d3d330776"
+  },
+  {
+    "catalogueId": "OLY-105",
+    "cardId": "creatures-15",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-105_Cyclope.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "8f43e0d139ba133636f7036cb8a047ae072bc5505998c3e71905d2f5fbe06e0b"
+  },
+  {
+    "catalogueId": "OLY-106",
+    "cardId": "creatures-16",
+    "path": "assets/cards/illustrations/creatures-partie-2/OLY-106_Scylla.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6e94b98278a1beaad18eedc46f732eee27e5362e2a49676f32972c932e468139"
+  },
+  {
+    "catalogueId": "OLY-107",
+    "cardId": "creatures-17",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-107_Charybde.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6f66e33f0cab5d322f743f597abaca25ffeb33b46db83b1e2286ebc504ec0e71"
+  },
+  {
+    "catalogueId": "OLY-108",
+    "cardId": "creatures-18",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-108_Hydre_de_Lerne.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "6e031b49205cabc9c42da98dde4052d2ecac18193394beacd0dc87a0d9b99d42"
+  },
+  {
+    "catalogueId": "OLY-109",
+    "cardId": "creatures-19",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-109_Lion_de_Nemee.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "71e13644746106970f1bfa1095e475c40a926c95feed5c013543756a8d95935a"
+  },
+  {
+    "catalogueId": "OLY-110",
+    "cardId": "creatures-20",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-110_Sanglier_de_Calydon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "13bb91fad91e53624ff21585ee57298c2abf06ee502558d096b5b2ec53e72f83"
+  },
+  {
+    "catalogueId": "OLY-111",
+    "cardId": "creatures-21",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-111_Echidna.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "3b858a4d8b69a6bdb81ec9a5a2a0807530208796bb92cffa2fb9171b46cd2d26"
+  },
+  {
+    "catalogueId": "OLY-112",
+    "cardId": "creatures-22",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-112_Typhon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "116a304f7f257931be5debfc9a7c70fd9d8921a19d86e9aec2c955c4dd340e62"
+  },
+  {
+    "catalogueId": "OLY-113",
+    "cardId": "creatures-23",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-113_Ladon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "e4cd79c935a68810eabc0c0685c0f368d24514fc7e91e9d1593f6555a0f1afda"
+  },
+  {
+    "catalogueId": "OLY-114",
+    "cardId": "creatures-24",
+    "path": "assets/cards/illustrations/creatures-partie-3/OLY-114_Talos.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "03daacc43fe2bcfcd61036bcbd73307795c0a93f8e600ba8608ad574bfb51041"
+  },
+  {
+    "catalogueId": "OLY-115",
+    "cardId": "creatures-25",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-115_Meduse.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "124d5fdf44c56c0f0ca2c4d38b7df6bea0a515bae30d1d10a7711965313a19df"
+  },
+  {
+    "catalogueId": "OLY-116",
+    "cardId": "creatures-26",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-116_Python.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "062e1e3a2e1f1d91fa9f5dc1a41a8ddc73b54c20b7c32716733bbd7ae2c5849e"
+  },
+  {
+    "catalogueId": "OLY-117",
+    "cardId": "creatures-27",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-117_Cecrops.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "c37a11a77f5fda5840b06c5f60d70837d2ef1a27ca476d163e4b7eea40af2bd4"
+  },
+  {
+    "catalogueId": "OLY-118",
+    "cardId": "creatures-28",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-118_Minotaure.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "5ab787061b6a03cbf04276ad9ec2aa00294a38c15d51e73f3659c9cb3e7aa03f"
+  },
+  {
+    "catalogueId": "OLY-119",
+    "cardId": "creatures-29",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-119_Typhon.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "900cc1c5ab09154a8b5874de8657753190b409cd1b19b48b1615b3ac0358ae05"
+  },
+  {
+    "catalogueId": "OLY-120",
+    "cardId": "creatures-30",
+    "path": "assets/cards/illustrations/creatures-partie-4/OLY-120_Phenix.png",
+    "width": 750,
+    "height": 1050,
+    "sha256": "a29240dd6ab942a899089d67df57c4b7f7e61916a3d872e7b2e54abf8f6ce9db"
   }
 ]
