@@ -30,46 +30,17 @@ export function CardFront({
     width,
     card.id === "olympe-30" ? 914 / 1280 : 5 / 7,
   );
+  const ink = card.rarity === 0 || card.rarity === 4 ? "#29231b" : theme.paper;
   const collection =
     EXTENSIONS.find((e) => e.id === card.extension)?.name ?? card.extension;
-  const numberSeal = card.number?.replace("-", "\n") ?? "—";
-  const extensionSeal = {
-    olympe: "EXT.\nI",
-    titans: "EXT.\nII",
-    heros: "EXT.\nIII",
-    creatures: "EXT.\nIV",
-  }[card.extension] ?? card.extension.toUpperCase();
   const unit = width / CARD_REFERENCE.width;
-  const newFrame = card.rarity > 0;
-  // Measured inner cartouches of the owner-supplied master PNGs.
+  // Measured inner cartouches of the seven master PNGs (not one shared offset).
   const nameBox = [
-    { top: 0.681, height: 0.043, left: 0.19, right: 0.19 },
-    { top: 0.628, height: 0.089, left: 0.18, right: 0.18 },
-    { top: 0.621, height: 0.097, left: 0.18, right: 0.18 },
-    { top: 0.621, height: 0.098, left: 0.18, right: 0.18 },
-    { top: 0.617, height: 0.086, left: 0.18, right: 0.18 },
-    { top: 0.624, height: 0.104, left: 0.18, right: 0.18 },
-    { top: 0.638, height: 0.09, left: 0.18, right: 0.18 },
+    { top: 0.681, height: 0.043 }, { top: 0.659, height: 0.045 },
+    { top: 0.673, height: 0.043 }, { top: 0.670, height: 0.043 },
+    { top: 0.665, height: 0.040 }, { top: 0.675, height: 0.047 },
+    { top: 0.673, height: 0.043 },
   ][card.rarity]!;
-  const descriptionBox = [
-    { top: 0.755, height: 0.09 },
-    { top: 0.725, height: 0.126 },
-    { top: 0.727, height: 0.124 },
-    { top: 0.729, height: 0.126 },
-    { top: 0.711, height: 0.14 },
-    { top: 0.738, height: 0.114 },
-    { top: 0.738, height: 0.134 },
-  ][card.rarity]!;
-  const footerBox = [
-    { top: 0.875, height: 0.05 },
-    { top: 0.861, height: 0.066 },
-    { top: 0.861, height: 0.068 },
-    { top: 0.864, height: 0.069 },
-    { top: 0.858, height: 0.071 },
-    { top: 0.861, height: 0.071 },
-    { top: 0.881, height: 0.061 },
-  ][card.rarity]!;
-  const nameInk = ["#29231b", theme.paper, theme.paper, theme.paper, "#29231b", theme.paper, "#29231b"][card.rarity]!;
   // Long descriptions must fit the ivory panel without touching the name band.
   const longDescription = (card.description?.length ?? 0) > 100;
   return (
@@ -123,42 +94,28 @@ export function CardFront({
       />
       {!compact && (
         <>
-          {newFrame && (
-            <>
-              <View style={s.numberSeal}>
-                <Text numberOfLines={2} adjustsFontSizeToFit style={[s.sealText, { fontSize: 40 * unit, lineHeight: 44 * unit }]}>
-                  {numberSeal}
-                </Text>
-              </View>
-              <View style={s.extensionSeal}>
-                <Text numberOfLines={2} adjustsFontSizeToFit style={[s.sealText, { fontSize: 40 * unit, lineHeight: 44 * unit }]}>
-                  {extensionSeal}
-                </Text>
-              </View>
-            </>
-          )}
-          <View style={[s.rarity, newFrame && s.rarityNew]}>
+          <View style={s.rarity}>
             <Text
               numberOfLines={1}
               style={{
-                color: card.rarity === 5 ? theme.paper : "#29231b",
+                color: ink,
                 fontFamily: fonts.bold,
-                fontSize: (newFrame ? 55 : 68) * unit,
+                fontSize: 68 * unit,
                 textAlign: "center",
               }}
             >
               {RARITIES[card.rarity]?.toUpperCase()}
             </Text>
           </View>
-          <View style={[s.name, { top: `${nameBox.top * 100}%`, height: `${nameBox.height * 100}%`, left: `${nameBox.left * 100}%`, right: `${nameBox.right * 100}%` }]}>
+          <View style={[s.name, { top: `${nameBox.top * 100}%`, height: `${nameBox.height * 100}%` }]}>
             <Text
               numberOfLines={1}
               adjustsFontSizeToFit
               style={{
-                color: nameInk,
+                color: ink,
                 fontFamily: fonts.bold,
-                fontSize: (newFrame ? 88 : 100) * unit,
-                lineHeight: (newFrame ? 98 : 110) * unit,
+                fontSize: 100 * unit,
+                lineHeight: 110 * unit,
                 includeFontPadding: false,
                 textAlign: "center",
               }}
@@ -166,7 +123,7 @@ export function CardFront({
               {card.name.toUpperCase()}
             </Text>
           </View>
-          <View style={[s.description, { top: `${descriptionBox.top * 100}%`, height: `${descriptionBox.height * 100}%` }]}>
+          <View style={s.description}>
             <Text
               numberOfLines={5}
               adjustsFontSizeToFit
@@ -180,22 +137,27 @@ export function CardFront({
               {card.description}
             </Text>
           </View>
-          <View style={[s.footer, { top: `${footerBox.top * 100}%`, height: `${footerBox.height * 100}%` }, newFrame && s.footerNew]}>
-            {newFrame ? (
-              <>
-                <Text numberOfLines={1} adjustsFontSizeToFit style={[s.footerEpithet, { fontSize: 39 * unit, lineHeight: 46 * unit }]}>
-                  {card.epithet?.toUpperCase() || card.name.toUpperCase()}
-                </Text>
-                <Text numberOfLines={1} adjustsFontSizeToFit style={[s.footerMeta, { fontSize: 30 * unit, lineHeight: 36 * unit }]}>
-                  {[card.category, collection].filter(Boolean).join(" · ")}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text style={{ color: "#29231b", fontFamily: fonts.bold, fontSize: 45 * unit }}>{card.number}</Text>
-                <Text numberOfLines={2} style={{ color: "#29231b", fontSize: 34 * unit, textAlign: "right", width: "42%" }}>{collection}</Text>
-              </>
-            )}
+          <View style={s.footer}>
+            <Text
+              style={{
+                color: "#29231b",
+                fontFamily: fonts.bold,
+                fontSize: 45 * unit,
+              }}
+            >
+              {card.number}
+            </Text>
+            <Text
+              numberOfLines={2}
+              style={{
+                color: "#29231b",
+                fontSize: 34 * unit,
+                textAlign: "right",
+                width: "42%",
+              }}
+            >
+              {collection}
+            </Text>
           </View>
         </>
       )}
@@ -211,10 +173,6 @@ const s = StyleSheet.create({
     height: "3.9%",
     justifyContent: "center",
   },
-  rarityNew: { top: "1.1%", left: "31%", right: "31%", height: "5.5%" },
-  numberSeal: { position: "absolute", top: "2.1%", left: "2.7%", width: "13.6%", height: "10%", alignItems: "center", justifyContent: "center" },
-  extensionSeal: { position: "absolute", top: "2.1%", right: "2.7%", width: "13.6%", height: "10%", alignItems: "center", justifyContent: "center" },
-  sealText: { color: "#29231b", fontFamily: fonts.bold, textAlign: "center", includeFontPadding: false },
   name: {
     position: "absolute",
     top: "65.2%",
@@ -241,7 +199,4 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  footerNew: { left: "20%", right: "20%", flexDirection: "column", justifyContent: "center", gap: 0 },
-  footerEpithet: { color: "#29231b", fontFamily: fonts.semibold, textAlign: "center", includeFontPadding: false, width: "100%" },
-  footerMeta: { color: "#554735", textAlign: "center", includeFontPadding: false, width: "100%" },
 });
