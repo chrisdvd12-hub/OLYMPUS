@@ -8,10 +8,6 @@ import { RARITY_FRAME_ART } from "./rarityFrameArt";
 import { fonts, theme } from "./theme";
 import type { ReactNode } from "react";
 
-const CARD_TEXT_OVERLAYS: Partial<Record<Card["id"], number>> = {
-  "olympe-1": require("../../assets/cards/text-overlays/OLY-001_Hebe_texte_transparent.png"),
-};
-
 export const CARD_REFERENCE = {
   width: 1500,
   height: 2100,
@@ -31,7 +27,6 @@ export function CardFront({
   effectLayer?: ReactNode;
 }) {
   const illustration = CARD_ILLUSTRATIONS[card.id];
-  const textOverlay = CARD_TEXT_OVERLAYS[card.id];
   const artwork = artworkLayout(
     card.id,
     card.rarity,
@@ -101,14 +96,7 @@ export function CardFront({
         style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
       />
       {effectLayer}
-      {textOverlay ? (
-        <Image
-          source={textOverlay}
-          recyclingKey={`text-overlay-${card.id}`}
-          resizeMode="contain"
-          style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]}
-        />
-      ) : !compact ? (
+      {!compact ? (
         <>
           <View style={s.rarity}>
             <Text
