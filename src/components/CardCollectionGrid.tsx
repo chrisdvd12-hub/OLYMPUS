@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -8,12 +8,16 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 import { EXTENSIONS, RARITIES, type Card } from "../domain/catalog";
 import { collectionStats, filterCollection, type CollectionFilters } from "../domain/collection";
 import { AppText as Text } from "./AppText";
-import { CardFace } from "./CardFace";
+import { CardFront } from "./CardFront";
 import { CardBack } from "./CardBack";
+import {
+  CollectionCardEffects,
+  CollectionLivingCard,
+} from "./CollectionCardEffects";
 import { CollectionProgress } from "./CollectionProgress";
 import { fonts, styles, theme } from "./theme";
 import { OlympusIcon, OlympusMarblePanel, OlympusProgressBar, OlympusSectionTitle } from "./OlympusUI";
@@ -67,6 +71,27 @@ export function CardCollectionGrid({
   const [viewMode, setViewMode] = useState<"grid" | "list" | "gallery">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [details, setDetails] = useState(false);
+  const [visibleCards, setVisibleCards] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 15,
+    minimumViewTime: 80,
+  }).current;
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: Array<{ item: Card }> }) => {
+      const next = new Set(
+        viewableItems
+          .map((entry) => entry.item?.id)
+          .filter((id): id is string => Boolean(id)),
+      );
+      setVisibleCards((current) =>
+        current.size === next.size && [...current].every((id) => next.has(id))
+          ? current
+          : next,
+      );
+    },
+  ).current;
   const cards = useMemo(
     () => filterCollection(collection, { ...filters, newCardIds: recentDiscoveries }),
     [collection, filters, recentDiscoveries],
@@ -102,10 +127,11 @@ export function CardCollectionGrid({
         reduced={reduced}
         gallery={gallery}
         list={list}
+        active={visibleCards.has(item.id)}
         onInspect={onInspect}
       />
     ),
-    [collection, tileWidth, reduced, gallery, list, onInspect],
+    [collection, tileWidth, reduced, gallery, list, visibleCards, onInspect],
   );
   return (
     <FlatList
@@ -115,6 +141,8 @@ export function CardCollectionGrid({
       renderItem={renderItem}
       numColumns={columns}
       keyExtractor={(card) => card.id}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
       initialNumToRender={columns * 2}
       maxToRenderPerBatch={columns * 2}
       windowSize={3}
@@ -281,6 +309,7 @@ const CollectionTile = memo(function CollectionTile({
   reduced,
   gallery,
   list,
+  active,
   onInspect,
 }: {
   item: Card;
@@ -289,14 +318,20 @@ const CollectionTile = memo(function CollectionTile({
   reduced: boolean;
   gallery: boolean;
   list: boolean;
+  active: boolean;
   onInspect: (id: string) => void;
 }) {
+  const lightX = useSharedValue(0);
+  const lightY = useSharedValue(0);
+  const cardWidth = list ? 84 : width;
   return (
-    <Animated.View
-      entering={reduced ? undefined : FadeIn.duration(200)}
-      style={{ width: width, marginBottom: list ? 10 : 20, gap: 6 }}
-    >
+    <View style={{ width: width, marginBottom: list ? 10 : 20, gap: 6 }}>
       <View style={list ? { flexDirection: "row", alignItems: "center", gap: 14 } : undefined}>
+      <CollectionLivingCard
+        active={active && quantity > 0}
+        mode="grid"
+        reduced={reduced}
+      >
       <Pressable
         accessibilityRole="button"
         disabled={!quantity}
@@ -306,29 +341,31 @@ const CollectionTile = memo(function CollectionTile({
             : `${item.number}, carte non découverte`
         }
         onPress={() => onInspect(item.id)}
-        style={{ width: list ? 84 : width, aspectRatio: 5 / 7 }}
+        style={{ width: cardWidth, aspectRatio: 5 / 7 }}
       >
         {quantity ? (
-          <CardFace card={item} />
+          <CardFront
+            card={item}
+            width={cardWidth}
+            effectLayer={
+              <CollectionCardEffects
+                card={item}
+                width={cardWidth}
+                mode="grid"
+                lightX={lightX}
+                lightY={lightY}
+                active={active}
+                reduced={reduced}
+              />
+            }
+          />
         ) : (
           <View style={{ flex: 1, opacity: 0.34 }}>
             <CardBack />
           </View>
         )}
-        {quantity > 0 && item.rarity >= 4 && (
-          <View
-            pointerEvents="none"
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: "15%",
-              right: "15%",
-              height: 2,
-              backgroundColor: item.rarity >= 5 ? theme.violet : theme.gold,
-            }}
-          />
-        )}
       </Pressable>
+      </CollectionLivingCard>
       <View style={list ? { flex: 1, gap: 4 } : { gap: 4 }}>
       <Text
         numberOfLines={gallery ? 2 : 1}
@@ -352,6 +389,6 @@ const CollectionTile = memo(function CollectionTile({
       </Text>
       </View>
       </View>
-    </Animated.View>
+    </View>
   );
 });

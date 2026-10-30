@@ -14,19 +14,26 @@ import {
 } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
-  Easing,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useAppActivity } from "../animations/openingMotion";
 import type { Card } from "../domain/catalog";
+import {
+  clampCollectionPointer,
+  collectionEffectFor,
+} from "../domain/collectionEffects";
 import { projectedYaw } from "../interaction/spatial";
 import { selectionFeedback } from "../interaction/feedback";
 import { AppText as Text } from "./AppText";
-import { CardFace } from "./CardFace";
+import { CardFront } from "./CardFront";
 import { CardBack } from "./CardBack";
 import { Card3DTransform } from "./Card3DTransform";
-import { CardMaterialEffects, MATERIALS } from "./CardMaterialEffects";
+import {
+  CollectionCardEffects,
+  CollectionLivingCard,
+} from "./CollectionCardEffects";
 import { CardArtworkZoom } from "./CardArtworkZoom";
 import { CardDetailPanel } from "./CardDetailPanel";
 import { SanctuaryBackdrop } from "./SanctuaryBackdrop";
@@ -55,7 +62,15 @@ export function InteractiveCardViewer({
   const pitch = useSharedValue(0);
   const startYaw = useSharedValue(0);
   const startPitch = useSharedValue(0);
+  const lightX = useSharedValue(0);
+  const lightY = useSharedValue(0);
   const duration = reduced ? 0 : 600;
+  const cardWidth = Math.min(
+    width - 72,
+    400,
+    Math.max(180, (height * 0.52 * 5) / 7),
+  );
+  const cardHeight = (cardWidth * 7) / 5;
   const pan = useMemo(
     () =>
       Gesture.Pan()
@@ -70,18 +85,24 @@ export function InteractiveCardViewer({
         .onUpdate((e) => {
           yaw.value = startYaw.value + e.translationX * 0.65;
           pitch.value = Math.max(
-            -35,
-            Math.min(35, startPitch.value - e.translationY * 0.22),
+            -13,
+            Math.min(13, startPitch.value - e.translationY * 0.16),
           );
+          lightX.value = clampCollectionPointer((e.x / cardWidth) * 2 - 1);
+          lightY.value = clampCollectionPointer((e.y / cardHeight) * 2 - 1);
         })
         .onEnd((e) => {
-          if (!reduced)
-            yaw.value = withTiming(projectedYaw(yaw.value, e.velocityX), {
-              duration: 600,
-              easing: Easing.out(Easing.cubic),
+          if (!reduced) {
+            yaw.value = withSpring(projectedYaw(yaw.value, e.velocityX), {
+              duration: 400,
+              dampingRatio: 0.8,
+              velocity: e.velocityX * 0.065,
             });
+            lightX.value = withSpring(0, { duration: 400, dampingRatio: 1 });
+            lightY.value = withSpring(0, { duration: 400, dampingRatio: 1 });
+          }
         }),
-    [active, cardVisible, zoom, yaw, pitch, startYaw, startPitch, reduced],
+    [active, cardVisible, zoom, yaw, pitch, startYaw, startPitch, lightX, lightY, reduced, cardWidth, cardHeight],
   );
   const doubleTap = useMemo(
     () =>
@@ -104,11 +125,6 @@ export function InteractiveCardViewer({
       cancelAnimation(pitch);
     };
   }, [active, yaw, pitch]);
-  const cardWidth = Math.min(
-    width - 72,
-    400,
-    Math.max(180, (height * 0.52 * 5) / 7),
-  );
   const flip = () => {
     yaw.value = withTiming(yaw.value + 180, { duration });
     selectionFeedback(!reduced);
@@ -165,50 +181,63 @@ export function InteractiveCardViewer({
             }
             contentContainerStyle={{ padding: 20, paddingBottom: 40, gap: 18 }}
           >
-            <GestureDetector gesture={gesture}>
-              <Animated.View
-                collapsable={false}
-                accessible
-                accessibilityRole="adjustable"
-                accessibilityLabel={`Carte ${card.name}, rotation à 360 degrés. Glissez ou utilisez les boutons.`}
-                accessibilityActions={[
-                  { name: "increment", label: "Tourner à droite" },
-                  { name: "decrement", label: "Tourner à gauche" },
-                ]}
-                onAccessibilityAction={(e) => {
-                  yaw.value = withTiming(
-                    yaw.value +
-                      (e.nativeEvent.actionName === "increment" ? 45 : -45),
-                    { duration },
-                  );
-                }}
-                style={{ alignItems: "center", paddingVertical: 22 }}
-              >
-                <Card3DTransform
-                  yaw={yaw}
-                  pitch={pitch}
-                  width={cardWidth}
-                  front={
-                    <>
-                      <CardFace card={card} material={false} />
-                      <CardMaterialEffects
-                        card={card}
-                        yaw={yaw}
-                        pitch={pitch}
-                        active={active && !zoom && cardVisible}
-                        reduced={reduced}
-                      />
-                    </>
-                  }
-                  back={<CardBack />}
-                />
-              </Animated.View>
-            </GestureDetector>
+            <Animated.View style={{ alignItems: "center", paddingVertical: 22 }}>
+              <GestureDetector gesture={gesture}>
+                <Animated.View
+                  collapsable={false}
+                  accessible
+                  accessibilityRole="adjustable"
+                  accessibilityLabel={`Carte ${card.name}, rotation à 360 degrés. Glissez ou utilisez les boutons.`}
+                  accessibilityActions={[
+                    { name: "increment", label: "Tourner à droite" },
+                    { name: "decrement", label: "Tourner à gauche" },
+                  ]}
+                  onAccessibilityAction={(e) => {
+                    yaw.value = withTiming(
+                      yaw.value +
+                        (e.nativeEvent.actionName === "increment" ? 45 : -45),
+                      { duration },
+                    );
+                  }}
+                  style={{ width: cardWidth, aspectRatio: 5 / 7 }}
+                >
+                  <CollectionLivingCard
+                    active={active && !zoom && cardVisible}
+                    mode="detail"
+                    reduced={reduced}
+                  >
+                    <Card3DTransform
+                      yaw={yaw}
+                      pitch={pitch}
+                      width={cardWidth}
+                      front={
+                        <CardFront
+                          card={card}
+                          width={cardWidth}
+                          effectLayer={
+                            <CollectionCardEffects
+                              card={card}
+                              width={cardWidth}
+                              mode="detail"
+                              lightX={lightX}
+                              lightY={lightY}
+                              active={active && !zoom && cardVisible}
+                              reduced={reduced}
+                            />
+                          }
+                        />
+                      }
+                      back={<CardBack />}
+                    />
+                  </CollectionLivingCard>
+                </Animated.View>
+              </GestureDetector>
+            </Animated.View>
             <Text style={styles.muted}>
               Glissez pour tourner · Double touchez pour retourner
             </Text>
             <Text style={[styles.muted, { color: theme.highlight }]}>
-              {MATERIALS[card.rarity]!.label}
+              {collectionEffectFor(card.rarity).label}
             </Text>
             <View
               style={{
