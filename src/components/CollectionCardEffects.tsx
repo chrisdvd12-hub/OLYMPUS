@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Svg, {
   Defs,
   G,
+  Image as SvgImage,
   LinearGradient,
   Mask,
   Rect,
@@ -18,12 +19,16 @@ import { useOpeningLoop } from "../animations/openingMotion";
 import type { Card } from "../domain/catalog";
 import {
   COLLECTION_GRID_INTENSITY,
+  COLLECTION_TEXTURE_GEOMETRY,
   collectionEffectFor,
   collectionParticleOrigin,
+  collectionTexturePosition,
   seededCollectionValue,
   type CollectionEffectProfile,
 } from "../domain/collectionEffects";
+import { FRAME_APERTURES } from "../domain/artworkLayout";
 import { useGraphicsQuality } from "../performance/graphicsQuality";
+import { RARITY_FRAME_ART } from "./rarityFrameArt";
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -135,23 +140,34 @@ export const CollectionCardEffects = memo(function CollectionCardEffects({
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
   const profile = collectionEffectFor(card.rarity);
   const isGrid = mode === "grid";
-  const foil = profile.foil * (isGrid ? COLLECTION_GRID_INTENSITY.foil : 1);
-  const bands = profile.bands * (isGrid ? COLLECTION_GRID_INTENSITY.bands : 1);
-  const beam = profile.beam * (isGrid ? COLLECTION_GRID_INTENSITY.beam : 1);
+  const illustrationIntensity =
+    profile.illustrationIntensity *
+    (isGrid ? COLLECTION_GRID_INTENSITY.illustration : 1);
+  const frameIntensity =
+    profile.frameIntensity * (isGrid ? COLLECTION_GRID_INTENSITY.frame : 1);
+  const aperture = FRAME_APERTURES[card.rarity] ?? FRAME_APERTURES[0];
   const ambient = useOpeningLoop(
     active && !reduced && quality.animateAmbientEffects,
     Math.max(2800, 6200 - card.rarity * 430),
     false,
   );
   const foilProps = useAnimatedProps(() => ({
-    x: -310 + (lightX.value + 1) * 155 + ambient.value * (isGrid ? 90 : 135),
-    y: -150 + (lightY.value + 1) * 70,
+    ...collectionTexturePosition(
+      "foil",
+      lightX.value,
+      lightY.value,
+      ambient.value,
+      isGrid,
+    ),
   }));
   const bandProps = useAnimatedProps(() => ({
-    x: -420 + (lightX.value + 1) * 210 + ambient.value * (isGrid ? 100 : 240),
-  }));
-  const beamProps = useAnimatedProps(() => ({
-    x: -315 + (lightX.value + 1) * 235 + ambient.value * (isGrid ? 120 : 210),
+    ...collectionTexturePosition(
+      "bands",
+      lightX.value,
+      lightY.value,
+      ambient.value,
+      isGrid,
+    ),
   }));
   const qualityParticles = quality.animateAmbientEffects
     ? Math.round(profile.particles * quality.cardSparkleScale)
@@ -183,7 +199,7 @@ export const CollectionCardEffects = memo(function CollectionCardEffects({
           ]}
         />
       )}
-      {(foil > 0 || showAura) && (
+      {(frameIntensity > 0 || showAura) && (
         <View
           style={[
             effectStyles.clip,
@@ -192,44 +208,69 @@ export const CollectionCardEffects = memo(function CollectionCardEffects({
         >
           <Svg width="100%" height="100%" viewBox="0 0 500 700">
             <Defs>
-              <LinearGradient id={`living-${id}`} x1="0%" y1="100%" x2="100%" y2="0%">
+              <LinearGradient id={`art-${id}`} x1="0%" y1="100%" x2="100%" y2="0%">
                 <Stop offset="0" stopColor="#ff3c9a" stopOpacity="0" />
-                <Stop offset=".18" stopColor="#ff3c9a" stopOpacity={foil * 0.4} />
-                <Stop offset=".32" stopColor="#6bffff" stopOpacity={foil * 0.6} />
-                <Stop offset=".46" stopColor="#ffe78b" stopOpacity={foil * 0.67} />
-                <Stop offset=".6" stopColor="#a673ff" stopOpacity={foil * 0.73} />
-                <Stop offset=".74" stopColor="#77ffd6" stopOpacity={foil * 0.67} />
-                <Stop offset=".9" stopColor="#fff5cb" stopOpacity={foil * 0.47} />
+                <Stop offset=".2" stopColor={profile.accent} stopOpacity={illustrationIntensity * 0.3} />
+                <Stop offset=".38" stopColor="#6bffff" stopOpacity={illustrationIntensity * 0.48} />
+                <Stop offset=".54" stopColor={profile.secondary} stopOpacity={illustrationIntensity * 0.56} />
+                <Stop offset=".7" stopColor="#a673ff" stopOpacity={illustrationIntensity * 0.45} />
+                <Stop offset=".86" stopColor="#fff5cb" stopOpacity={illustrationIntensity * 0.25} />
                 <Stop offset="1" stopColor="#fff" stopOpacity="0" />
+              </LinearGradient>
+              <LinearGradient id={`frame-${id}`} x1="0%" y1="100%" x2="100%" y2="0%">
+                <Stop offset="0" stopColor={profile.accent} stopOpacity="0" />
+                <Stop offset=".16" stopColor={card.rarity === 6 ? "#ff68dc" : profile.accent} stopOpacity={frameIntensity * 0.4} />
+                <Stop offset=".34" stopColor={card.rarity >= 5 ? "#886cff" : "#66eaff"} stopOpacity={frameIntensity * 0.68} />
+                <Stop offset=".5" stopColor={profile.secondary} stopOpacity={frameIntensity * 0.82} />
+                <Stop offset=".66" stopColor={card.rarity === 6 ? "#75f4ff" : profile.accent} stopOpacity={frameIntensity * 0.65} />
+                <Stop offset=".84" stopColor="#fff2a4" stopOpacity={frameIntensity * 0.42} />
+                <Stop offset="1" stopColor={profile.secondary} stopOpacity="0" />
               </LinearGradient>
               <LinearGradient id={`bands-${id}`} x1="0%" y1="0%" x2="100%" y2="100%">
                 <Stop offset="0" stopColor="#ff86e5" stopOpacity="0" />
-                <Stop offset=".26" stopColor="#ff86e5" stopOpacity={bands * 0.27} />
-                <Stop offset=".39" stopColor="#71eaff" stopOpacity={bands * 0.33} />
-                <Stop offset=".52" stopColor="#ffed9e" stopOpacity={bands * 0.33} />
-                <Stop offset=".66" stopColor="#b184ff" stopOpacity={bands * 0.28} />
+                <Stop offset=".28" stopColor={profile.accent} stopOpacity={frameIntensity * 0.22} />
+                <Stop offset=".42" stopColor="#71eaff" stopOpacity={frameIntensity * 0.3} />
+                <Stop offset=".54" stopColor={profile.secondary} stopOpacity={frameIntensity * 0.34} />
+                <Stop offset=".68" stopColor="#b184ff" stopOpacity={frameIntensity * 0.25} />
                 <Stop offset=".82" stopColor="#fff" stopOpacity="0" />
               </LinearGradient>
               <LinearGradient id={`beam-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
                 <Stop offset="0" stopColor="#fff" stopOpacity="0" />
-                <Stop offset=".44" stopColor="#fff" stopOpacity="0" />
-                <Stop offset=".5" stopColor="#fff" stopOpacity={beam * 0.67} />
-                <Stop offset=".56" stopColor="#fff" stopOpacity="0" />
+                <Stop offset=".485" stopColor="#fff" stopOpacity="0" />
+                <Stop offset=".5" stopColor="#fff" stopOpacity={frameIntensity * 0.58} />
+                <Stop offset=".515" stopColor="#fff" stopOpacity="0" />
                 <Stop offset="1" stopColor="#fff" stopOpacity="0" />
               </LinearGradient>
+              <Mask id={`art-mask-${id}`} maskType="alpha" x="0" y="0" width="500" height="700">
+                <Rect
+                  x={aperture.x * 500}
+                  y={aperture.y * 700}
+                  width={aperture.width * 500}
+                  height={aperture.height * 700}
+                  fill="#fff"
+                />
+              </Mask>
+              <Mask id={`frame-mask-${id}`} maskType="alpha" x="0" y="0" width="500" height="700">
+                <SvgImage
+                  href={RARITY_FRAME_ART[card.rarity]}
+                  width="500"
+                  height="700"
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              </Mask>
               <Mask
                 id={`text-safe-${id}`}
-                maskType="alpha"
+                maskType="luminance"
                 x="0"
                 y="0"
                 width="500"
                 height="700"
               >
                 <Rect x="0" y="0" width="500" height="700" fill="#fff" />
-                <Rect x="145" y="12" width="210" height="48" rx="10" fill="#fff" fillOpacity=".22" />
-                <Rect x="82" y="450" width="336" height="58" rx="12" fill="#fff" fillOpacity=".16" />
-                <Rect x="75" y="514" width="350" height="88" rx="12" fill="#fff" fillOpacity=".16" />
-                <Rect x="82" y="604" width="336" height="66" rx="12" fill="#fff" fillOpacity=".18" />
+                <Rect x="145" y="12" width="210" height="48" rx="10" fill="#282828" />
+                <Rect x="72" y="442" width="356" height="70" rx="12" fill="#202020" />
+                <Rect x="68" y="508" width="364" height="100" rx="12" fill="#202020" />
+                <Rect x="72" y="598" width="356" height="76" rx="12" fill="#242424" />
               </Mask>
             </Defs>
             {showAura && (
@@ -245,11 +286,36 @@ export const CollectionCardEffects = memo(function CollectionCardEffects({
                 strokeOpacity={isGrid ? 0.14 : 0.25 + card.rarity * 0.035}
               />
             )}
-            {foil > 0 && (
+            {frameIntensity > 0 && (
               <G mask={`url(#text-safe-${id})`}>
-                <AnimatedRect animatedProps={foilProps} width="850" height="900" fill={`url(#living-${id})`} />
-                <AnimatedRect animatedProps={bandProps} y="-80" width="900" height="920" fill={`url(#bands-${id})`} />
-                <AnimatedRect animatedProps={beamProps} y="-170" width="360" height="1040" fill={`url(#beam-${id})`} />
+                <G mask={`url(#art-mask-${id})`}>
+                  <AnimatedRect
+                    animatedProps={foilProps}
+                    width={COLLECTION_TEXTURE_GEOMETRY.foil.width}
+                    height={COLLECTION_TEXTURE_GEOMETRY.foil.height}
+                    fill={`url(#art-${id})`}
+                  />
+                </G>
+                <G mask={`url(#frame-mask-${id})`}>
+                  <AnimatedRect
+                    animatedProps={foilProps}
+                    width={COLLECTION_TEXTURE_GEOMETRY.foil.width}
+                    height={COLLECTION_TEXTURE_GEOMETRY.foil.height}
+                    fill={`url(#frame-${id})`}
+                  />
+                  <AnimatedRect
+                    animatedProps={bandProps}
+                    width={COLLECTION_TEXTURE_GEOMETRY.bands.width}
+                    height={COLLECTION_TEXTURE_GEOMETRY.bands.height}
+                    fill={`url(#bands-${id})`}
+                  />
+                  <AnimatedRect
+                    animatedProps={bandProps}
+                    width={COLLECTION_TEXTURE_GEOMETRY.bands.width}
+                    height={COLLECTION_TEXTURE_GEOMETRY.bands.height}
+                    fill={`url(#beam-${id})`}
+                  />
+                </G>
               </G>
             )}
           </Svg>

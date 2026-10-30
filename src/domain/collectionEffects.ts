@@ -10,9 +10,8 @@ export type CollectionParticleKind =
 export interface CollectionEffectProfile {
   accent: string;
   secondary: string;
-  foil: number;
-  bands: number;
-  beam: number;
+  illustrationIntensity: number;
+  frameIntensity: number;
   particles: number;
   glyphs: readonly string[];
   kind: CollectionParticleKind;
@@ -24,9 +23,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#b9c0c7",
     secondary: "#e5dfd2",
-    foil: 0,
-    bands: 0,
-    beam: 0,
+    illustrationIntensity: 0,
+    frameIntensity: 0,
     particles: 0,
     glyphs: [],
     kind: "none",
@@ -35,9 +33,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#76c8a4",
     secondary: "#d5b878",
-    foil: 0,
-    bands: 0,
-    beam: 0,
+    illustrationIntensity: 0,
+    frameIntensity: 0,
     particles: 9,
     glyphs: ["·"],
     kind: "motes",
@@ -46,9 +43,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#70d5ff",
     secondary: "#d8f4ff",
-    foil: 0.26,
-    bands: 0.12,
-    beam: 0.2,
+    illustrationIntensity: 0.1,
+    frameIntensity: 0.3,
     particles: 17,
     glyphs: ["◆"],
     kind: "frost",
@@ -57,9 +53,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#b68aff",
     secondary: "#f0c8ff",
-    foil: 0.45,
-    bands: 0.26,
-    beam: 0.35,
+    illustrationIntensity: 0.15,
+    frameIntensity: 0.45,
     particles: 14,
     glyphs: ["Ω", "Δ", "Φ", "Λ", "Σ"],
     kind: "runes",
@@ -68,9 +63,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#f3aa55",
     secondary: "#ffe3a1",
-    foil: 0.68,
-    bands: 0.48,
-    beam: 0.55,
+    illustrationIntensity: 0.18,
+    frameIntensity: 0.65,
     particles: 23,
     glyphs: ["·"],
     kind: "embers",
@@ -79,9 +73,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#c5a3ff",
     secondary: "#f3cf75",
-    foil: 0.9,
-    bands: 0.78,
-    beam: 0.8,
+    illustrationIntensity: 0.2,
+    frameIntensity: 0.85,
     particles: 26,
     glyphs: ["✦"],
     kind: "stars",
@@ -90,9 +83,8 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
   {
     accent: "#f2ce7b",
     secondary: "#fff8d6",
-    foil: 1,
-    bands: 0.95,
-    beam: 1,
+    illustrationIntensity: 0.25,
+    frameIntensity: 1,
     particles: 32,
     glyphs: ["✧"],
     kind: "gold",
@@ -101,11 +93,59 @@ export const COLLECTION_EFFECTS: readonly CollectionEffectProfile[] = [
 ] as const;
 
 export const COLLECTION_GRID_INTENSITY = {
-  foil: 0.12,
-  bands: 0.12,
-  beam: 0.1,
+  illustration: 0.28,
+  frame: 0.24,
   maxParticles: 4,
 } as const;
+
+export const COLLECTION_TEXTURE_GEOMETRY = {
+  foil: {
+    width: 1000,
+    height: 950,
+    baseX: -300,
+    baseY: -125,
+    pointerX: 80,
+    pointerY: 50,
+    ambientX: 60,
+  },
+  bands: {
+    width: 1100,
+    height: 980,
+    baseX: -360,
+    baseY: -140,
+    pointerX: 90,
+    pointerY: 40,
+    ambientX: 80,
+  },
+} as const;
+
+export type CollectionTextureLayer = keyof typeof COLLECTION_TEXTURE_GEOMETRY;
+
+export function clampCollectionPointer(value: number) {
+  "worklet";
+  return Math.max(-1, Math.min(1, value));
+}
+
+export function collectionTexturePosition(
+  layer: CollectionTextureLayer,
+  pointerX: number,
+  pointerY: number,
+  ambient: number,
+  grid = false,
+) {
+  "worklet";
+  const geometry = COLLECTION_TEXTURE_GEOMETRY[layer];
+  const motionScale = grid ? 0.45 : 1;
+  return {
+    x:
+      geometry.baseX +
+      clampCollectionPointer(pointerX) * geometry.pointerX * motionScale +
+      clampCollectionPointer(ambient) * geometry.ambientX * motionScale,
+    y:
+      geometry.baseY +
+      clampCollectionPointer(pointerY) * geometry.pointerY * motionScale,
+  };
+}
 
 export const COLLECTION_TILT_LIMITS = {
   yaw: 18,
@@ -114,11 +154,6 @@ export const COLLECTION_TILT_LIMITS = {
 
 export function collectionEffectFor(rarity: number) {
   return COLLECTION_EFFECTS[rarity] ?? COLLECTION_EFFECTS[0]!;
-}
-
-export function clampCollectionPointer(value: number) {
-  "worklet";
-  return Math.max(-1, Math.min(1, value));
 }
 
 export function collectionTilt(x: number, y: number) {

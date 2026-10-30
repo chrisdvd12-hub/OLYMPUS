@@ -98,8 +98,17 @@ export function InteractiveCardViewer({
               dampingRatio: 0.8,
               velocity: e.velocityX * 0.065,
             });
+          }
+        })
+        .onFinalize(() => {
+          if (!reduced) {
+            pitch.value = withSpring(0, { duration: 400, dampingRatio: 1 });
             lightX.value = withSpring(0, { duration: 400, dampingRatio: 1 });
             lightY.value = withSpring(0, { duration: 400, dampingRatio: 1 });
+          } else {
+            pitch.value = 0;
+            lightX.value = 0;
+            lightY.value = 0;
           }
         }),
     [active, cardVisible, zoom, yaw, pitch, startYaw, startPitch, lightX, lightY, reduced, cardWidth, cardHeight],
